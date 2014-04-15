@@ -1,0 +1,31 @@
+/* CSS Document */
+body {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+h2 {
+  color: #E88833;
+  text-shadow: 0px 2px 2px white;
+}
+#photo p {
+  float: left;
+  background-color: gray;
+  border: 1px solid #ffffff;
+  padding: 1px;
+}
+td {
+  vertical-align: top;
+}
+td p {
+  margin: 0;
+  padding: 0;
+}
+dl dt {
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+dl dd {
+  margin-left: 2em;
+}
+ul.nobullets li {
+  list-style-type: none;
+}

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Создание бизнес-процесса</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;}
+@font-face
+	{font-family:"\@MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:6.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+h1
+	{margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	text-align:center;
+	page-break-after:avoid;
+	font-size:16.0pt;
+	font-family:Arial;}
+h2
+	{margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	page-break-after:avoid;
+	font-size:14.0pt;
+	font-family:Arial;
+	font-style:italic;}
+h3
+	{margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	page-break-after:avoid;
+	font-size:13.0pt;
+	font-family:Arial;}
+p.MsoCaption, li.MsoCaption, div.MsoCaption
+	{margin-top:6.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+p.MsoListBullet2, li.MsoListBullet2, div.MsoListBullet2
+	{margin-top:6.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:32.15pt;
+	text-indent:-18.0pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	font-style:italic;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";}
+span.a
+	{font-style:italic;}
+span.GUI
+	{color:navy;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:2.0cm 42.5pt 2.0cm 3.0cm;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+    var pageTracker = _gat._getTracker("UA-7476874-1");
+    pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- Google Analytics -->
+
+    <div class=Section1>
+
+<h1>Создание бизнес-процесса в <span lang=EN-US>BPEL</span></h1>
+
+<h2>Цель работы</h2>
+
+<p class=MsoNormal>Лабораторная работа дает практические навыки реализации
+прототипа распределенного бизнес-процесса для выбранной предметной области на
+основе технологии <span lang=EN-US>BPEL</span> и веб-сервисов.</p>
+
+<h2>Задачи</h2>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Выбрать предметную область и продумать содержание
+     бизнес-процесса и веб-сервиса, который будет участвовать в процессе.</li>
+ <li class=MsoNormal>Нарисовать диаграмму бизнес-процесса.</li>
+ <li class=MsoNormal>Создать <span lang=EN-US>WSDL</span>-описание
+     бизнес-процесса и веб-сервиса, который им используется.</li>
+ <li class=MsoNormal>Реализовать <span lang=EN-US>BPEL</span>-процесс и
+     промоделировать его работу в среде <span class=a><span lang=EN-US>ActiveBPEL</span></span><span
+     class=a><span lang=EN-US> </span><span lang=EN-US>Designer</span></span>.</li>
+</ol>
+
+<h2>Предварительные требования</h2>
+
+<p class=MsoNormal>Для выполнения работы на компьютере должно быть установлено
+следующее ПО:</p>
+
+<p class=MsoListBullet2><span lang=EN-US style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US><a
+href="http://java.sun.com/javase/downloads/index.jsp"><i>JDK</i></a> </span>версии
+<span lang=EN-US>1.5 </span>или выше<span lang=EN-US>.</span></p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US><a href="http://www.eclipse.org/"><i>Eclipse</i><i>
+IDE</i></a></span><span lang=EN-US> </span>версии 3.2.1 или выше с
+установленными расширениями <span lang=EN-US><a
+href="http://www.eclipse.org/webtools/"><i>J</i><i><span lang=RU>2</span>EE</i><i>
+Standard</i><i> Tools</i></a></span> 1.5.2 или выше и <span lang=EN-US><a
+href="http://www.eclipse.org/webtools/"><i>Web</i><i> Standard</i><i> Tools</i></a></span>
+1.5.2 или выше.</p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US><a href="http://www.active-endpoints.com/"><i>ActiveBPEL
+Designer</i></a> </span>версии <span lang=EN-US>2.0.</span></p>
+
+<p class=MsoNormal>Для поиска публичного веб-сервиса потребуется доступ в
+Интернет.</p>
+
+<p class=MsoNormal>При реализации бизнес-процесса потребуются знания технологии
+веб-сервисов и в частности <span lang=EN-US>WSDL</span>.</p>
+
+<h2>Ход работы</h2>
+
+<h3>Выбор предметной области</h3>
+
+<p class=MsoNormal>Выберите предметную область и постройте на черновике
+диаграмму бизнес-процесса в свободной форме. Определите на диаграмме входные и
+выходные данные процесса и отдельных блоков и условия перехода.</p>
+
+<p class=MsoNormal>К бизнес-процессу предъявляются следующие требования: </p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Наличие в процессе одного блока, вызывающего веб-сервис, который
+затем будет реализован самостоятельно, и блока вызывающего сторонний
+веб-сервис;</p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Наличие хотя бы одного ветвления или цикла.</p>
+
+<p class=MsoNormal>Примеры предметных областей: </p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Бизнес-процесс выдачи кредита включает вызов сервиса оценки риска
+(<span lang=EN-US>Assessor</span>) в случае крупной суммы кредита и вызов
+сервиса, подтверждающего выдачу кредита (<span lang=EN-US>Approver</span>). Этот
+пример включен в комплект поставки <i><span lang=EN-US>ActiveBPEL</span><span
+lang=EN-US> </span></i><i><span lang=EN-US>Designer</span></i>. </p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Бизнес-процесс заказа туристической путевки может включать вызов сервиса,
+показывающего текущую погоду на выбранном курорте, и вызов сервиса бронирования
+комнаты в отеле. </p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Бизнес-процесс покупки товара в Интернет-магазине может включать
+проверку платежеспособности кредитной карты, указанной покупателем, и проверку
+наличия товара на складе.</p>
+
+<p class=MsoNormal>Исходя из требования использовать в бизнес-процессе
+сторонний веб-сервис, полезно сначала найти подходящий веб-сервис, а уже затем
+выбирать предметную область под него.</p>
+
+<h3>Поиск стороннего веб-сервиса</h3>
+
+<p class=MsoNormal>Рекомендуется с целью облегчения отладки бизнес-процесса в
+среде <span class=a><span lang=EN-US>ActiveBPEL</span></span><span class=a><span
+lang=EN-US> </span><span lang=EN-US>Designer</span></span><span lang=EN-US> </span>использовать
+только веб-сервисы в стиле <span lang=EN-US>RPC</span>/<span lang=EN-US>Encoded</span>.
+Далее будет рассматриваться работа только с такими сервисами.</p>
+
+<p class=MsoNormal>Искать веб-сервисы можно в поисковых системах Интернета.
+Существуют также специальные сайты, на которых есть списки публичных
+веб-сервисов, например, <a href="http://xmethods.net/"><i>http://xmethods.net/</i></a>.
+При выборе веб-сервиса, обращайте внимание на стиль (<span lang=EN-US>RPC</span>/<span
+lang=EN-US>Encoded</span>) и на условия использования веб-сервиса, т.к. там
+могут быть ограничения на количество вызовов в сутки. Для проверки
+работоспособности веб-сервиса удобно использовать <span class=a><span
+lang=EN-US>Web</span></span><span class=a><span lang=EN-US> </span><span
+lang=EN-US>Services</span></span><span class=a><span lang=EN-US> </span><span
+lang=EN-US>Explorer</span></span>, встроенный в среду <span class=a><span
+lang=EN-US>Eclipse</span></span>. Для этого:</p>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Выберите пункт меню <span class=GUI><span lang=EN-US>Run
+     &#8594; Launch the Web Services Explorer</span></span><span lang=EN-US>. </span></li>
+ <li class=MsoNormal>Нажмите кнопку <span class=GUI><span lang=EN-US>WSDL Page</span></span><span
+     lang=EN-US>.</span></li>
+ <li class=MsoNormal>В области <span class=GUI><span lang=EN-US>Navigator</span></span><span
+     lang=EN-US> </span>нажмите на <span class=GUI><span lang=EN-US>WSDL</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>Main</span></span>.</li>
+ <li class=MsoNormal>Введите в поле <span class=GUI><span lang=EN-US>WSDL</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>URL</span></span><span
+     lang=EN-US> </span>ссылку на <span lang=EN-US>WSDL</span>-описание сервиса
+     и появится возможность вызвать любую операцию веб-сервиса с заданными
+     параметрами. В некоторых <span lang=EN-US>WSDL</span>-описаниях
+     встречается встроенная документация для каждой операции. </li>
+</ol>
+
+<p class=MsoCaption style='page-break-after:avoid'>Рисунок 1 – Интерфейс <span class=a><span lang=EN-US>Web</span></span><span class=a><span lang=EN-US> </span><span
+lang=EN-US>Services</span></span><span class=a><span lang=EN-US> </span><span
+lang=EN-US>Explorer</span></span>, встроенного в среду <span class=a><span
+lang=EN-US>Eclipse</span></span></p>
+
+<p class=MsoNormal><img border=0 width=570 height=492
+src="01-bpel_files/image001.jpg"></p>
+
+<h3>Создание <span lang=EN-US>WSDL</span>-описания</h3>
+
+<p class=MsoNormal>Взяв за основу результаты выполнения предудыщих пунктов,
+создайте два отдельных <span lang=EN-US>WSDL</span>-описания: для вашего
+веб-сервиса и для <span lang=EN-US>BPEL</span>-процесса. Если вы хорошо знаете <span
+lang=EN-US>WSDL</span>, то сделать это можно в любом текстовом редакторе.
+Однако более удобным представляется использование средств предоставляемых
+средой <span lang=EN-US>Eclipse</span>. </p>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Запустите среду <span class=a><span lang=EN-US>Eclipse</span></span><span
+     lang=EN-US>.</span></li>
+ <li class=MsoNormal>Создайте новый проект<span lang=EN-US> (<span class=GUI>File
+     &#8594; New &#8594; Project</span>) </span>типа <span lang=EN-US>Dynamic
+     Web Project. </span>Укажите имя проекта, соответствующее выбранной
+     предметной области. Остальные настройки можно оставить по-умолчанию.</li>
+ <li class=MsoNormal>Создайте новое <span lang=EN-US>WSDL</span>-описание (<span
+     class=GUI><span lang=EN-US>File</span></span><span class=GUI> &#8594; <span
+     lang=EN-US>New</span></span><span class=GUI> &#8594; <span lang=EN-US>Other</span></span><span
+     class=GUI> &#8594; <span lang=EN-US>Web</span></span><span class=GUI><span
+     lang=EN-US> </span><span lang=EN-US>Services</span></span><span class=GUI>
+     &#8594; <span lang=EN-US>WSDL</span></span>). Задайте имя <span
+     lang=EN-US>WSDL</span>-файла, <span lang=EN-US>URI</span><span lang=EN-US>
+     </span>целевого пространства имен <span lang=EN-US>XML</span> (<span
+     class=GUI><span lang=EN-US>Target</span></span><span class=GUI><span
+     lang=EN-US> </span><span lang=EN-US>Namespace</span></span>), префикс
+     пространства имен. Выберите в пункте <span class=GUI><span lang=EN-US>SOAP</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>Binding</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>Options</span></span><span
+     lang=EN-US> </span>пункт <span class=GUI><span lang=EN-US>rpc</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>encoded</span></span>.
+     Появится предупреждение о том, что <span lang=EN-US>rpc</span><span
+     lang=EN-US> </span><span lang=EN-US>encoded</span><span lang=EN-US> </span>не
+     поддерживается спецификациями <span lang=EN-US>WS</span>-<span lang=EN-US>I</span>,
+     которое можно проигнорировать. В результате будет сгенерирован шаблон <span
+     lang=EN-US>WSDL-</span>описания.</li>
+ <li class=MsoNormal>Поправьте сгенерированный средой шаблон <span lang=EN-US>WSDL</span>-описания
+     в графическом режиме или в текстовом. При этом адрес привязки для сервиса <span
+     lang=EN-US>BPEL</span>-процесса должен быть вида <i><a
+     href="http://localhost:8080/active-bpel/services/%3cимя-BPEL-сервиса%3e">http://localhost:8080/active-bpel/services/&lt;имя-<span
+     lang=EN-US>BPEL</span>-сервиса&gt;</a></i>, а для вашего сервиса вида <i><a
+     href="http://localhost:8080/%3cимя-проекта%3e/services/%3cимя-порта-сервиса%3e">http://localhost:8080/&lt;имя-проекта&gt;/services/&lt;имя-порта-сервиса&gt;</a></i>.
+     Также надо изменить набор аргументов операции, их типы и имена в
+     соответствии с предметной областью. Проследите, чтобы в <span lang=EN-US>WSDL</span>-описании
+     не было сущностей с одинаковыми именами, т.к. это может в последствии
+     затруднить реализацию веб-сервиса.</li>
+</ol>
+
+<p class=MsoCaption style='page-break-after:avoid'><a name="_Ref155952366">Рисунок
+</a>2 – Графическое представление получившегося <span lang=EN-US>WSDL</span>-описания</p>
+
+<p class=MsoNormal><img border=0 width=610 height=156
+src="01-bpel_files/image002.jpg"></p>
+
+<h3>Реализация <span lang=EN-US>BPEL-</span>процесса</h3>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Запустите среду <span class=a><span lang=EN-US>ActiveBPEL
+     Designer</span></span><span lang=EN-US>.</span></li>
+ <li class=MsoNormal>Создайте новый проект<span lang=EN-US> (<span class=GUI>File
+     &#8594; New &#8594; Project</span>) </span>типа <span lang=EN-US>Simple Project.
+     </span>Задайте имя проекта, соответствующее выбранной предметной области.</li>
+ <li class=MsoNormal>Сохраните в папку проекта <span lang=EN-US>WSDL</span>-описание
+     стороннего веб-сервиса для ускорения работы с ним.</li>
+ <li class=MsoNormal>Добавьте <span lang=EN-US>WSDL</span>-описание
+     бизнес-процесса и всех используемых в нем веб-сервисов в среду. Для этого
+     перейдите на вкладку <span class=GUI><span lang=EN-US>Web</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>References</span></span>,
+     нажмите на кнопку <span class=GUI><span lang=EN-US>Add</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>a</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>Web</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>Reference</span></span>,
+     укажите местонахождение <span lang=EN-US>WSDL</span>-файла и все описания
+     из него будут доступны для работы. Проделайте это действие для всех трех <span
+     lang=EN-US>WSDL</span>-описаний, используемых в работе.</li>
+ <li class=MsoNormal>Добавьте отладочные значения для переменных, которые будут
+     использоваться в <span lang=EN-US>BPEL</span>-процессе. Это понадобится в
+     дальнейшем для моделирования работы процесса. Для этого на вкладке <span
+     class=GUI><span lang=EN-US>Web</span></span><span class=GUI><span
+     lang=EN-US> </span><span lang=EN-US>References</span></span><span
+     lang=EN-US> </span>выберите в меню пункт <span class=GUI><span lang=EN-US>View</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>Messages</span></span>.
+     В контекстном меню переменной выберите пункт <span class=GUI><span
+     lang=EN-US>Add</span></span><span class=GUI><span lang=EN-US> </span><span
+     lang=EN-US>Sample</span></span><span lang=EN-US> </span>и укажите
+     значение.</li>
+ <li class=MsoNormal>Создайте новый <span lang=EN-US>BPEL</span>-процесс (<span
+     class=GUI><span lang=EN-US>File</span></span><span class=GUI> &#8594; <span
+     lang=EN-US>New</span></span><span class=GUI><span lang=EN-US> </span></span><span
+     class=GUI>&#8594; <span lang=EN-US>BPEL</span></span><span class=GUI><span
+     lang=EN-US> </span><span lang=EN-US>Process</span></span>). Задайте имя
+     процесса, соответствующее выбранной предметной области.</li>
+ <li class=MsoNormal>Поместите в <span lang=EN-US>BPEL</span>-процесс блоки <span
+     lang=EN-US>Receive</span><span lang=EN-US> </span>и <span lang=EN-US>Reply</span>.
+     Для этого перейдите на вкладку <span class=GUI><span lang=EN-US>Web</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>References</span></span><span
+     lang=EN-US> </span>и выберите в меню <span class=GUI><span lang=EN-US>View</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>WSDL</span></span>. Найдите
+     порт и операцию, соответствующую <span lang=EN-US>BPEL</span>-процессу и
+     перетащите ее в поле редактирования процесса. Появится мастер,
+     предлагающий создать новый <span lang=EN-US>Partner</span><span
+     lang=EN-US> </span><span lang=EN-US>Link</span><span lang=EN-US> </span><span
+     lang=EN-US>Type</span>, задайте имя для него и <span lang=EN-US>Role</span>.
+     Далее выберите <span class=GUI><span lang=EN-US>Add</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>To</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>WSDL</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>File</span></span><span
+     lang=EN-US> </span>и укажите <span lang=EN-US>WSDL</span>-файл <span
+     lang=EN-US>BPEL</span>-процесса. В окне <span class=GUI><span lang=EN-US>Activity</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>Type</span></span><span
+     lang=EN-US> </span>выберите <span lang=EN-US>Receive</span>-<span
+     lang=EN-US>Reply</span>. Будет создано два блока, соответствующих входу и
+     выходу бизнес-процесса.</li>
+ <li class=MsoNormal>Аналогично перетащите операции двух оставшихся
+     веб-сервисов в поле редактирования бизнес-процесса, но теперь выберите в
+     окне <span class=GUI><span lang=EN-US>Activity</span></span><span
+     class=GUI><span lang=EN-US> </span><span lang=EN-US>Type</span></span><span
+     lang=EN-US> </span>тип <span lang=EN-US>Invoke</span>.</li>
+ <li class=MsoNormal>Используя вкладку <span class=GUI><span lang=EN-US>Properties</span></span><span
+     class=GUI>,</span> задайте имена для всех созданных блоков, изменив
+     содержимое свойства <span class=GUI><span lang=EN-US>Activity Name</span></span>.</li>
+ <li class=MsoNormal>Соедините блоки линиями перехода. Для этого выделите два
+     блока и в контекстном меню выберите пункт <span class=GUI><span
+     lang=EN-US>Link</span></span><span class=GUI><span lang=EN-US> </span><span
+     lang=EN-US>Activities</span></span>. </li>
+ <li class=MsoNormal>Задайте условия для некоторых переходов. Для этого выделите
+     переход и выберите пункт контекстного меню <span class=GUI><span
+     lang=EN-US>Edit</span></span><span class=GUI><span lang=EN-US> </span><span
+     lang=EN-US>Transition</span></span>. Появится окно, в котором можно
+     выбрать переменную из имеющихся и условие перехода.</li>
+ <li class=MsoNormal>Так как переменные различных блоков не согласованы между
+     собой, необходимо добавить несколько блоков типа <span lang=EN-US>Assign</span>
+     для того чтобы приравнять значение выходной переменной одного блока
+     входной переменной другого. Для этого перейдите на вкладку <span
+     class=GUI><span lang=EN-US>Process</span></span><span class=GUI><span
+     lang=EN-US> </span><span lang=EN-US>Variables</span></span>, найдите там
+     нужную переменную и выберите в контекстном меню <span class=GUI><span
+     lang=EN-US>Open</span></span>. В открывшемся поле найдите часть, которую
+     нужно скопировать и выберите пункт контекстного меню <span class=GUI><span
+     lang=EN-US>Copy</span></span><span class=GUI> &#8594; <span lang=EN-US>From</span></span><span
+     lang=EN-US> </span>или <span class=GUI><span lang=EN-US>Copy</span></span><span
+     class=GUI> &#8594; <span lang=EN-US>To</span></span><span lang=EN-US> </span>и
+     в появившемся окне выберите другую часть операции присваивания. В поле
+     редактирования бизнес-процесса появится новый блок, который надо вставить
+     в нужное место процесса и связать линиями перехода.</li>
+ <li class=MsoNormal>Выберите блок <span lang=EN-US>Receive</span><span
+     lang=EN-US> </span>и в его свойствах установите значение <span class=GUI><span
+     lang=EN-US>Create Instance</span></span><span lang=EN-US> </span>равное <span
+     lang=EN-US>Yes</span>.</li>
+ <li class=MsoNormal>Сохраните проект. Если процесс построен правильно, то на
+     вкладке <span class=GUI><span lang=EN-US>Problems</span></span><span
+     lang=EN-US> </span>не должно быть никаких сообщений.</li>
+</ol>
+
+<p class=MsoCaption style='page-break-after:avoid'><a name="_Ref155952571">Рисунок
+</a>3 – Диаграмма <span lang=EN-US>BPEL-</span>процесса</p>
+
+<p class=MsoNormal><img border=0 width=395 height=395
+src="01-bpel_files/image003.jpg"></p>
+
+<h3>Моделирование <span lang=EN-US>BPEL-</span>процесса</h3>
+
+<p class=MsoNormal>Моделирование <span lang=EN-US>BPEL</span>-процесса в среде <span
+lang=EN-US>ActiveBPEL</span><span lang=EN-US> </span><span lang=EN-US>Designer</span><span
+lang=EN-US> </span>можно запустить, нажав на кнопку панели инструментов <span
+class=GUI><span lang=EN-US>Start</span></span><span class=GUI><span lang=EN-US>
+</span><span lang=EN-US>Simulation</span></span><span class=GUI><span
+lang=EN-US> </span><span lang=EN-US>of</span></span><span class=GUI><span
+lang=EN-US> </span><span lang=EN-US>the</span></span><span class=GUI><span
+lang=EN-US> </span><span lang=EN-US>Process</span></span>. При этом среда
+перейдет в режим отладки. Используйте кнопку <span class=GUI><span lang=EN-US>Step</span></span><span
+class=GUI><span lang=EN-US> </span><span lang=EN-US>Over</span></span><span
+lang=EN-US> </span>на вкладке <span class=GUI><span lang=EN-US>Debug</span></span><span
+lang=EN-US> </span>для пошагового выполнения процесса. Текущие значения
+переменных можно увидеть на вкладке <span class=GUI><span lang=EN-US>Process</span></span><span
+class=GUI><span lang=EN-US> </span><span lang=EN-US>Variables</span></span> –
+выберите пункт контекстного меню <span class=GUI><span lang=EN-US>Open</span></span><span
+class=GUI><span lang=EN-US> </span><span lang=EN-US>All</span></span>, чтобы
+открыть все используемые переменные для просмотра. На вкладке <span class=GUI><span
+lang=EN-US>Console</span></span><span lang=EN-US> </span>выводятся отладочные
+сообщения о ходе выполнения процесса. Чтобы убрать с диаграммы информацию о
+текущем выполнении процесса нажмите кнопку, находящуюся рядом с кнопкой запуска
+моделирования.</p>
+
+<p class=MsoNormal>Промоделируйте <span lang=EN-US>BPEL</span>-процесс с разными
+значениями переменных, чтобы проверить различные пути выполнения.</p>
+
+<h2>Пример выполнения</h2>
+
+<p class=MsoNormal>Предметная область: заказ транспортных перевозок в пределах
+США. На входе – почтовый индекс места отправления и места прибытия. На выходе –
+цена за один контейнер.</p>
+
+<p class=MsoNormal>Сторонний веб-сервис <a
+href="http://webservices.imacination.com/distance/Distance.jws?wsdl"><i>http://webservices.imacination.com/distance/Distance.jws?wsdl</i></a>
+– определяет расстояние по двум почтовым индексам. На выходе – расстояние в
+милях или 0, если указаны некорректные данные.</p>
+
+<p class=MsoNormal>Собственный сервис: определение стоимости. На входе –
+расстояние, на выходе – цена в долларах, вычисляемая как расстояние помноженное
+на 50.</p>
+
+<p class=MsoCaption style='page-break-after:avoid'>Рисунок 4 – Черновик диаграммы процесса</p>
+
+<p class=MsoNormal><img border=0 width=299 height=499
+src="01-bpel_files/image004.jpg"></p>
+
+<p class=MsoNormal><span lang=EN-US>WSDL</span>-описание для <span lang=EN-US>BPEL</span>-процесса
+– см.&nbsp;Рисунок 2. </p>
+
+<p class=MsoNormal><span lang=EN-US>WSDL</span>-описание для собственного
+сервиса:</p>
+
+<p class=MsoNormal><img border=0 width=612 height=110
+src="01-bpel_files/image005.jpg"></p>
+
+<p class=MsoNormal>Диаграмма <span lang=EN-US>BPEL-</span>процесса – см.&nbsp;Рисунок
+3. </p>
+
+<p class=MsoNormal>Снимок экрана в процессе моделирования:</p>
+
+<p class=MsoNormal><img border=0 width=624 height=449
+src="01-bpel_files/image006.jpg"></p>
+
+<h2>Результаты</h2>
+
+<p class=MsoNormal>В результате выполнения работы было создано <span
+lang=EN-US>WSDL</span>-описание для <span lang=EN-US>BPEL</span>-процесса и
+веб-сервиса, используемого этим процессом, разработан и промоделирован <span
+lang=EN-US>BPEL</span>-процесс, соответствующий бизнес-процессу из выбранной
+предметной области.</p>
+
+<h2>Вопросы для самоконтроля</h2>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Чем <span lang=EN-US>BPEL</span>-процесс отличается от
+     веб-сервиса? В чем сходства?</li>
+ <li class=MsoNormal>Какие факторы нужно учитывать при принятии решения о том,
+     как реализовать бизнес-процесс – на языке <span lang=EN-US>BPEL</span><span
+     lang=EN-US> </span>или в виде <span lang=EN-US>Java</span>-веб-сервиса,
+     вызывающего другие сервисы?</li>
+ <li class=MsoNormal>Какие сложности могут возникнуть при реализации на языке <span
+     lang=EN-US>BPEL</span><span lang=EN-US> </span>бизнес-процесса,
+     включающего человеко-машинные взаимодействия? Предложите способы их
+     преодоления.</li>
+ <li class=MsoNormal>Что нужно знать, чтобы воспользоваться публичным
+     веб-сервисом?</li>
+ <li class=MsoNormal>Какую информацию можно найти в <span lang=EN-US>WSDL</span>-описании
+     веб-сервиса?</li>
+ <li class=MsoNormal>Перечислите основные типы блоков <span lang=EN-US>BPEL</span>-процесса
+     и их назначение.</li>
+ <li class=MsoNormal>Как избавиться от необходимости вставлять блоки <span
+     lang=EN-US>Assign</span><span lang=EN-US> </span>между вызовами
+     веб-сервисов?</li>
+ <li class=MsoNormal>Почему <span lang=EN-US>WS</span>-<span lang=EN-US>I</span><span
+     lang=EN-US> </span>не рекомендует использовать в веб-сервисах стиль <span
+     lang=EN-US>RPC</span>/<span lang=EN-US>Encoded</span>? Почему <span
+     lang=EN-US>RPC</span>/<span lang=EN-US>Encoded</span><span lang=EN-US> </span>веб-сервисы
+     проще отлаживать в <span class=a><span lang=EN-US>ActiveBPEL</span></span><span
+     class=a><span lang=EN-US> </span><span lang=EN-US>Designer</span></span>?</li>
+</ol>
+
+</div>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

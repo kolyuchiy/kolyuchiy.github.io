@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<title>Decimal &lt;-&gt; Binary -&gt; CIDR converter</title>
+	</head>
+	<body>
+	<script>
+	function doIt() {
+		decimal = document.getElementById("decimal");
+		binary = document.getElementById("binary");
+		classes = document.getElementById("classes");
+
+		binary.value = dec2bin(decimal.value);
+		classes.value = bin2cls(binary.value);
+	}
+
+function doBin() {
+		decimal = document.getElementById("decimal");
+		binary = document.getElementById("binary");
+		classes = document.getElementById("classes");
+
+		decimal.value = bin2dec(binary.value);
+		classes.value = bin2cls(binary.value);
+}
+
+function dec2bin(decimal) {
+	if (decimal == 0) return 0;
+
+	i = decimal.valueOf();
+	res = "";
+	do {
+		if (i % 2 == 0) res = "0" + res
+		else res = "1" + res;
+		i = Math.floor(i / 2);
+	} while (i >= 1);
+
+	return res;
+}
+
+function bin2dec(binary) {
+	res = 0;
+	for (i=binary.length-1; i>=0; i--) {
+		if (binary[i] == 1) res += 1 << (binary.length - i - 1);
+	}
+	return res;
+}
+
+function bin2cls(binary) {
+	res = "";
+	cls = 32;
+	for (i = binary.length-1; i >= 0; i--) {
+		if (binary[i] == 1)	res = "/" + cls + (res.length > 0 ? "," : "") + res;
+		cls--;
+	}
+	return res;
+}
+		</script>
+		<table>
+			<form>
+				<tr>
+					<td>Decimal:</td><td><input type="text" id="decimal" name="decimal" onkeyup="doIt()" /></td>
+				</tr>
+				<tr>
+				<td>Binary:</td> <td><input type="text" id="binary" name="binary" onkeyup="doBin()" /></td>
+			</tr>
+			<tr>
+				<td>Network classes:</td><td><input type="text" id="classes" name="classes" /></td>
+			</tr>
+		</form>
+	</body>
+</html>
+

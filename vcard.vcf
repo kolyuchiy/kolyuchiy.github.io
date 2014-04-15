@@ -1,0 +1,17 @@
+BEGIN:VCARD
+VERSION:2.1
+N;CHARSET=UTF-8:Морев;Николай;;;
+FN;CHARSET=UTF-8:Николай Морев
+ORG:DENIVIP Media
+PHOTO;JPEG:http://kolia.pp.ru/photos/me3.jpg
+BDAY:19840123
+EMAIL:kolyuchiy@gmail.com
+SOURCE:http://kolia.pp.ru/vcard.vcf
+TZ:+0400
+TITLE;CHARSET=UTF-8:программист
+URL:http://kolia.pp.ru
+UID:f42167d3ffada82c949bf6472015b00b
+REV:20130216T231600Z
+X-JABBER:kolyuchiy@gmail.com
+X-SKYPE:kolyuchiy
+END:VCARD

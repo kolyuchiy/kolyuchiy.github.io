@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AJAX: Asynchronous JavaScript And XML</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<LINK REL="STYLESHEET" HREF="text.css">
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+    var pageTracker = _gat._getTracker("UA-7476874-1");
+    pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- Google Analytics -->
+
+    <H1 ALIGN="CENTER">AJAX: Asynchronous JavaScript And XML</H1><DIV CLASS="author_info">
+
+<P ALIGN="CENTER"><STRONG>Морев&nbsp;Н.&nbsp;В.</STRONG></P>
+</DIV>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Содержание</A>
+</H2>
+<!--Table of Contents-->
+
+<UL CLASS="TofC">
+<LI><A NAME="tex2html20"
+  HREF="index.htm#SECTION00020000000000000000">Введение</A>
+<LI><A NAME="tex2html21"
+  HREF="index.htm#SECTION00030000000000000000">Простой пример</A>
+<UL>
+<LI><A NAME="tex2html22"
+  HREF="index.htm#SECTION00031000000000000000">Серверная часть</A>
+<LI><A NAME="tex2html23"
+  HREF="index.htm#SECTION00032000000000000000">Клиентская часть</A>
+<LI><A NAME="tex2html24"
+  HREF="index.htm#SECTION00033000000000000000">Испытание примера</A>
+</UL><BR>
+<LI><A NAME="tex2html25"
+  HREF="index.htm#SECTION00040000000000000000">Библиотеки</A>
+<UL>
+<LI><A NAME="tex2html26"
+  HREF="index.htm#SECTION00041000000000000000">Компонентно-ориентированные библиотеки</A>
+</UL><BR>
+<LI><A NAME="tex2html27"
+  HREF="index.htm#SECTION00050000000000000000">Пример на Java</A>
+<UL>
+<LI><A NAME="tex2html28"
+  HREF="index.htm#SECTION00051000000000000000">Исходный код</A>
+<LI><A NAME="tex2html29"
+  HREF="index.htm#SECTION00052000000000000000">Испытание</A>
+</UL><BR>
+<LI><A NAME="tex2html30"
+  HREF="index.htm#SECTION00060000000000000000">Заключение</A>
+<LI><A NAME="tex2html31"
+  HREF="index.htm#SECTION00070000000000000000">Bibliography</A>
+</UL>
+<!--End of Table of Contents-->
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Введение</A>
+</H1>
+
+<P>
+<EM>AJAX (Asynchronous XML And JavaScript)</EM>&nbsp;-- это способ построения
+веб-приложений на основе объединения целого ряда технологий:
+
+<P>
+
+<UL>
+<LI>HTML (XHTML) и CSS для представления информации;
+
+<P>
+</LI>
+<LI>DOM, используемый через JavaScript, для динамического отображения и
+взаимодействия с представляемой информацией;
+
+<P>
+</LI>
+<LI>Объект <TT>XMLHTTPRequest</TT> для асинхронного обмена данными с веб-сервером.
+(при этом в качестве формата данных при обмене часто выступает XML, но могут
+использоваться и другие форматы, включая HTML, обычный текст, JSON или даже
+бинарные форматы как EBML)
+</LI>
+</UL>
+
+<P>
+Аббревиатура AJAX, также как DHTML<A NAME="tex2html1"
+  HREF="#foot30"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A> или
+LAMP<A NAME="tex2html2"
+  HREF="#foot31"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A>, не является технологией, а
+обозначает совместное использование группы существующих технологий.
+
+<P>
+В качестве платформы для выполнения AJAX-приложений может выступать любой
+популярный браузер последних версий: Mozilla Firefox, Microsoft Internet
+Explorer, Opera, Apple Safari.
+
+<P>
+Суть AJAX в том, что приложения, использующие его, становятся более
+интерактивными и похожими на традиционные приложения, выполняющиеся в
+операционной системе. Достигается это тем, что для каждого взаимодействия с
+пользователем можно обновить только часть страницы, а не перезагружать всю
+страницу целиком, как в традиционных веб-приложениях.
+
+<P>
+<img src="ajax-fig1_small.png"><br/>
+Рис. Модель веб-приложения
+
+<P>
+<img src="ajax-fig2_small.png"><br/>
+Рис. Сравнение традиционной модели
+взаимодействия в веб-приложениях и AJAX
+
+<P>
+На самом деле идея сделать веб-приложения более похожими на обычные приложения
+в смысле пользовательского интерфейса не нова и такие возможности уже давно
+могли быть реализованы с помощью различных технологий: Macromedia Flash, Java
+Applets, Microsoft ActiveX и т.д. Однако, все они не получили очень широкого
+распространения из-за того, что использовали частные закрытые решения отдельных
+фирм, требовали установки дополнительного программного обеспечения и не имели
+достаточной переносимости между платформами. AJAX лишен этого недостатка.
+
+<P>
+Хотя AJAX не требует установки дополнительного программного обеспечения, для
+его работы все-таки необходимо, чтобы в браузере был включен JavaScript,
+поэтому чтобы приложения были по-настоящему переносимыми, это необходимо
+предусмотреть. В настоящее время для обхода этого недостатка были добавлены
+средства в ряд библиотек для поддержки AJAX и выработаны определенные техники
+для поддержки пользователей с выключенным JavaScript-ом.
+
+<P>
+Другие недостатки AJAX связаны с удобством использования&nbsp;-- нарушается работа
+кнопки &#171;Назад&#187; браузера и возможность делать закладки на определенное
+состояние приложения. Для обхода этих недостатков также разработаны и
+применяются различные техники.
+
+<P>
+Внедрение AJAX идет полным ходом как на любительских сайтах, так и на крупных
+сайтах, обслуживающих миллионы запросов ежедневно<A NAME="tex2html3"
+  HREF="#foot100"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A>.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000"></A>
+<A NAME="simple"></A><BR>
+Простой пример
+</H1>
+
+<P>
+Приведем простой низкоуровневый пример веб-приложения, использующего AJAX, из
+которого хорошо видно какие технологии и как используются для достижения
+требуемого эффекта частичного обновления страницы. В примере не будут
+использованы никакие дополнительные средства, позволяющие упростить разработку
+AJAX-приложений и повысить уровень абстракции.
+
+<P>
+Для того, чтобы испытать данный пример необходимо иметь доступ к веб-серверу с
+поддержкой PHP. Полные исходные коды примера приведены на <a href="https://github.com/kolyuchiy/simple-ajax-example">github-е</a> (<a href="https://github.com/kolyuchiy/simple-ajax-example/zipball/master">в архиве</a>).
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000">
+Серверная часть</A>
+</H2>
+
+<P>
+Серверная часть примера представляет собой PHP-скрипт, являющийся простейшим
+веб-сервисом. Понятие веб-сервиса в общем случае не ограничивается
+SOAP/WSDL-сервисами. Возможно применять и другие XML-протоколы. Один из
+наиболее популярных из них XML/RPC. В нашем примере для простоты между сервисом
+и клиентом будут передаваться чистые данные без какой-либо XML-разметки.
+
+<P>
+Функция разработанного веб-сервиса&nbsp;-- принимать на входе методом POST число и
+выдавать на выходе это число возведенное в квадрат. Число передается в виде
+строки и никакой проверки правильности входных данных не производится.
+
+<P>
+Серверная часть примера test.php
+<PRE>
+&lt;?php // vim:ts=4
+
+$x = $GLOBALS['HTTP_RAW_POST_DATA'];
+print($x * $x);
+
+?&gt; 
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00032000000000000000">
+Клиентская часть</A>
+</H2>
+
+<P>
+Клиентская часть примера представляет собой HTML-файл с внедренными
+JavaScript-инструкциями. Клиент посылает веб-сервису число и асинхронно
+принимает ответ. Асинхронность означает, что веб-браузер не подвисает во время
+запроса и пользователь может продолжать работать пока запрос
+выполняется.&nbsp;(рис.&nbsp;<A HREF="#ajax-fig2_small">2</A>)
+
+<P>
+Основой поддержки AJAX в браузере является объект XMLHttpRequest для браузеров
+Mozilla, Safari и прочих, и объект ActiveX Microsoft.XMLHTTP для браузеров
+фирмы Microsoft.
+
+<P>
+Ответ веб-сервиса выдается пользователю с помощью стандартной функции
+JavaScript alert(), но чаще всего он внедряется непосредственно в страницу с
+помощью DOM, встроенной в браузер.
+
+<P>
+Клиентская часть примера
+test.html
+<PRE>
+&lt;html&gt;
+&lt;head&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+&lt;script type="text/javascript" language="javascript"&gt;
+// &lt;![CDATA[		
+
+var http_request = false;
+
+function makeRequest(url) {
+	http_request = false;
+
+	if (window.XMLHttpRequest) { // Mozilla, Safari,...
+		http_request = new XMLHttpRequest();
+		if (http_request.overrideMimeType) {
+			http_request.overrideMimeType('text/xml');
+		}
+	} else if (window.ActiveXObject) { // IE
+		try {
+			http_request = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch (e) {
+			try {
+				http_request = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch (e) {}
+		}
+	}
+
+	if (!http_request) {
+		alert('Giving up :( Cannot create an XMLHTTP instance');
+		return false;
+	}
+
+	http_request.onreadystatechange = alertContents;
+	http_request.open('POST', url, true);
+	http_request.send('5');
+}
+
+function alertContents() {
+	if (http_request.readyState == 4) {	// COMPLETED
+		if (http_request.status == 200) {	// HTTP STATUS
+			alert(http_request.responseText);
+		} else {
+			alert('There was a problem with the request.');
+		}
+	}
+}
+
+// ]]&gt;	
+&lt;/script&gt;
+
+&lt;span
+	style="cursor: pointer; text-decoration: underline"
+	onclick="makeRequest('http://freedomnet.ru/services/simple/test.php')"&gt;
+
+	Make a request
+
+&lt;/span&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00033000000000000000">
+Испытание примера</A>
+</H2>
+
+<P>
+<img src="output.png"><br/>
+Рис. Пользовательский интерфейс
+примера
+
+<P>
+Заголовки пересылаемые при вызове
+веб-сервиса
+<PRE>
+
+POST /services/simple/test.php HTTP/1.1
+Host: freedomnet.ru
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7
+Accept: text/xml,application/xml,application/xhtml+xml,index.htm;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 300
+Connection: keep-alive
+Content-Type: text/xml
+Content-Length: 1
+Pragma: no-cache
+Cache-Control: no-cache
+
+5
+
+HTTP/1.x 200 OK
+Date: Wed, 09 Nov 2005 11:40:36 GMT
+Server: Apache/2.0.54
+X-Powered-By: PHP/5.0.5
+Content-Length: 2
+Keep-Alive: timeout=10, max=100
+Connection: Keep-Alive
+Content-Type: index.htm; charset=WINDOWS-1251
+Content-Language: ru
+
+25
+
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Библиотеки</A>
+</H1>
+
+<P>
+В последнее время в сообществе веб-разработчиков AJAX является горячей
+темой. Неудивительно, что уже появилось множество библиотек поддержки
+AJAX для различных языков
+программирования.&nbsp;[<A
+ HREF="index.htm#ajaxframeworks">2</A>,<A
+ HREF="index.htm#ajaxinfo">3</A>] Среди них можно
+выделить некоторую классификацию. Во-первых, по языку
+программирования:
+
+<P>
+<DL>
+<DT><STRONG>JavaScript</STRONG></DT>
+<DD>Эти библиотеки работают на стороне браузера, что
+        естественно накладывает определенные ограничения на размер
+        библиотеки, а следовательно и на ее функциональность. Эти
+        библиотеки предоставляют следующую функциональность:
+
+<UL>
+<LI>Обертка для XMLHttpRequest, чтобы скрыть детали
+                взаимодействия браузера и сервера.
+</LI>
+<LI>Манипулирование XML-данными.
+</LI>
+<LI>Манипулирование объектами DOM в соответствии с
+                ответами от XMLHttpRequest.
+</LI>
+<LI>Иногда, интеграция с другими технологиями, типа
+                Flash или Java-апплеты.
+        
+</LI>
+</UL>
+    
+</DD>
+<DT><STRONG>PHP, Java и др.</STRONG></DT>
+<DD>Работают на стороне сервера. Предоставляют
+        следующую функциональность:
+
+<UL>
+<LI>Генерация HTML/JavaScript.
+</LI>
+<LI>Удаленные вызовы.
+        
+</LI>
+</UL>
+</DD>
+</DL>
+
+<P>
+По функциональности AJAX-библиотеки можно разделить на:
+<DL>
+<DT><STRONG>Компонентно-ориентированные</STRONG></DT>
+<DD>Реализуют отдельные визуальные
+        компоненты для реализации на странице, такие как форма ввода
+        текста с автодополнением, валидация форм, progress bar и др.
+    
+</DD>
+<DT><STRONG>Универсальные</STRONG></DT>
+<DD>Предоставляют уровень абстракции для более
+        удобной работы с AJAX. Позволяют реализовывать свою
+        функциональность.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+Компонентно-ориентированные библиотеки</A>
+</H2>
+
+<P>
+Рассмотрим компонентно-ориентированные библиотеки поддержки AJAX на
+примере компонентов для JavaServer Faces (JSF). 
+
+<P>
+JavaServer Faces&nbsp;-- это набор серверных компонентов Java для создания
+HTML-интерфейсов. Для него существуют компоненты, использующие
+Ajax.<A NAME="tex2html4"
+  HREF="#foot62"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A>
+<P>
+Рассмотрим компонент Progress Bar, который показывает ход выполнения
+некоторого процесса на сервере в виде заполняющейся полосы и процентов
+выполнения. (рис.&nbsp;<A HREF="#jsf-progressbar">4</A>)
+
+<P>
+Данный пример выполняется в любом Java-веб-контейнере, поддерживающем стандарт
+сервлетов. Я использовал Apache Tomcat 5.5. Полные исходные коды примера приведены на сайте <a href="https://bpcatalog.dev.java.net/nonav/ajax/progress-bar-jsf/frames.html">https://bpcatalog.dev.java.net/nonav/ajax/progress-bar-jsf/frames.html</a>.
+
+<P>
+<img src="jsf-progressbar.png"><br/>
+Рис. Компонент Progress Bar
+
+<P>
+Текст JSP-страницы с
+компонентом Progress Bar
+<PRE>
+&lt;%-- Copyright 2004-2005 Sun Microsystems, Inc.  All rights reserved.  You may not modify, 
+use, reproduce, or distribute this software except in compliance with the terms of the 
+License at: 
+ http://developer.sun.com/berkeley_license.html
+ --%&gt;
+
+&lt;%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %&gt;
+&lt;%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %&gt;
+&lt;%@ taglib uri="http://java.sun.com/blueprints/ajax/progress-bar" prefix="d" %&gt;
+
+&lt;f:view&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+
+&lt;title&gt;AJAX enabled Button and Progress Bar&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h:form id="form"&gt;
+  &lt;table&gt;
+
+    &lt;tr&gt;&lt;td&gt;&lt;d:progressBar id="progressBar" 
+                           value="#{process.percentage}" 
+                           interval="#{process.pollInterval}" 
+                           action="complete" /&gt;
+        &lt;/td&gt; &lt;td&gt;&nbsp;&lt;/td&gt;&lt;/tr&gt;
+        
+  &lt;/table&gt;
+  
+  &lt;p&gt;For a detailed description of this component, please see &lt;a href="https://bpcatalog.dev.java.net/ajax/progress-bar-jsf/"&gt;the blueprints
+  catalog entry&lt;/a&gt;.&lt;/p&gt;
+
+&lt;/h:form&gt;
+&lt;/f:view&gt;
+
+&lt;/body&gt;
+&lt;/html&gt; 
+
+</PRE>
+
+<P>
+Переменная process соответствуют классу ProcessBean:
+
+<P>
+Класс
+ProcessBean
+<PRE>
+/* Copyright 2005 Sun Microsystems, Inc. All rights reserved. You may not modify, use, reproduce, or distribute this software except in compliance with the terms of the License at: http://developer.sun.com/berkeley_license.html
+ */
+
+/*
+ * $Id: ProcessBean.java,v 1.2 2005/06/11 06:05:10 edburns Exp $
+ */
+ 
+package com.sun.j2ee.blueprints.bpcatalog.ajax.progressbar;
+
+import java.util.Random;
+
+public class ProcessBean {
+    
+    public ProcessBean() {
+    }
+    
+    private int percentage = 0;
+    private int increment = 10;
+    
+    public int getPercentage() {
+        if (100 &lt; percentage) {
+            percentage = 0 - increment;
+        }
+        return percentage += increment;
+    }
+    
+    /**
+     * Getter for property randomPercentage.
+     * @return Value of property randomPercentage.
+     */
+    public int getRandomPercentage() {
+        
+        return random.nextInt(101);
+    }
+    
+    private Random random = new Random();
+
+    /**
+     * Holds value of property pollInterval.
+     */
+    private int pollInterval = 250;
+
+    /**
+     * Getter for property pollInterval.
+     * @return Value of property pollInterval.
+     */
+    public int getPollInterval() {
+
+        return this.pollInterval;
+    }
+
+    /**
+     * Setter for property pollInterval.
+     * @param pollInterval New value of property pollInterval.
+     */
+    public void setPollInterval(int pollInterval) {
+
+        this.pollInterval = pollInterval;
+    }
+    
+} 
+
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Пример на Java</A>
+</H1>
+
+<P>
+Для написания примера AJAX-приложения на Java я выбрал библиотеку
+DWR<A NAME="tex2html5"
+  HREF="#foot70"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A>.
+
+<P>
+Библиотека Direct Web Remoting (DWR) позволяет &#171;экспортировать&#187; код
+Java в код JavaScript веб-страницы и непосредственно вызывать
+Java-методы из веб-страницы. На самом деле эта библиотека реализует
+удаленные вызовы с помощью технологий AJAX. Кроме того она
+предоставляет удобные JavaScript-функции для манипулирования
+содержимым страницы через DOM.
+
+<P>
+Для выполнения данного примера необходим Java-веб-контейнер, поддерживающий
+стандарты сервлетов. Я использовал Apache Tomcat 5.5. Кроме того необходимо
+скачать и установить в контейнер библиотеку DWR. Полные исходные коды примера
+находятся на <a href="https://github.com/kolyuchiy/dwr-ajax-example">github-е</a> (<a href="https://github.com/kolyuchiy/dwr-ajax-example/zipball/master">в архиве</a>).
+
+<P>
+Приведенный пример будет аналогичен примеру из
+раздела&nbsp;<A HREF="#simple">2</A>&nbsp;-- возведение числа в квадрат. Только на этот
+раз код примера будет выглядеть гораздо чище и понятнее, входное
+значение можно будет вводить непосредственно пользователю, а выходное
+значение будет внедряться в страницу, а не выводиться через функцию
+<TT>alert()</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00051000000000000000">
+Исходный код</A>
+</H2>
+
+<P>
+Java-код примера состоит всего из одного простого класса:
+
+<P>
+Calculator.java
+<PRE>
+package org.koliamorev.dwr;
+
+public class Calculator {
+	public float Square(float num) {
+		return num * num;
+	}
+}
+</PRE>
+
+<P>
+Этот класс через десриптор dwr.xml экспортируется в JavaScript код:
+
+<P>
+dwr.xml
+<PRE>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE dwr PUBLIC
+    "-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN"
+    "http://www.getahead.ltd.uk/dwr/dwr10.dtd"&gt;
+
+&lt;dwr&gt;
+	&lt;allow&gt;
+		&lt;create creator="new" javascript="Calculator"&gt;
+			&lt;param name="class" value="org.koliamorev.dwr.Calculator" /&gt;
+		&lt;/create&gt;
+	&lt;/allow&gt;
+&lt;/dwr&gt;
+</PRE>
+
+<P>
+В JSP-странице мы включаем сгенерированные заглушки для класса
+Calculator, а также вспомогательный JavaScript-код библиотеки DWR.
+Кроме того здесь мы задаем функцию назначенную для кнопки
+&#171;Отправить&#187; и функцию-callback для получения результатов вычислений.
+
+<P>
+index.jsp
+<PRE>
+&lt;%@ page language="java" contentType="index.htm; charset=UTF-8"
+    pageEncoding="UTF-8"%&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="index.htm; charset=UTF-8"&gt;
+&lt;title&gt;Insert title here&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;script type='text/javascript' src='dwr/engine.js'&gt;&lt;/script&gt;
+&lt;script type='text/javascript' src='dwr/interface/Calculator.js'&gt;&lt;/script&gt;
+&lt;script type='text/javascript' src='dwr/util.js'&gt;&lt;/script&gt;
+&lt;script type='text/javascript'&gt; 
+// &lt;![CDATA[
+function sendNumber()
+{
+    var number = DWRUtil.getValue("number");
+    DWRUtil.setValue("result", "");
+    Calculator.Square(gotResult, number);
+}
+
+function gotResult(number)
+{
+    DWRUtil.setValue("result", number);
+}
+// ]]&gt; 
+&lt;/script&gt;
+
+&lt;p&gt;
+  Введите число:
+  &lt;input id="number"/&gt;
+  &lt;input type="button" value="Возвести в квадрат"
+      onclick="sendNumber()"/&gt;
+&lt;/p&gt;
+&lt;p&gt;Ответ: &lt;span id="result"&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt; 
+
+</PRE>
+
+<P>
+JavaScript-заглушки Java-классов генерируются каждый раз во время
+вызова страницы. Происходит это через специальный сервлет библиотеки
+DWR. Поэтому в дексрипторе веб-приложения web.xml мы назначаем
+переадресацию на этот сервлет всех вызовов адресов вида <TT>dwr/*</TT>.
+
+<P>
+web.xml
+<PRE>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"&gt;
+	&lt;display-name&gt;dwr&lt;/display-name&gt;
+	&lt;welcome-file-list&gt;
+		&lt;welcome-file&gt;index.html&lt;/welcome-file&gt;
+		&lt;welcome-file&gt;index.htm&lt;/welcome-file&gt;
+		&lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+		&lt;welcome-file&gt;default.html&lt;/welcome-file&gt;
+		&lt;welcome-file&gt;default.htm&lt;/welcome-file&gt;
+		&lt;welcome-file&gt;default.jsp&lt;/welcome-file&gt;
+	&lt;/welcome-file-list&gt;
+
+	&lt;servlet&gt;
+		&lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;uk.ltd.getahead.dwr.DWRServlet&lt;/servlet-class&gt;
+		&lt;init-param&gt;
+			&lt;param-name&gt;debug&lt;/param-name&gt;
+			&lt;param-value&gt;true&lt;/param-value&gt;
+		&lt;/init-param&gt;
+	&lt;/servlet&gt;
+	&lt;servlet-mapping&gt;
+		&lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+		&lt;url-pattern&gt;/dwr/*&lt;/url-pattern&gt;
+	&lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00052000000000000000">
+Испытание</A>
+</H2>
+
+<P>
+<img src="dwr-output.png"><br/>
+Рис. Пользовательский интерфейс примера
+
+<P>
+Обмен данными с сервером
+<PRE>
+http://localhost:8080/dwr/dwr/exec/Calculator.Square
+
+POST /dwr/dwr/exec/Calculator.Square HTTP/1.1
+Host: localhost:8080
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7
+Accept: text/xml,application/xml,application/xhtml+xml,index.htm;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 300
+Connection: keep-alive
+Content-Type: text/xml
+Content-Length: 119
+Cookie: JSESSIONID=E0ACB6407919818A27C1EBA4DD0A6753
+Pragma: no-cache
+Cache-Control: no-cache
+
+callCount=1
+c0-scriptName=Calculator
+c0-methodName=Square
+c0-id=7260_1132038473906
+c0-param0=string:3.1415926
+xml=true
+
+
+HTTP/1.x 200 OK
+Server: Apache-Coyote/1.1
+Content-Type: text/plain;charset=ISO-8859-1
+Transfer-Encoding: chunked
+Date: Tue, 15 Nov 2005 07:07:53 GMT
+
+&lt;script type='text/javascript'&gt;
+var s0=9.869603;
+window.parent.DWREngine._handleResponse('520_1132038593390', s0);
+&lt;/script&gt;
+ 
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+Заключение</A>
+</H1>
+
+<P>
+Технология AJAX и вопросы связанные с разработкой таких приложений в
+настоящее время очень популярны в среде веб-разработчиков и дизайнеров
+и быстро развиваются. Так, например, в следующих версиях браузера
+Mozilla планируется добавить более продвинутую поддержку XML в движок
+JavaScript. Это будет способствовать переходу на XML-формат для обмена
+данными в AJAX-приложениях (в настоящее время более удобными
+оказываются простые текстовые форматы).  Постоянно открываются
+какие-либо новые аспекты связанные с этой технологией, отмечаются
+различные достоинства и недостатки. Но уже сейчас можно сказать, что
+AJAX прочно занял свое место на огромном количестве сайтов.
+
+<P>
+Отметим важные вопросы, которые не были рассмотрены в данном докладе:
+обратная совместимость AJAX-приложений с устаревшими браузерами,
+техники сохраняющие usability традиционных веб-приложений (кнопка
+&#171;Назад&#187;, соответствие URL и состояния веб-приложения и&nbsp;т.&nbsp;д.).
+
+<P>
+
+<P>
+ 
+<H2><A NAME="SECTION00070000000000000000">
+Bibliography</A>
+</H2><DL COMPACT><DD><P></P><DT><A NAME="wiki:ajax">1</A>
+<DD> Ajax (programming) / From Wikipedia, the free encyclopedia.
+    (<EM>http://en.wikipedia.org/wiki/AJAX</EM>, 12.10.2005)
+
+<P>
+<P></P><DT><A NAME="ajaxframeworks">2</A>
+<DD> Ajax Frameworks / Ajax Patterns. 
+    (<EM>http://www.ajaxpatterns.org/Ajax_Frameworks</EM>, 9.11.2005)
+
+<P>
+<P></P><DT><A NAME="ajaxinfo">3</A>
+<DD> Components, Widgets &amp; Libraries / AjaxInfo.com. 
+    (<EM>http://www.ajaxinfo.com/default<code>~</code>area<code>~</code>components.htm</EM>, 10.11.2005)
+
+<P>
+<P></P><DT><A NAME="ibm:dwr">4</A>
+<DD> Ajax for Java developers: Ajax with Direct Web
+    Remoting / IBM developerWorks. 
+    (<EM>http://www-128.ibm.com/developerworks/java/library/j-ajax3/?ca=dgr-lnxw03AJAX-DWR</EM>, 15.11.2005)
+
+<P>
+<P></P><DT><A NAME="javanet:dwr">5</A>
+<DD> Developing AJAX Applications the Easy Way /
+    java.net. 
+    (<EM>http://today.java.net/pub/a/today/2005/08/25/dwr.html</EM>, 15.11.2005)
+</DL>
+
+<H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot30">... DHTML</A><A
+ HREF="index.htm#tex2html1"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A></DT>
+<DD>Dynamic HTML
+
+</DD>
+<DT><A NAME="foot31">...
+LAMP</A><A
+ HREF="index.htm#tex2html2"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A></DT>
+<DD>Linux, Apache, MySQL, Perl
+
+</DD>
+<DT><A NAME="foot100">... ежедневно</A><A
+ HREF="index.htm#tex2html3"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A></DT>
+<DD><EM>http://en.wikipedia.org/wiki/List_of_websites_using_Ajax</EM>
+
+</DD>
+<DT><A NAME="foot62">...
+Ajax.</A><A
+ HREF="index.htm#tex2html4"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A></DT>
+<DD>https://bpcatalog.dev.java.net/nonav/ajax/index.html,
+http://smirnov.org.ru/en/myfaces-ajax.html
+
+</DD>
+<DT><A NAME="foot70">...
+DWR</A><A
+ HREF="index.htm#tex2html5"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="footnote.png"></SUP></A></DT>
+<DD>http://getahead.ltd.uk/dwr/
+
+</DD>
+</DL>
+<DIV CLASS="navigation"><HR>
+<ADDRESS>
+Kolia Morev
+2005-11-23
+</ADDRESS>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

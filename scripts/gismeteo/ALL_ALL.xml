@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<messagebundle>
+    <msg name="title">Weather GISMETEO.ru</msg>
+    <msg name="description">Daily weather in more than 4000 places of the world from gismeteo.ru</msg>
+    <msg name="city">City</msg>
+    <msg name="clouds">Clouds</msg>
+    <msg name="rain">Rain/snow</msg>
+    <msg name="temperature">Temperature</msg>
+    <msg name="pressure">Pressure</msg>
+    <msg name="wind_dir">Wind direction</msg>
+    <msg name="wind_speed">Speed of wind</msg>
+    <msg name="error_nodata">No data.</msg>
+</messagebundle>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Коля Морев. Скрипты</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+    var pageTracker = _gat._getTracker("UA-7476874-1");
+    pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- Google Analytics -->
+
+    <div class="container">
+    <div class="span-12">
+        <ul>
+            <li>SQL-запросы для <a href="smf/forum-polls.html">анализа результатов голосования на форуме SMF</a> по карме, количеству сообщений, дате регистрации, уникальным IP-адресам.</li>
+            <li>Виджет для Google Homepage, показывающий погоду с сайта gismeteo.ru: <a href="https://github.com/kolyuchiy/gismeteo-igoogle-widget">исходники</a> (<a href="https://github.com/kolyuchiy/gismeteo-igoogle-widget/zipball/master">в архиве</a>), <a href="http://kolia.pp.ru/scripts/gismeteo/gismeteo.xml">ссылка для добавления</a>.</li>
+            <li><a href="https://gist.github.com/1379373">Гейт IRC-VyChat</a>. Простейший скриптик на перле, который посылает сообщения из VyPRESS Chat в IRC. </li>
+            <li><a href="https://github.com/kolyuchiy/webcafe-traffic">Контроль трафика</a> (<a href="https://github.com/kolyuchiy/webcafe-traffic/tarball/master">в архиве</a>)  для интернет-кафе. Linux, iptables, Perl, sh, MySQL, веб-интерфейс.  Умеет включать/выключать интернет определенному компу, считать трафик и  время сессии, устанавливать лимит по трафику, восстанавливать данные  после перезагрузки. Писалось в два подхода по нескольку часов, не было времени сделать все обдуманно, поэтому делал просто чтобы работало :) </li>
+            <li>Скрипт для AMX Mod X, показывающий <a href="https://gist.github.com/1379388">список игроков на сервере Counter-Strike</a> и их IP-адреса.</li>
+        </ul>
+    </div>
+    <div class="span-12 last">
+        <ul>
+            <li>Скрипт для AMX Mod X, <a href="https://gist.github.com/1379392">выбрасывающий с сервера юзеров без античита</a> при условии, что на сервере играет больше заданного количества пользователей.</li>
+            <li>Экспериментальный «движок для блога и всего такого». Раньше работал на <a href="http://vlgu.1gb.ru/i01/"><del>http://vlgu.1gb.ru/i01</del></a> (сайт группы). Главной целью при написании было исследование возможностей ООП вообще и <a href="http://pear.php.net">PEAR</a> (библиотеки компонентов для PHP) в  частности. Были выбраны именно PHP и PEAR из-за распространенности на  доступных хостингах, т.к. второстепенной целью было чтоб оно работало на  благо общества, тем самым поддерживая мою мотивацию в разработке. <a href="https://github.com/kolyuchiy/i01-blog">Исходники</a>, <a href="https://github.com/kolyuchiy/i01-blog/tarball/master">в архиве</a>.</li>
+            <li>Онлайн <a href="../programming/cidr.html">конвертер десятичное-двоичное-CIDR</a> помогает по количеству IP-адресов определить список префиксов сетей. Может быть полезен при составлении заявок на блоки IP-адресов в RIPE (впрочем, <a href="http://www.potaroo.net/tools/ipv4/index.html">скоро он перестанет быть полезен</a>).</li>
+        </ul>
+    </div>
+
+    <div class="span-24">
+        <p style="clear: both">Далее скрипты, которые на сегодняшний день не
+        представляют никакой практической ценности (даже воображаемой, как у скриптов
+        выше), но оставлены здесь как напоминание о прошлом для того времени, когда я
+        начну писать мемуары.</p>
+
+        <ul>
+            <li><a href="/programming/freedomnet/Freedomnet.ru_servers_status.widget">Виджет состояния игровых серверов</a> (<a href="https://github.com/kolyuchiy/freedomnet-servers-status-widget">исходники</a>) для Yahoo Widget Engine (бывш. Konfabulator). Показывает количество игроков на трех серверах freedomnet.ru. Сейчас не работает, т.к. серверная часть демонтирована.</li>
+        </ul>
+    </div>
+</div>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
