@@ -1,153 +1,127 @@
-<!DOCTYPE html>
-<html lang="ru">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DocBook</title>
-
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+---
+layout: default
+title: DocBook
+header: |
     <link href="/pygments.css" rel="stylesheet" type="text/css" />
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:Wingdings;
-	panose-1:5 0 0 0 0 0 0 0 0 0;
-	mso-font-charset:2;
-	mso-generic-font-family:auto;
-	mso-font-pitch:variable;
-	mso-font-signature:0 268435456 0 0 -2147483648 0;}
-@font-face
-	{font-family:"MS Mincho";
-	panose-1:2 2 6 9 4 2 5 8 3 4;
-	mso-font-alt:"\FF2D\FF33 \660E\671D";
-	mso-font-charset:128;
-	mso-generic-font-family:modern;
-	mso-font-pitch:fixed;
-	mso-font-signature:-1610612033 1757936891 16 0 131231 0;}
-@font-face
-	{font-family:"\@MS Mincho";
-	panose-1:2 2 6 9 4 2 5 8 3 4;
-	mso-font-charset:128;
-	mso-generic-font-family:modern;
-	mso-font-pitch:fixed;
-	mso-font-signature:-1610612033 1757936891 16 0 131231 0;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-parent:"";
-	margin-top:6.0pt;
-	margin-right:0cm;
-	margin-bottom:6.0pt;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"MS Mincho";}
-h1
-	{mso-style-next:Normal;
-	margin-top:12.0pt;
-	margin-right:0cm;
-	margin-bottom:3.0pt;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	page-break-after:avoid;
-	mso-outline-level:1;
-	font-size:16.0pt;
-	font-family:Arial;
-	mso-font-kerning:16.0pt;}
-p.MsoFootnoteText, li.MsoFootnoteText, div.MsoFootnoteText
-	{mso-style-noshow:yes;
-	margin-top:6.0pt;
-	margin-right:0cm;
-	margin-bottom:6.0pt;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	font-size:10.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"MS Mincho";}
-span.MsoFootnoteReference
-	{mso-style-noshow:yes;
-	vertical-align:super;}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;
-	text-underline:single;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;
-	text-underline:single;}
-p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:10.0pt;
-	font-family:"Courier New";
-	mso-fareast-font-family:"MS Mincho";
-	mso-no-proof:yes;}
-pre
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:10.0pt;
-	font-family:"Courier New";
-	mso-fareast-font-family:"MS Mincho";}
- /* Page Definitions */
- @page
-	{mso-footnote-separator:url("DocBook_files/header.htm") fs;
-	mso-footnote-continuation-separator:url("DocBook_files/header.htm") fcs;
-	mso-endnote-separator:url("DocBook_files/header.htm") es;
-	mso-endnote-continuation-separator:url("DocBook_files/header.htm") ecs;}
-@page Section1
-	{size:595.3pt 841.9pt;
-	margin:2.0cm 42.5pt 2.0cm 3.0cm;
-	mso-header-margin:35.4pt;
-	mso-footer-margin:35.4pt;
-	mso-paper-source:0;}
-div.Section1
-	{page:Section1;}
- /* List Definitions */
- @list l0
-	{mso-list-id:1959291788;
-	mso-list-type:hybrid;
-	mso-list-template-ids:1918299018 68747265 68747267 68747269 68747265 68747267 68747269 68747265 68747267 68747269;}
-@list l0:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	font-family:Symbol;}
-ol
-	{margin-bottom:0cm;}
-ul
-	{margin-bottom:0cm;}
--->
-</style>
+    <style>
+    <!--
+     /* Font Definitions */
+     @font-face
+    	{font-family:Wingdings;
+    	panose-1:5 0 0 0 0 0 0 0 0 0;
+    	mso-font-charset:2;
+    	mso-generic-font-family:auto;
+    	mso-font-pitch:variable;
+    	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+    @font-face
+    	{font-family:"MS Mincho";
+    	panose-1:2 2 6 9 4 2 5 8 3 4;
+    	mso-font-alt:"\FF2D\FF33 \660E\671D";
+    	mso-font-charset:128;
+    	mso-generic-font-family:modern;
+    	mso-font-pitch:fixed;
+    	mso-font-signature:-1610612033 1757936891 16 0 131231 0;}
+    @font-face
+    	{font-family:"\@MS Mincho";
+    	panose-1:2 2 6 9 4 2 5 8 3 4;
+    	mso-font-charset:128;
+    	mso-generic-font-family:modern;
+    	mso-font-pitch:fixed;
+    	mso-font-signature:-1610612033 1757936891 16 0 131231 0;}
+     /* Style Definitions */
+     p.MsoNormal, li.MsoNormal, div.MsoNormal
+    	{mso-style-parent:"";
+    	margin-top:6.0pt;
+    	margin-right:0cm;
+    	margin-bottom:6.0pt;
+    	margin-left:0cm;
+    	mso-pagination:widow-orphan;
+    	font-size:12.0pt;
+    	font-family:"Times New Roman";
+    	mso-fareast-font-family:"MS Mincho";}
+    h1
+    	{mso-style-next:Normal;
+    	margin-top:12.0pt;
+    	margin-right:0cm;
+    	margin-bottom:3.0pt;
+    	margin-left:0cm;
+    	mso-pagination:widow-orphan;
+    	page-break-after:avoid;
+    	mso-outline-level:1;
+    	font-size:16.0pt;
+    	font-family:Arial;
+    	mso-font-kerning:16.0pt;}
+    p.MsoFootnoteText, li.MsoFootnoteText, div.MsoFootnoteText
+    	{mso-style-noshow:yes;
+    	margin-top:6.0pt;
+    	margin-right:0cm;
+    	margin-bottom:6.0pt;
+    	margin-left:0cm;
+    	mso-pagination:widow-orphan;
+    	font-size:10.0pt;
+    	font-family:"Times New Roman";
+    	mso-fareast-font-family:"MS Mincho";}
+    span.MsoFootnoteReference
+    	{mso-style-noshow:yes;
+    	vertical-align:super;}
+    a:link, span.MsoHyperlink
+    	{color:blue;
+    	text-decoration:underline;
+    	text-underline:single;}
+    a:visited, span.MsoHyperlinkFollowed
+    	{color:purple;
+    	text-decoration:underline;
+    	text-underline:single;}
+    p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+    	{margin:0cm;
+    	margin-bottom:.0001pt;
+    	mso-pagination:widow-orphan;
+    	font-size:10.0pt;
+    	font-family:"Courier New";
+    	mso-fareast-font-family:"MS Mincho";
+    	mso-no-proof:yes;}
+    pre
+    	{margin:0cm;
+    	margin-bottom:.0001pt;
+    	mso-pagination:widow-orphan;
+    	font-size:10.0pt;
+    	font-family:"Courier New";
+    	mso-fareast-font-family:"MS Mincho";}
+     /* Page Definitions */
+     @page
+    	{mso-footnote-separator:url("DocBook_files/header.htm") fs;
+    	mso-footnote-continuation-separator:url("DocBook_files/header.htm") fcs;
+    	mso-endnote-separator:url("DocBook_files/header.htm") es;
+    	mso-endnote-continuation-separator:url("DocBook_files/header.htm") ecs;}
+    @page Section1
+    	{size:595.3pt 841.9pt;
+    	margin:2.0cm 42.5pt 2.0cm 3.0cm;
+    	mso-header-margin:35.4pt;
+    	mso-footer-margin:35.4pt;
+    	mso-paper-source:0;}
+    div.Section1
+    	{page:Section1;}
+     /* List Definitions */
+     @list l0
+    	{mso-list-id:1959291788;
+    	mso-list-type:hybrid;
+    	mso-list-template-ids:1918299018 68747265 68747267 68747269 68747265 68747267 68747269 68747265 68747267 68747269;}
+    @list l0:level1
+    	{mso-level-number-format:bullet;
+    	mso-level-text:\F0B7;
+    	mso-level-tab-stop:36.0pt;
+    	mso-level-number-position:left;
+    	text-indent:-18.0pt;
+    	font-family:Symbol;}
+    ol
+    	{margin-bottom:0cm;}
+    ul
+    	{margin-bottom:0cm;}
+    -->
+    </style>
+---
 
-  </head>
-  <body>
-    <!-- Google Analytics -->
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-    var pageTracker = _gat._getTracker("UA-7476874-1");
-    pageTracker._trackPageview();
-} catch(err) {}</script>
-<!-- Google Analytics -->
-
-        <p><a href="slides.pdf">Презентация</a></p>
+    <p><a href="slides.pdf">Презентация</a></p>
 
 <div class=Section1>
 
@@ -240,19 +214,20 @@ lang=EN-US> </span>в связи с популярностью <span lang=EN-US 
 EN-US'>XML</span><span lang=EN-US> </span>в последнее время надеется, что это
 увеличит количество новообращенных пользователей.</p>
 
-<div class="highlight"><pre><code class="xml"><span class="nt">&lt;book</span> <span class="na">id=</span><span class="s">&quot;simple_book&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;title&gt;</span>Very simple book<span class="nt">&lt;/title&gt;</span>
-    <span class="nt">&lt;chapter</span> <span class="na">id=</span><span class="s">&quot;simplechapter&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;title&gt;</span>Chapter 1<span class="nt">&lt;/title&gt;</span>
-        <span class="nt">&lt;para&gt;</span>Hello world!<span class="nt">&lt;/para&gt;</span>
-        <span class="nt">&lt;para&gt;</span>I hope that your day is proceeding splendidly!<span class="nt">&lt;/para&gt;</span>
-    <span class="nt">&lt;/chapter&gt;</span>
-    <span class="nt">&lt;chapter</span> <span class="na">id=</span><span class="s">&quot;simplechapter&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;title&gt;</span>Chapter 2<span class="nt">&lt;/title&gt;</span>
-        <span class="nt">&lt;para&gt;</span>Hello again, world!<span class="nt">&lt;/para&gt;</span>
-    <span class="nt">&lt;/chapter&gt;</span>
-<span class="nt">&lt;/book&gt;</span>
-</code></pre></div>
+{% highlight xml %}
+<book id="simple_book">
+    <title>Very simple book</title>
+    <chapter id="simplechapter">
+        <title>Chapter 1</title>
+        <para>Hello world!</para>
+        <para>I hope that your day is proceeding splendidly!</para>
+    </chapter>
+    <chapter id="simplechapter">
+        <title>Chapter 2</title>
+        <para>Hello again, world!</para>
+    </chapter>
+</book>
+{% endhighlight %}
 
 <p class=MsoNormal>Для получения выходных форматов используются <span
 lang=EN-US style='mso-ansi-language:EN-US'>XSLT</span>-шаблоны. До появления <span
@@ -352,9 +327,3 @@ style='mso-ansi-language:EN-US'> <span lang=EN-US><o:p></o:p></span></span></p>
 
 </div>
 
-
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-  </body>
-</html>

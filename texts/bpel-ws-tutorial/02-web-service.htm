@@ -1,125 +1,99 @@
-<!DOCTYPE html>
-<html lang="ru">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Создание веб-сервиса</title>
-
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+---
+layout: default
+title: Создание веб-сервиса
+header: |
     <style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:"MS Mincho";
-	panose-1:2 2 6 9 4 2 5 8 3 4;}
-@font-face
-	{font-family:"\@MS Mincho";
-	panose-1:2 2 6 9 4 2 5 8 3 4;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin-top:6.0pt;
-	margin-right:0cm;
-	margin-bottom:6.0pt;
-	margin-left:0cm;
-	font-size:12.0pt;
-	font-family:"Times New Roman";}
-h1
-	{margin-top:12.0pt;
-	margin-right:0cm;
-	margin-bottom:3.0pt;
-	margin-left:0cm;
-	text-align:center;
-	page-break-after:avoid;
-	font-size:16.0pt;
-	font-family:Arial;}
-h2
-	{margin-top:12.0pt;
-	margin-right:0cm;
-	margin-bottom:3.0pt;
-	margin-left:0cm;
-	page-break-after:avoid;
-	font-size:14.0pt;
-	font-family:Arial;
-	font-style:italic;}
-h3
-	{margin-top:12.0pt;
-	margin-right:0cm;
-	margin-bottom:3.0pt;
-	margin-left:0cm;
-	page-break-after:avoid;
-	font-size:13.0pt;
-	font-family:Arial;}
-p.MsoCaption, li.MsoCaption, div.MsoCaption
-	{margin-top:6.0pt;
-	margin-right:0cm;
-	margin-bottom:6.0pt;
-	margin-left:0cm;
-	font-size:10.0pt;
-	font-family:"Times New Roman";
-	font-weight:bold;}
-p.MsoListBullet2, li.MsoListBullet2, div.MsoListBullet2
-	{margin-top:6.0pt;
-	margin-right:0cm;
-	margin-bottom:6.0pt;
-	margin-left:32.15pt;
-	text-indent:-18.0pt;
-	font-size:12.0pt;
-	font-family:"Times New Roman";}
-a:link, span.MsoHyperlink
-	{color:blue;
-	font-style:italic;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;}
-p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	font-size:9.0pt;
-	font-family:"Courier New";}
-span.a
-	{font-style:italic;}
-span.GUI
-	{color:navy;}
-span.PlainTextChar
-	{font-family:"Courier New";}
-@page Section1
-	{size:595.3pt 841.9pt;
-	margin:2.0cm 42.5pt 2.0cm 3.0cm;}
-div.Section1
-	{page:Section1;}
- /* List Definitions */
- ol
-	{margin-bottom:0cm;}
-ul
-	{margin-bottom:0cm;}
--->
-</style>
+    <!--
+     /* Font Definitions */
+     @font-face
+    	{font-family:"MS Mincho";
+    	panose-1:2 2 6 9 4 2 5 8 3 4;}
+    @font-face
+    	{font-family:"\@MS Mincho";
+    	panose-1:2 2 6 9 4 2 5 8 3 4;}
+     /* Style Definitions */
+     p.MsoNormal, li.MsoNormal, div.MsoNormal
+    	{margin-top:6.0pt;
+    	margin-right:0cm;
+    	margin-bottom:6.0pt;
+    	margin-left:0cm;
+    	font-size:12.0pt;
+    	font-family:"Times New Roman";}
+    h1
+    	{margin-top:12.0pt;
+    	margin-right:0cm;
+    	margin-bottom:3.0pt;
+    	margin-left:0cm;
+    	text-align:center;
+    	page-break-after:avoid;
+    	font-size:16.0pt;
+    	font-family:Arial;}
+    h2
+    	{margin-top:12.0pt;
+    	margin-right:0cm;
+    	margin-bottom:3.0pt;
+    	margin-left:0cm;
+    	page-break-after:avoid;
+    	font-size:14.0pt;
+    	font-family:Arial;
+    	font-style:italic;}
+    h3
+    	{margin-top:12.0pt;
+    	margin-right:0cm;
+    	margin-bottom:3.0pt;
+    	margin-left:0cm;
+    	page-break-after:avoid;
+    	font-size:13.0pt;
+    	font-family:Arial;}
+    p.MsoCaption, li.MsoCaption, div.MsoCaption
+    	{margin-top:6.0pt;
+    	margin-right:0cm;
+    	margin-bottom:6.0pt;
+    	margin-left:0cm;
+    	font-size:10.0pt;
+    	font-family:"Times New Roman";
+    	font-weight:bold;}
+    p.MsoListBullet2, li.MsoListBullet2, div.MsoListBullet2
+    	{margin-top:6.0pt;
+    	margin-right:0cm;
+    	margin-bottom:6.0pt;
+    	margin-left:32.15pt;
+    	text-indent:-18.0pt;
+    	font-size:12.0pt;
+    	font-family:"Times New Roman";}
+    a:link, span.MsoHyperlink
+    	{color:blue;
+    	font-style:italic;
+    	text-decoration:underline;}
+    a:visited, span.MsoHyperlinkFollowed
+    	{color:purple;
+    	text-decoration:underline;}
+    p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+    	{margin:0cm;
+    	margin-bottom:.0001pt;
+    	font-size:9.0pt;
+    	font-family:"Courier New";}
+    span.a
+    	{font-style:italic;}
+    span.GUI
+    	{color:navy;}
+    span.PlainTextChar
+    	{font-family:"Courier New";}
+    @page Section1
+    	{size:595.3pt 841.9pt;
+    	margin:2.0cm 42.5pt 2.0cm 3.0cm;}
+    div.Section1
+    	{page:Section1;}
+     /* List Definitions */
+     ol
+    	{margin-bottom:0cm;}
+    ul
+    	{margin-bottom:0cm;}
+    -->
+    </style>
+---
 
-  </head>
-  <body>
-    <!-- Google Analytics -->
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-    var pageTracker = _gat._getTracker("UA-7476874-1");
-    pageTracker._trackPageview();
-} catch(err) {}</script>
-<!-- Google Analytics -->
-
-    <div class=Section1>
+<div class=Section1>
 
 <h1>Создание веб-сервиса</h1>
 
@@ -454,9 +428,3 @@ lang=EN-US>BPEL</span>-процесс, соответствующий бизне
 
 </div>
 
-
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-  </body>
-</html>

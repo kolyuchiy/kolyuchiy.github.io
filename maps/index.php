@@ -1,3 +1,5 @@
+---
+---
 <?php
 
 $center['lat'] = 56.13809;
@@ -1778,18 +1780,7 @@ if (!empty($_GET['spn'])) {
 
     <body onresize = "resizeMap()" onunload = "GUnload()"
           onload = "var rnl_near = document.getElementById('rnl_near');if (rnl_near) {rnl_near.focus();}">
-        <!-- Google Analytics -->
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-    var pageTracker = _gat._getTracker("UA-7476874-1");
-    pageTracker._trackPageview();
-} catch(err) {}</script>
-<!-- Google Analytics -->
-
+        {% include google_analytics.html %}
         <iframe name = "vp" id = "vp" src = "/maps/static/home3.html">
         </iframe>
 
