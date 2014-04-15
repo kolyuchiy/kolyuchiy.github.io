@@ -8,34 +8,30 @@ header: |
             border: none;
         }
     </style>
+scripts: |
+    <script type='text/javascript' src='js/jquery-1.5.js'></script>
+    <script type='text/javascript' src='js/jquery.jqzoom-core.pack.js'></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var options = {
+                zoomWidth: 300,
+                zoomHeight: 250,
+                xOffset: 10,
+                yOffset: 0,
+                position: "right"
+            };
+            $('.zoomable').jqzoom(options);
+            var optionsv = {
+                zoomWidth: 338,
+                zoomHeight: 338,
+                xOffset: 10,
+                yOffset: 0,
+                position: "right"
+            };
+            $('.zoomablev').jqzoom(optionsv);
+        });
+    </script>
 ---
-        <script type='text/javascript' src='js/jquery-1.3.2.min.js'></script>
-        <script type='text/javascript' src='js/jqzoom.pack.1.0.1.js'></script>
-        <script type="text/javascript">
-$(document).ready(function(){
-        var options = {
-	    zoomWidth: 300,
-	    zoomHeight: 250,
-            xOffset: 10,
-            yOffset: 0,
-            position: "right"
-};
-$('.zoomable').jqzoom(options);
-
-	var optionsv = {
-	    zoomWidth: 338,
-	    zoomHeight: 338,
-            xOffset: 10,
-            yOffset: 0,
-            position: "right"
-};
-$('.zoomablev').jqzoom(optionsv);
-
-});
-
- 	</script>
-
-
         <h1>Схемы общественного транспорта города Владимира</h1>
 
         <p>На этой странице выложены мои эксперименты в области инфографики.
@@ -45,13 +41,19 @@ $('.zoomablev').jqzoom(optionsv);
             <img src="images/bus1_small.png" title="Схема автобусных маршрутов" />
         </a></p>
 
+        <div style="clear: both"></div>
+
         <p><a href="images/troll1.png" class="zoomable" title="Схема троллейбусных маршрутов">
             <img src="images/troll1_small.png" title="Схема троллейбусных маршрутов" />
         </a></p>
 
+        <div style="clear: both"></div>
+
         <p><a href="images/pobeda.png" class="zoomablev" title="Схема движения на пл. Победы">
             <img src="images/pobeda_small.png" title="Схема движения на пл. Победы" />
         </a></p>
+
+        <div style="clear: both"></div>
 
         <p>А это результаты работы различных алгоритмов автоматического расположения графов.</p>
 
@@ -59,9 +61,13 @@ $('.zoomablev').jqzoom(optionsv);
             <img src="images/graph1_small.png" title="Круговое расположение" />
         </a></p>
 
+        <div style="clear: both"></div>
+
         <p><a href="images/graph2.png" class="zoomablev" title="Органическое расположение">
             <img src="images/graph2_small.png" title="Органическое расположение" />
         </a></p>
+
+        <div style="clear: both"></div>
 
         <p><a href="images/graph3.png" class="zoomablev" title="С ортогонализацией ребер">
             <img src="images/graph3_small.png" title="С ортогонализацией ребер" />
