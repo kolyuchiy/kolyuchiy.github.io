@@ -8,10 +8,10 @@ h2 {
 	color: #E88833;
 	text-shadow: 0px 2px 2px white;
 }
-#photo p {
+span#photo {
 	float: left;
     background-color: gray;
-	border: 1px solid #ffffff; 
+	border: 1px solid #ddd; 
 	padding: 1px;
 }
 td {
@@ -31,4 +31,7 @@ dl dd {
 ul.nobullets li {
 	list-style-type: none;
 }
-
+span.year {
+    font-size: smaller;
+    color: #777;
+}
