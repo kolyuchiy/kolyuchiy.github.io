@@ -4,6 +4,12 @@ body {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
     padding: 1em;
 }
+h1 {
+    background-color: black;
+    color: white;
+    padding: 0.25em;
+    display: inline-block;
+}
 h2 {
 	color: #E88833;
 	text-shadow: 0px 2px 2px white;

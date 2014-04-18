@@ -1,71 +1,74 @@
-<html>
-	<head>
-		<title>Decimal &lt;-&gt; Binary -&gt; CIDR converter</title>
-	</head>
-	<body>
-	<script>
-	function doIt() {
-		decimal = document.getElementById("decimal");
-		binary = document.getElementById("binary");
-		classes = document.getElementById("classes");
+---
+layout: default
+title: Decimal to Binary to CIDR converter
+---
+<script>
+    function doIt() {
+        decimal = document.getElementById("decimal");
+        binary = document.getElementById("binary");
+        classes = document.getElementById("classes");
 
-		binary.value = dec2bin(decimal.value);
-		classes.value = bin2cls(binary.value);
-	}
+        binary.value = dec2bin(decimal.value);
+        classes.value = bin2cls(binary.value);
+    }
 
-function doBin() {
-		decimal = document.getElementById("decimal");
-		binary = document.getElementById("binary");
-		classes = document.getElementById("classes");
+    function doBin() {
+        decimal = document.getElementById("decimal");
+        binary = document.getElementById("binary");
+        classes = document.getElementById("classes");
 
-		decimal.value = bin2dec(binary.value);
-		classes.value = bin2cls(binary.value);
-}
+        decimal.value = bin2dec(binary.value);
+        classes.value = bin2cls(binary.value);
+    }
 
-function dec2bin(decimal) {
-	if (decimal == 0) return 0;
+    function dec2bin(decimal) {
+        if (decimal == 0) return 0;
 
-	i = decimal.valueOf();
-	res = "";
-	do {
-		if (i % 2 == 0) res = "0" + res
-		else res = "1" + res;
-		i = Math.floor(i / 2);
-	} while (i >= 1);
+        i = decimal.valueOf();
+        res = "";
+        do {
+            if (i % 2 == 0) res = "0" + res
+                else res = "1" + res;
+            i = Math.floor(i / 2);
+        } while (i >= 1);
 
-	return res;
-}
+        return res;
+    }
 
-function bin2dec(binary) {
-	res = 0;
-	for (i=binary.length-1; i>=0; i--) {
-		if (binary[i] == 1) res += 1 << (binary.length - i - 1);
-	}
-	return res;
-}
+    function bin2dec(binary) {
+        res = 0;
+        for (i=binary.length-1; i>=0; i--) {
+            if (binary[i] == 1) res += 1 << (binary.length - i - 1);
+        }
+        return res;
+    }
 
-function bin2cls(binary) {
-	res = "";
-	cls = 32;
-	for (i = binary.length-1; i >= 0; i--) {
-		if (binary[i] == 1)	res = "/" + cls + (res.length > 0 ? "," : "") + res;
-		cls--;
-	}
-	return res;
-}
-		</script>
-		<table>
-			<form>
-				<tr>
-					<td>Decimal:</td><td><input type="text" id="decimal" name="decimal" onkeyup="doIt()" /></td>
-				</tr>
-				<tr>
-				<td>Binary:</td> <td><input type="text" id="binary" name="binary" onkeyup="doBin()" /></td>
-			</tr>
-			<tr>
-				<td>Network classes:</td><td><input type="text" id="classes" name="classes" /></td>
-			</tr>
-		</form>
-	</body>
-</html>
+    function bin2cls(binary) {
+        res = "";
+        cls = 32;
+        for (i = binary.length-1; i >= 0; i--) {
+            if (binary[i] == 1)	res = "/" + cls + (res.length > 0 ? "," : "") + res;
+            cls--;
+        }
+        return res;
+    }
+</script>
+
+<p>Онлайн конвертер десятичное-двоичное-CIDR помогает по количеству IP-адресов определить список префиксов сетей. Может быть полезен при составлении заявок на блоки IP-адресов в RIPE (впрочем, <a href="http://www.potaroo.net/tools/ipv4/index.html">скоро он перестанет быть полезен</a>).</p>
+
+<p>Online converter between decimal, binary, and CIDR. It helps to determine a list of CIDR prefixes from a number of IP addresses. This may be helpful when filing requests to RIPE (<a href="http://www.potaroo.net/tools/ipv4/index.html">not anymore though</a>).</p>
+
+<table style="margin: auto">
+    <form>
+        <tr>
+            <td>Decimal:</td><td><input type="text" id="decimal" name="decimal" onkeyup="doIt()" /></td>
+        </tr>
+        <tr>
+            <td>Binary:</td> <td><input type="text" id="binary" name="binary" onkeyup="doBin()" /></td>
+        </tr>
+        <tr>
+            <td>Network classes:</td><td><input type="text" id="classes" name="classes" /></td>
+        </tr>
+    </form>
+</table>
 
