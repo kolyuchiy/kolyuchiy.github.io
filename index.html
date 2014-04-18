@@ -7,16 +7,23 @@ header: |
     <meta http-equiv="X-XRDS-Location" content="http://kolia.pp.ru/openid/index.php?q=xrds/kolia" />
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="foaf.rdf" />
 ---
-<div class="col-md-6">
-    <p>Меня зовут Николай Морев. Вы можете связаться со мной по email <a href="mailto:kolyuchiy@gmail.com">kolyuchiy@gmail.com</a>.</p>
+<div class="col-md-6" itemscope itemtype="http://data-vocabulary.org/Person">
+    <div class="col-md-6">
+        <p>Меня зовут Николай Морев. Вы можете связаться со мной по email <a href="mailto:kolyuchiy@gmail.com">kolyuchiy@gmail.com</a>.</p>
+        <p>Сейчас я работаю в компании <a href="http://www.denivip.ru/">DENIVIP Group</a> программистом и занимаюсь в основном разработкой под Apple iOS.</p>
+        <p>Мои интересы: современные интернет-технологии и тенденции, мобильная разработка, web-разработка, администрирование UNIX-систем.</p>
+        <p><img src="pics/vcard-icon.gif" alt="" /> <a href="vcard.vcf">vCard</a>, <a href="resume.html">Резюме</a></p>
+    </div>
+    <div class="col-md-6">
+        <p>My name is <span itemprop="name">Nikolay Morev</span>. You can contact me by email <a href="mailto:kolyuchiy@gmail.com">kolyuchiy@gmail.com</a></p>
+        <p>Currently I work at <a href="http://www.denivip.ru/" itemprop="affiliation">DENIVIP Group</a> as an <span itemprop="title">iOS Developer</span>.</p>
+        <p>My interests include Internet and technology trends, mobile and web development, UNIX-like systems.</p>
+        <p><a href="cv.html">C.V.</a></p>
+    </div>
 
-    <p>Сейчас я работаю в компании <a href="http://www.denivip.ru/">DENIVIP Media</a> программистом и занимаюсь в основном разработкой под Apple iOS.</p>
-
-    <p>Мои интересы: современные интернет-технологии и тенденции, мобильная разработка, web-разработка, администрирование UNIX-систем.</p>
-
-    <p><img src="pics/vcard-icon.gif" alt="" /> <a href="vcard.vcf">vCard</a>, <a href="resume.html">Резюме</a>, <a href="cv.html">C.V.</a></p>
-
-    <p><span id="photo"><img src="photos/me3.jpg" alt="Коля Морев" width="250" height="281" /></span></p>
+    <div class="col-md-12">
+        <p><img itemprop="photo" id="my-photo" src="photos/me3.jpg" alt="Коля Морев" width="250" height="281" /></p>
+    </div>
 </div>
 
 <div class="col-md-6">

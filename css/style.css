@@ -14,8 +14,7 @@ h2 {
 	color: #E88833;
 	text-shadow: 0px 2px 2px white;
 }
-span#photo {
-	float: left;
+img#my-photo {
     background-color: gray;
 	border: 1px solid #ddd; 
 	padding: 1px;
