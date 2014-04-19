@@ -22,7 +22,6 @@ title: Коля Морев
 ## В сети
 
 <ul class="nobullets">
-<li><img src="/pics/delicious.gif" alt="" /> <a href="http://del.icio.us/kolia39">Delicious</a> <span class="year">(2004&ndash;2012)</span></li>
 <li><a href="https://groups.google.com/forum/#!search/Kolia$20Morev%7Csort:relevance%7Cspell:false">Архив фидошных сообщений</a> <span class="year">(1999&ndash;2002)</span></li>
 </ul>
 
