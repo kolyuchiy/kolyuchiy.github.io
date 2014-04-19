@@ -21,7 +21,7 @@ title: Коля Морев
 
 ## В сети
 
-<ul class="nobullets">
+<ul>
 <li><a href="https://groups.google.com/forum/#!search/Kolia$20Morev%7Csort:relevance%7Cspell:false">Архив фидошных сообщений</a> <span class="year">(1999&ndash;2002)</span></li>
 </ul>
 
