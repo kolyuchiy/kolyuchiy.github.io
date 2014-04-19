@@ -2,7 +2,7 @@ BEGIN:VCARD
 VERSION:2.1
 N;CHARSET=UTF-8:Морев;Николай;;;
 FN;CHARSET=UTF-8:Николай Морев
-ORG:DENIVIP Media
+ORG:DENIVIP Group
 PHOTO;JPEG:http://kolia.pp.ru/photos/me4.jpg
 BDAY:19840123
 EMAIL:kolyuchiy@gmail.com
@@ -11,7 +11,7 @@ TZ:+0400
 TITLE;CHARSET=UTF-8:программист
 URL:http://kolia.pp.ru
 UID:f42167d3ffada82c949bf6472015b00b
-REV:20130216T231600Z
+REV:20140419T220100Z
 X-JABBER:kolyuchiy@gmail.com
 X-SKYPE:kolyuchiy
 END:VCARD
