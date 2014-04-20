@@ -9,7 +9,7 @@ title: Коля Морев
 * [Схемы общественного транспорта](/creative/busmap/index.html)
 * Владимирский игровой сервер freedomnet.ru&nbsp;&mdash; <em>техническая реализация и поддержка</em> <span class="year">(2005&ndash;2009)</span>
 * [Карта города Владимира](http://app.kolia.pp.ru/maps/) <span class="year">(2006)</span>
-* [Выдиралка RSS](/rss/) <span class="year">(2004)</span>
+* [Выдиралка RSS](/programming/rss/) <span class="year">(2004)</span>
 * [Сайт групп ИВТ-201, ИВТ-101 и ИСМ-101 ВлГУ](http://web.archive.org/web/20050311014553/http://vlgu.1gb.ru/i01/)&nbsp;&mdash; <em>создатель</em> <span class="year">(2002&ndash;2004)</span>
 * [Аниме-клуб Kaze](http://web.archive.org/web/20131011031537/http://kaze.otaku.ru/)&nbsp;&mdash; <em>соучастник :)</em> <span class="year">(2003)</span>
 * [ASCII Art](/creative/ascii/index.html) <span class="year">(2000)</span>
