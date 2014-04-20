@@ -40,3 +40,6 @@ span.year, span.small {
     font-size: smaller;
     color: #777;
 }
+a:visited {
+    color: #543EC7;
+}
