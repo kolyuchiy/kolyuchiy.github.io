@@ -2,7 +2,7 @@
 layout: default
 title: Запросы для SMF
 header:
-    <link href="/pygments.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pygments.css" rel="stylesheet" type="text/css" />
 ---
 
 по положительной карме
