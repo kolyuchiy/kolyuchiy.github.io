@@ -54,21 +54,26 @@ title: Decimal to Binary to CIDR converter
     }
 </script>
 
-<p>Онлайн конвертер десятичное-двоичное-CIDR помогает по количеству IP-адресов определить список префиксов сетей. Может быть полезен при составлении заявок на блоки IP-адресов в RIPE (впрочем, <a href="http://www.potaroo.net/tools/ipv4/index.html">скоро он перестанет быть полезен</a>).</p>
+<div class="col-md-6">
+    <p>Онлайн конвертер десятичное-двоичное-CIDR помогает по количеству IP-адресов определить список префиксов сетей. Может быть полезен при составлении заявок на блоки IP-адресов в RIPE (впрочем, <a href="http://www.potaroo.net/tools/ipv4/index.html">скоро он перестанет быть полезен</a>).</p>
+</div>
 
-<p>Online converter between decimal, binary, and CIDR. It helps to determine a list of CIDR prefixes from a number of IP addresses. This may be helpful when filing requests to RIPE (<a href="http://www.potaroo.net/tools/ipv4/index.html">not anymore though</a>).</p>
+<div class="col-md-6">
+    <p>Online converter between decimal, binary, and CIDR. It helps to determine a list of CIDR prefixes from a number of IP addresses. This may be helpful when filing requests to RIPE (<a href="http://www.potaroo.net/tools/ipv4/index.html">not anymore though</a>).</p>
+</div>
 
+<div class="col-md-12">
 <table style="margin: auto">
     <form>
         <tr>
-            <td>Decimal:</td><td><input type="text" id="decimal" name="decimal" onkeyup="doIt()" /></td>
+            <td style="text-align: right">Decimal:&nbsp;</td><td><input type="text" id="decimal" name="decimal" onkeyup="doIt()" /></td>
         </tr>
         <tr>
-            <td>Binary:</td> <td><input type="text" id="binary" name="binary" onkeyup="doBin()" /></td>
+            <td style="text-align: right">Binary:&nbsp;</td> <td><input type="text" id="binary" name="binary" onkeyup="doBin()" /></td>
         </tr>
         <tr>
-            <td>Network classes:</td><td><input type="text" id="classes" name="classes" /></td>
+            <td style="text-align: right">Network classes:&nbsp;</td><td><input type="text" id="classes" name="classes" /></td>
         </tr>
     </form>
 </table>
-
+</div>
