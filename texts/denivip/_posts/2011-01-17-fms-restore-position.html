@@ -1,0 +1,99 @@
+---
+layout: default
+title: "Flash Media Server: восстановление просмотра с точки останова"
+header: |
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+---
+<article id="post-1218" class="post-1218 post type-post status-publish format-standard hentry category-- category-tutorial tag-flash-media-server tag-fms tag-13">
+	<header class="entry-header">
+		<h1 class="entry-title">Flash Media Server: восстановление просмотра с точки останова</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2011/01/fms-restore/" title="13:20" rel="bookmark"><time class="entry-date" datetime="2011-01-17T13:20:45+00:00" pubdate>17.01.2011</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2011/01/flash-media-server-resume-video-from-breakpoint/?lang=en">Английский</a></p><p><a href="http://blog.denivip.ru/wp-content/uploads/2011/01/home-flash-media1.jpg"><img src="http://blog.denivip.ru/wp-content/uploads/2011/01/home-flash-media1.jpg" alt="" title="home flash media" width="530" height="197" class="alignnone size-full wp-image-1260" /></a><br />
+Для мультимедийных порталов, предоставляющих посетителям возможность просматривать продолжительный по времени видеоконтент (такой как полнометражные фильмы) может быть актуальной задача запомнить место, на котором пользователь остановил воспроизведение, чтобы в дальнейшем предложить ему начать просматривать это видео с той же секунды. В этой статье мы рассмотрим несколько способов того, как это можно сделать. <span id="more-1218"></span></p>
+<p>Эта задача была бы очень простой, если бы воспроизведение всегда прекращалось по нажатию кнопки «стоп» в плеере. Но в реальности выделенную кнопку останова в плеере обычно не делают, а к прерыванию просмотра может приводить целый ряд причин: </p>
+<ul>
+<li>пользователь ушел на другую страницу,</li>
+<li>пользователь закрыл страницу с плеером,</li>
+<li>браузер пользователя некорректно завершил работу,</li>
+<li>пользователь остался на странице с плеером, но видео не загружается из-за технических проблем с сервером или сетевым соединением пользователя.</li>
+</ul>
+<p>Дадее подробно рассмотрим возможные варианты реализации функции запоминания последней позиции просмотра, чтобы при последующем воспроизведении можно было начать просмотр с момента прерывания.</p>
+<p><strong>События DOM onbeforeunload или onunload</strong></p>
+<p>События onbeforeunload и onunload возникают для объекта window соответственно до события onunload и, когда пользователь уходит со страницы. Пример обработки:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br /></div></td><td><div class="text codecolorer">&lt;HTML&gt;<br />
+&lt;head&gt;<br />
+&lt;script&gt;<br />
+function closeIt()<br />
+{<br />
+&nbsp; return &quot;Any string value here forces a dialog box to \n&quot; + <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;appear before closing the window.&quot;;<br />
+}<br />
+window.onbeforeunload = closeIt;<br />
+&lt;/script&gt;<br />
+&lt;/head&gt;<br />
+&lt;body&gt;<br />
+&lt;/body&gt;<br />
+&lt;/html&gt;</div></td></tr></tbody></table></div>
+<p>Перед закрытием страницы мы имеем возможность в последний момент отправить текущую позицию видео на сервер. </p>
+<p>Недостатки: поддерживается не всеми браузерами (например, Opera), необходимо использовать синхронный AJAX-запрос, работает не во всех случаях, перечисленных выше.</p>
+<p><strong>Периодическая отправка на сервер текущей позиции</strong></p>
+<p>Через определенные интервалы времени в ходе воспроизведения видео мы можем отправлять на сервер текущую позицию. Пример на ActionScript:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br /></div></td><td><div class="text codecolorer">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; setTimeout(function () {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (video.playing) {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sendPosition(video.position);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }, 5000);</div></td></tr></tbody></table></div>
+<p>В дополнение к этому для увеличения точности можно также отправлять текущую позицию во время возникновения различных событий воспроизведения: постановка на паузу, перемотка, буферизация.</p>
+<p>Недостатки: приходится искать компромисс между точностью запомненной позиции и снижением нагрузки на сервер по числу запросов.</p>
+<p><strong>Анализ лог-файлов Flash Media Server-а</strong></p>
+<p>Adobe FMS ведет подробный access.log для всех событий воспроизведения видео, включая событие прекращения воспроизведения в независимости от причины, по которой оно произошло. Пример записи в access.log:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br /></div></td><td><div class="text codecolorer">#Version: 1.0<br />
+#Start-Date: 2011-01-17 00:01:13<br />
+#Software: Adobe Flash Media Server 4.0.0 r1121 x64<br />
+#Date: 2011-01-17<br />
+#Fields: x-category &nbsp; &nbsp; x-event date &nbsp; &nbsp;time &nbsp; &nbsp;x-pid &nbsp; c-ip &nbsp; &nbsp;c-client-id &nbsp; &nbsp; cs-bytes &nbsp; &nbsp; &nbsp; &nbsp;c-referrer &nbsp; &nbsp; &nbsp; sc-bytes &nbsp; &nbsp; &nbsp; &nbsp;x-sname x-spos &nbsp;sc-stream-bytes x-file-size &nbsp; &nbsp; x-file-length &nbsp; x-trans-sname &nbsp; x-status &nbsp; &nbsp; &nbsp; x-comment<br />
+stream &nbsp;stop &nbsp; &nbsp;2011-01-17 &nbsp; &nbsp; &nbsp;11:03:57 &nbsp; &nbsp; &nbsp; &nbsp;16877 &nbsp; 94.25.145.221 &nbsp; 4702111234508538223 &nbsp; &nbsp; 3567 &nbsp; &nbsp;http://www.example.com/player_test/fl_player.swf?sid=4r01p81fvvooj20bumhggevu12&amp;uniqid=4ac11015f655b9335fe246a8ed24ae55&amp;uid=136 &nbsp; &nbsp; &nbsp;1378700 8ca9dc3d48cab6e5f8a8d42844c5c91d &nbsp; &nbsp; &nbsp; &nbsp;5990 &nbsp; &nbsp;1210365 343845829 &nbsp; &nbsp; &nbsp; 5111.269043 &nbsp; &nbsp; - &nbsp; &nbsp; &nbsp; 210 &nbsp; &nbsp; -</div></td></tr></tbody></table></div>
+<p>При анализе лог-файла для целей данной статьи в первую очередь следует обратить внимание на события stream pause и stream stop, в которых содержится точка останова. А события connection connect и disconnect помогут отделить сессии просмотра, которые уже завершились, от тех, которые еще продолжаются в момент обработки лога. Группировать строки лог-файла, относящиеся к одной сессии просмотра можно по различным полям, главное, чтобы их сочетание было уникальным для каждой сессии. В FMS есть для этого специальное поле c-client-id, но полагаться только на него не стоит, так как его значение может повторяться для различных сессий. Чтобы получить по-настоящему уникальный идентификатор, вы можете сгенерировать его на стороне клиента и добавить к URL вызова плеера.</p>
+<p>В логе помимо прочей полезной информации присутствует тип события, позиция воспроизведения, на которой возникло событие, имя файла контента. Любую дополнительную информацию, которой FMS сам по себе не располагает, можно передать в лог через поле c-referrer. В это поле записывается URL, который был использован для загрузки плеера, воспроизводящего контент. Такую информацию, как идентификатор пользователя, идентификатор сессии, различные признаки платного контента (цена, тариф и т.д.) вы можете закодировать в строке URL плеера в любом удобном для обработки виде. Наиболее простой и очевидный вариант &#8212; в формате строки параметров GET-запроса.</p>
+<p>Достоинства: возможность получения точной позиции при любых причинах останова.</p>
+<p>Недостатки: позиция в логах привязана не к воспроизведению, а к позиции буфера плеера, поэтому ее необходимо корректировать; данные появляются в БД портала с задержкой, необходимой для обработки лог-файлов.</p>
+<p><strong>Использование Web-сокетов</strong></p>
+<p>В том случае, если не используется Flash Media Server, или вообще не используется Flash Player для воспроизведения видео, мы можем сэмулировать поведение FMS, поддерживая постоянное соединение с сервером в ходе воспроизведения видео, по которому будет передаваться информация о текущей позиции. В случае обрыва этого соединения, который скорее всего произойдет при уходе со страницы, мы можем с достаточной точностью определить позицию воспроизведения, на которой это произошло и запомнить ее в качестве позиции останова видео.</p>
+<p>Пример работы с web-сокетами с использованием библиотеки <a href="http://socket.io/">Socket.io</a>. Клиентская часть:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br /></div></td><td><div class="text codecolorer">var socket = new io.Socket();<br />
+function playerSendEventCallback(position) {<br />
+socket.send(position);<br />
+}</div></td></tr></tbody></table></div>
+<p>Серверная часть:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br /></div></td><td><div class="text codecolorer">var http = require('http'), &nbsp;<br />
+io = require('socket.io'),<br />
+server = http.createServer(function(req, res){ <br />
+&nbsp;res.writeHeader(200, {'Content-Type': 'text/html'}); <br />
+&nbsp;res.writeBody('Hello world'); <br />
+&nbsp;res.finish(); <br />
+});<br />
+server.listen(80);<br />
+var socket = io.listen(server); <br />
+socket.on('connection', function(client){ <br />
+&nbsp; client.on('message', function(message){<br />
+&nbsp; &nbsp; &nbsp;savePosition(message);<br />
+&nbsp; });<br />
+&nbsp; client.on('disconnect', function(){ … });<br />
+}); <br />
+function savePosition(position) { ... }</div></td></tr></tbody></table></div>
+<p>Недостатки: технология web-сокетов относительно новая и пока еще не поддерживается всеми распространенными версиями браузеров.</p>
+<p><strong>Заключение</strong></p>
+<p>Единого идеального способа решения поставленной задачи не существует, у всех из них есть свои существенные недостатки. Поэтому в реальной работе для обеспечения максимального качества предоставления услуг необходимо применять сочетание из нескольких описанных выше способов.</p>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/%d0%be%d0%bd%d0%bb%d0%b0%d0%b9%d0%bd-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" title="Просмотреть все записи в рубрике &laquo;Онлайн видео&raquo;" rel="category tag">Онлайн видео</a>, <a href="http://blog.denivip.ru/index.php/category/tutorial/" title="Просмотреть все записи в рубрике &laquo;Разработка&raquo;" rel="category tag">Разработка</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/flash-media-server/" rel="tag">Flash Media Server</a>, <a href="http://blog.denivip.ru/index.php/tag/fms/" rel="tag">FMS</a>, <a href="http://blog.denivip.ru/index.php/tag/%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" rel="tag">видео</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2011/01/fms-restore/" title="Permalink to Flash Media Server: восстановление просмотра с точки останова" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-1218 -->
+

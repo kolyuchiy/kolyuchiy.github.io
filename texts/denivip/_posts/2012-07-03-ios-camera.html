@@ -1,0 +1,142 @@
+---
+layout: default
+title: Работа с камерой в iOS приложениях
+header: |
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+---
+<article id="post-2901" class="post-2901 post type-post status-publish format-standard hentry category-ios category-tutorial tag-apple tag-avfoundation tag-ios tag-ipad tag-iphone tag-23 tag---">
+	<header class="entry-header">
+		<h1 class="entry-title">Работа с камерой в iOS приложениях</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2012/07/%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0-%d1%81-%d0%ba%d0%b0%d0%bc%d0%b5%d1%80%d0%be%d0%b9-%d0%b2-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f%d1%85-%d0%b4%d0%bb%d1%8f-apple-ios/" title="18:25" rel="bookmark"><time class="entry-date" datetime="2012-07-03T18:25:08+00:00" pubdate>03.07.2012</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2012/07/handling-camera-in-ios-applications/?lang=en">Английский</a></p><p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/iphone-camera.jpeg"><img class="aligncenter size-medium wp-image-2910" title="Камера iPhone 4" alt="" src="http://blog.denivip.ru/wp-content/uploads/2012/07/iphone-camera-300x183.jpg" width="300" height="183" /></a></center>Камера в последних устройствах на iOS &#8212; это один из важных факторов популярности этих устройств. Возможность снимать и аппаратно кодировать в H.264 видео высокого разрешения, появившаяся в iPhone 4, была встречена с большим воодушевлением пользователями и разработчиками новых приложений. Продолжая серию статей об AV Foundation и сопустствующих ему фреймворках, в этой статье мы расскажем о том, как снять видеопоток с камеры, и какие существуют возможности по его обработке, сохранению и распространению. <span id="more-2901"></span></p>
+<p>В iPhone, начиная с модели 3GS, появилась возможность записывать видео с задней камеры в разрешении 480p, в четвертой модели и в iPad 2 появилась передняя камера с обычным разрешением, а задняя была улучшена до разрешения 720p, что по общепринятой классификации относится к видео высокой четкости, а в модели 4S и в новом iPad камера уже снимает видео в 1080p, то есть в идеальном для просмотра на большинстве современных телевизоров разрешении.</p>
+<h2>Съемка фото в UIKit</h2>
+<p>Большинство функций, имеющих отношение к работе с камерой, входят в AV Foundation Framework. Но, как и в случае с Media Player Framework, Apple предоставила разработчикам простой и удобный в использовании класс для съемки фото и видеороликов с уже готовым пользовательским интерфейсом - UIImagePickerController, включающим полный набор функций: управление вспышкой, переключение между камерами, зум, выбор точки фокусировки, выбор из библиотеки, редактирование снятых фотографий. Для его использования, приложение должно выполнить следующие действия:</p>
+<ol>
+<li>После выбора пользователем одного из источников &#8212; библиотека фотографий, камера или альбом сохраненных фотографий &#8212; проверить, имеет ли используемое устройство доступ к получению данных из выбранного источника, с помощью метода isSourceTypeAvailable:.</li>
+<li>Проверить методом availableMediaTypesForSourceType:, какие из видов контента доступны через выбранный источник: фотографии, видеоролики или все вместе.</li>
+<li>Сконфигурировать контроллер, присвоив свойству mediaType перечень видов контента, которые приложение ожидает получить.</li>
+<li>Отобразить контроллер и после выбора пользователем контента или по нажатию кнопки &#171;Отмена&#187; скрыть контроллер с экрана.</li>
+</ol>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br />21<br />22<br />23<br />24<br />25<br />26<br />27<br />28<br />29<br /></div></td><td><div class="text codecolorer">- (BOOL) startCameraControllerFromViewController: <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(UIViewController*) controller<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;usingDelegate: (id &amp;lt;UIImagePickerControllerDelegate,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;UINavigationControllerDelegate&amp;gt;) delegate {<br />
+<br />
+&nbsp; &nbsp; if (([UIImagePickerController isSourceTypeAvailable:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;UIImagePickerControllerSourceTypeCamera] == NO)<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; || (delegate == nil)<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; || (controller == nil))<br />
+&nbsp; &nbsp; &nbsp; &nbsp; return NO;<br />
+<br />
+&nbsp; &nbsp; UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];<br />
+&nbsp; &nbsp; cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;<br />
+<br />
+&nbsp; &nbsp; // Displays a control that allows the user to choose picture or<br />
+&nbsp; &nbsp; // movie capture, if both are available:<br />
+&nbsp; &nbsp; cameraUI.mediaTypes =<br />
+&nbsp; &nbsp; &nbsp; &nbsp; [UIImagePickerController availableMediaTypesForSourceType:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; UIImagePickerControllerSourceTypeCamera];<br />
+<br />
+&nbsp; &nbsp; // Hides the controls for moving &amp;amp; scaling pictures, or for<br />
+&nbsp; &nbsp; // trimming movies. To instead show the controls, use YES.<br />
+&nbsp; &nbsp; cameraUI.allowsEditing = NO;<br />
+<br />
+&nbsp; &nbsp; cameraUI.delegate = delegate;<br />
+<br />
+&nbsp; &nbsp; [controller presentModalViewController: cameraUI animated: YES];<br />
+&nbsp; &nbsp; return YES;<br />
+}</div></td></tr></tbody></table></div>
+
+</pre>
+<p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/IMG_0151.png"><img class="aligncenter size-medium wp-image-3001" title="Скриншот приложения &quot;Камера&quot;" alt="" src="/texts/denivip/assets/IMG_0151.png" width="200" height="300" /></a></center></p>
+<p>UIImagePickerController поддерживает ограниченную кастомизацию пользовательского интерфейса через задание свойства cameraOverlayView, которое должно содержать view для отображения поверх стандартного интерфейса.</p>
+<p>Для того, чтобы в полном объеме задействовать в своем приложении возможности съемки или реализовать какую-то нестандартную функциональность, придется обратиться к AV Foundation Framework.</p>
+<h2>AV Foundation Framework</h2>
+<p>Получение данных с камеры и микрофона осуществляется в рамках сессии съемки (capture session). Сессия координирует потоки данных из входов в выходы, один из которых может быть, например, видеофайлом. Кроме того, к сессии можно привязать слой предпросмотра, на котором будет показано изображение с камеры. Сессия представляет собой граф, в котором вершины &#8212; это объекты ввода AVCaptureInput и вывода AVCaptureOutput, а связи &#8212; объекты AVCaptureConnection. Устройства ввода, являющиеся источником данных для объектов ввода, описываются классом AVCaptureDevice.</p>
+<p>Для инициализации сессии, необходимо добавить нужные входы и выходы, при этом связи создадутся автоматически по принципу &#171;все входы соединены со всеми выходами&#187;, а затем задать для сессии одно из предустановленных качеств: высокое, среднее, низкое и т.д. После инициализации можно запускать сессию методом startRunning и останавливать методом stopRunning.</p>
+<p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/1333162118_6227.jpeg"><img class="aligncenter size-medium wp-image-3005" title="Схема AVCaptureSession" alt="" src="http://blog.denivip.ru/wp-content/uploads/2012/07/1333162118_6227-300x185.jpg" width="300" height="185" /></a></center>На различных моделях устройств могут быть доступны различные по количеству и характеристикам камеры, какие-то устройства могут оказаться недоступными из-за того, что они используются другими приложениями. Поэтому для поиска и выбора подходящего устройства класс AVCaptureDevice предоставляет ряд методов: hasMediaType: для подбора по виду контента (аудио/видео), supportsAVCaptureSessionPreset: для проверки поддерживаемых установок качества, isFocusModeSupported: для определения поддерживаемых режимов автофокусировки, и т.д. Если устройство поддерживает автофокусировку, подстветку или автоматический баланс белого, то все эти функции можно включить или выключить.</p>
+<p>В рамках запущенной сессии можно переключаться с одного устройства на другое, например, с фронтальной камеры на заднюю, не останавливая сессию. Для этого, как и для изменения других настроек сессии, соответствующий код необходимо написать внутри вызовов beginConfiguration, commitConfiguration, чтобы минимизировать время применения новых настроек.</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br /></div></td><td><div class="text codecolorer">[session beginConfiguration];<br />
+[session removeInput:frontFacingCameraDeviceInput];<br />
+[session addInput:backFacingCameraDeviceInput];<br />
+[session commitConfiguration];</div></td></tr></tbody></table></div>
+
+</pre>
+<p>В качестве выходов в сессии съемки могут участвовать объекты следующих классов:</p>
+<ul>
+    <li><p>AVCaptureMovieFileOutput для сохранения данных сессии в видеофайл.</p></li>
+    <li><p>AVCaptureVideoDataOutput для получения отдельных видеосэмплов, снятых камерой.</p></li>
+    <li><p>AVCaptureAudioDataOutput для получения отдельных звуковых сэмплов, снятых микрофоном.</p></li>
+    <li><p>AVCaptureStillImageOutput для сохранения статического изображения с камеры с сопутствующими метаданными.</p></li>
+</ul>
+
+<h3>Сохранение в файл</h3>
+<p>AVCaptureMovieFileOutput позволяет задать следующие основные параметры записи: максимальную длительность записанного файла, по достижению которой запись прекратится автоматически, требуемый для записи объем свободного дискового пространства. Параметры качества выходного видеофайла зависят от параметров сессии и поддерживаемых режимов записи на используемой модели устройства. Метод startRecordingToOutputFileURL: recordingDelegate: начинает запись в файл, а по завершению вызывается метод делегата captureOutput: didFinishRecordingToOutputFileAtURL: fromConnections: error:. В этом методе очень важно проверить причину завершения записи, так как она может прерваться по совершенно разным, в том числе и не зависящим от приложения, причинам: переполнение диска, отсоединение микрофона, поступление входящего звонка и т.д.</p>
+<p>Для добавления в записанный видеофайл или изображение информации о геолокации используется свойство metadata, содержащее массив объетов AVMutableMetadataItem. Помимо геолокации поддерживаются также следующие метаданные: дата записи, язык, название, расширенное описание и прочие.</p>
+<h3>Покадровая обработка</h3>
+<p>Выходы AVCaptureVideoDataOutput и AVCaptureAudioDataOutput после запуска сессии начинают передавать в метод делегата captureOutput: didOutputSampleBuffer: fromConnection: отдельные несжатые сэмплы, снятые с камеры или микрофона. Метод делегата вызывается в фоновой последовательной очереди, что гарантирует обработку кадров в заданном порядке без блокирования основной очереди. При обработке кадров важно следить за тем, чтобы приложение успевало их обрабатывать с той же скоростью, с которой они поступают на вход. Для этого могут быть полезными возможности аппаратного ускорения, предоставляемые фреймворками OpenGL ES и Accelerate Framework.</p>
+<p>В качестве контейнера, содержащего данные сэмпла выступает структура типа CMSampleBuffer. Функции библиотеки Core Media позволяют преобразовывать эту структуру в массив байтов, содержащих медиаинформацию сэмпла, и обратно или в объект UIImage для видеокадров, а также получить сопутствующую информацию о сэмпле: описание формата данных, количество аудиоканалов, частоту дискретизации, временную метку, длительность, и т.д. Программист имеет возможность задать необходимый формат сэмплов до начала записи в зависимости от того, какой формат будет более удобен для обработки. Например, для обработки кадров средствами Core Graphics или OpenGL лучше подойдет кадр с пикселями закодированными в формате BGRA.</p>
+<h3>Предварительный просмотр</h3>
+<p>Для предпросмотра изображения с камеры слой AVCaptureVideoPreviewLayer инициализуется с использованием сессии съемки:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br /></div></td><td><div class="text codecolorer">AVCaptureSession *captureSession = &lt;#Get a capture session#&gt;;<br />
+CALayer *viewLayer = &lt;#Get a layer from the view in which <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; you want to present the preview#&gt;;<br />
+AVCaptureVideoPreviewLayer *captureVideoPreviewLayer = <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[[AVCaptureVideoPreviewLayer alloc]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;initWithSession:captureSession];<br />
+[viewLayer addSublayer:captureVideoPreviewLayer];</div></td></tr></tbody></table></div>
+
+</pre>
+<p>Слой предпросмотра поддерживает несколько режимов масштабирования, также как и AVPlayerLayer: масштабирование с полным заполнением, с сохранением соотношения сторон и с обрезанием сторон.</p>
+<p>Класс AVCaptureAudioChannel позволяет получить текущий максимальный и усредненный уровень звука для отображения в интерфейсе приложения.</p>
+<p>Пример использования вышеописанных средств фреймворка AV Foundation можно найти в разделе руководства <a href="https://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/04_MediaCapture.html#//apple_ref/doc/uid/TP40010188-CH5-SW3">Putting it all Together: Capturing Video Frames as UIImage Objects</a>.</p>
+<h3>Покадровая запись видеофайла</h3>
+<p>Класс AVAssetWriter позволяет осуществлять покадровую запись видеофайлов. Звуковые сэмплы и кадры видео при этом можно получать как из сессии съемки, так и формировать самостоятельно внутри приложения, используя готовые изображения, скриншоты, рисунки, выполненные с помощью фреймворка Core Graphics, или трехмерные OpenGL сцены. Трэки результирующего видеофайла кодируются одним из поддерживаемых устройством кодеков, например, H.264 и AAC. При этом всегда, когда есть такая возможность, кодирование производится аппаратно, не создавая нагрузку на центральный процессор устройства.</p>
+<p>При инициализации AVAssetWriter создается один или несколько входов AVAssetWriterInput, соответствующих отдельным звуковым и видеодорожкам выходного файла. Для них задаются параметры выходного потока, такие как битрейт, частота дискретизации, разрешение видео. После этого вызывается метод startWriting для начала записи видеофайла и методы startSessionAtSourceTime: и endSessionAtSourceTime: перед началом и концом записи отдельных отрезков видео. В ходе записи сессии кадры добавляются методом [AVAssetWriterInput appendSampleBuffer:].</p>
+<h2>Assets Library Framework</h2>
+<p>Еще один небольшой фреймворк &#8212; Assets Library позволяет приложению получить доступ на чтение и запись к библиотеке фотографий и записанных видеороликов устройства, которой управляет стандартное приложение &#171;Фото&#187;. Большинство методов этого фреймворка являются асинхронными, в том числе и по той причине, что для совершения различных действий операционная система может запрашивать у пользователя разрешение на доступ к библиотеке. Для поиска нужных фотографий фреймворк предоставляет программный интерфейс очень похожий на тот, который доступен обычным пользователям в приложении Фото: выбор из различных коллекций, фильтрация по различным признакам.</p>
+<h2>Core Image</h2>
+<p>Фреймворк Core Image предназначен для обработки статических изображений, например фотографий. В iOS 5 в нем появился ряд новых интересных функций, которые в некоторых случаях можно использовать в том числе и при съемке видео:</p>
+<ul>
+<li>Определение характерных признаков на фотографии.</li>
+<li>Новые фильтры для обработки фотографий: удаление эффекта красных глаз и автоматическое улучшение фотографии.</li>
+</ul>
+<p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/ScreenShot__9rtq37__.jpeg"><img class="aligncenter size-medium wp-image-3003" title="Пример работы Face Detection" alt="" src="http://blog.denivip.ru/wp-content/uploads/2012/07/ScreenShot__9rtq37__-200x300.jpg" width="200" height="300" /></a></center>В данный момент единственный поддерживаемый признак, который можно выявить по фотографии, &#8212; это человеческое лицо. С помощью класса CIFaceDetector можно найти ту область изображения, в которой предположительно находится лицо. Объект найденной характеристики CIFaceFeature содержит следующую информацию: границы лица, местонахождение правого глаза, левого глаза и рта. Стоит отметить, что эта функция не делает распознавание лиц в полном смысле этого слова, то есть не может отличить одно лицо от другого или определить, что лицо принадлежит определенному человеку.</p>
+<p>Для использовании функций Core Image при съемке видео, необходимо задать выходной формат BGRA и конвертировать снимаемые кадры в объекты типа CIImage с помощью одного из методов инициализации этого класса.</p>
+<h2>Живое вещание видео в сеть</h2>
+<p>К сожалению iOS SDK не предоставляет встроенных возможностей для вещания сжатого видео снятого с камеры в реальном времени, хотя аппаратные возможности мобильных устройств Apple позволяют это делать, что подтверждается существованием приложений, которые это делают, таких как Facetime, Skype и Ustream. В текущей версии SDK отсутствует поддержка двух критически важных для поддержки живого вещания функций:</p>
+<ul>
+<li>Формирование сжатых видеобуферов в памяти, пригодных для отправки по сети.</li>
+<li>Поддержка существующих сетевых протоколов для вещания с минимальными задержками, таких как MMS, RTSP или RTMP.</li>
+</ul>
+<p>К счастью, возможности платформы iOS не ограничиваются встроенными SDK. Мы можем задействовать в приложении функциональность любой библиотеки, написанной на языках C, C++, Objective-C или других, способных компилировать код в виде подключаемой библиотеки, при условии, что ее код достаточно хорошо переносим между UNIX-совместимыми ОС и нормально компилируется для целевой платформы armv7. Большинство библиотек с открытым исходным кодом подпадают под эти требования.</p>
+<p>Другое ограничение, с которым разработчик может столкнуться при использовании некоторых открытых библиотек &#8212; это то, что популярная открытая лицензия GPL не совместима с правилами App Store. Один из примеров такой библиотеки &#8212; libx264 для кодирования видеопотока кодеком H.264. Возможно, на этапе review это никак не повлияет на решение по вашему приложению, однако, в дальнейшем любой из разработчиков библиотеки легко сможет удалить ваше приложение из App Store, написав жалобу в Apple. Помимо GPL существуют и другие, более совместимые с закрытой коммерческой разработкой лицензии, такие как LGPL, MIT, BSD, и большинство открытых библиотек используют именно их. Например, код ffmpeg частично, а libfaac и librtmp целиком лицензированы по LGPL.</p>
+<p>Однако, и использование сторонних библиотек не решает полностью проблему живого вещания. Дело в том, что ни одна из известных на сегодняшний день открытых библиотек не способна задействовать возможности аппаратного кодирования видео, доступные на устройствах Apple. А кодирование средствами CPU осуществляется недостаточно быстро и отнимает огромное количество ресурсов процессора, а самое главное &#8212; быстро сажает батарею. К счастью, все же существует обходной путь для аппаратного кодирования видео в реальном времени, который к тому же не использует закрытых API системы, и некоторые приложения используют этот вариант. Мы в компании DENIVIP Media также разработали и опробовали в опытной эксплуатации эту функциональность.</p>
+<h2>Интересные примеры</h2>
+<p>Рассмотрим некоторые интересные примеры использования описанных выше возможностей SDK iOS.</p>
+<h3>Пример RosyWriter</h3>
+<p>Проект <a href="https://developer.apple.com/library/ios/#samplecode/RosyWriter/Introduction/Intro.html">RosyWriter</a> доступен как часть официальной документации Apple для разработчиков. Он показывает, как реализовать продвинутый вариант съемки и записи видеофайла, включающий одним из этапов покадровую обработку получаемых с камеры изображений. В данном случае обработка заключается в обнулении зеленой составляющей цвета изображения, но в вашем приложении это может быть все, что угодно. Кроме того, в примере показано, как сделать собственный слой предпросмотра средствами OpenGL.</p>
+<p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/IMG_0145.png"><img class="aligncenter size-medium wp-image-2979" title="Скриншот RosyWriter" alt="" src="/texts/denivip/assets/IMG_0145.png" width="200" height="300" /></a></center></p>
+<h3>Пример GLCameraRipple</h3>
+<p><a href="http://developer.apple.com/library/ios/#samplecode/GLCameraRipple/Introduction/Intro.html">GLCameraRipple</a> &#8212; еще один аналогичный пример из документации iOS SDK. Он демонстрирует, как применить к видеопотоку, получаемому с камеры, эффект волн с помощью шейдеров OpenGL.</p>
+<p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/IMG_0147.png"><img class="aligncenter size-medium wp-image-2981" title="Скриншот GLCameraRipple" alt="" src="/texts/denivip/assets/IMG_0147.png" width="200" height="300" /></a></center>Для обработки кадров на GPU используется структура CVOpenGLESTextureCache, появившаяся в iOS 5, которая позволяет значительно ускорить работу с OpenGL, исключая избыточные операции пересылки данных картинки на GPU и обратно.</p>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/ios/" title="Просмотреть все записи в рубрике &laquo;iOS&raquo;" rel="category tag">iOS</a>, <a href="http://blog.denivip.ru/index.php/category/tutorial/" title="Просмотреть все записи в рубрике &laquo;Разработка&raquo;" rel="category tag">Разработка</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/apple/" rel="tag">Apple</a>, <a href="http://blog.denivip.ru/index.php/tag/avfoundation/" rel="tag">avfoundation</a>, <a href="http://blog.denivip.ru/index.php/tag/ios/" rel="tag">iOS</a>, <a href="http://blog.denivip.ru/index.php/tag/ipad/" rel="tag">iPad</a>, <a href="http://blog.denivip.ru/index.php/tag/iphone/" rel="tag">iPhone</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0/" rel="tag">разработка</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%bc%d0%be%d0%b1%d0%b8%d0%bb%d1%8c%d0%bd%d1%8b%d1%85-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d0%b9/" rel="tag">разработка мобильных приложений</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2012/07/%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0-%d1%81-%d0%ba%d0%b0%d0%bc%d0%b5%d1%80%d0%be%d0%b9-%d0%b2-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f%d1%85-%d0%b4%d0%bb%d1%8f-apple-ios/" title="Permalink to Работа с камерой в iOS приложениях" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-2901 -->
+

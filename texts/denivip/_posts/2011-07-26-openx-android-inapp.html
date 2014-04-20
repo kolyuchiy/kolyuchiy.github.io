@@ -1,0 +1,64 @@
+---
+layout: default
+title: Показ рекламы из сервера OpenX в приложениях под Android
+header: |
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+---
+<article id="post-1951" class="post-1951 post type-post status-publish format-standard hentry category-android category-tutorial category-44 tag-android tag-openx tag-23 tag---">
+	<header class="entry-header">
+		<h1 class="entry-title">Показ рекламы из сервера OpenX в приложениях под Android</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2011/07/openx-android-inapp/" title="16:18" rel="bookmark"><time class="entry-date" datetime="2011-07-26T16:18:44+00:00" pubdate>26.07.2011</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2011/07/showing-openx-server-ads-in-android-applications/?lang=en">Английский</a></p><p><center><a href="http://blog.denivip.ru/wp-content/uploads/2011/07/screenshot1.png" target="_blank"><img class="aligncenter size-medium wp-image-1953" title="screenshot" alt="" src="/texts/denivip/assets/screenshot1.png" width="300" height="175" /></a></center>Рынок мобильной рекламы набирает обороты, и многих разработчиков приложений под платформу Android интересует тема монетизации через показ рекламы. Большинство из них пользуются услугами крупнейшего провайдера мобильной рекламы AdMob. Но это — не единственная альтернатива. Открытый и бесплатный рекламный сервер OpenX, предназначенный для показа рекламы на веб-страницах, так же может быть использован для показа рекламы в мобильных приложениях. В этой статье мы покажем кому это может быть нужно и как это сделать. <span id="more-1951"></span></p>
+<p>Четыре причины, по которым вы можете выбрать открытое решение вместо популярного:</p>
+<ol>
+<li>Вы — энтузиаст интернет-рекламы и вам интересно разбираться в том, как все работает, и делать все самому.</li>
+<li>Вы не можете воспользоваться услугами AdMob или других сервисов, так как не проходите по требованиям, которые они предъявляют к приложениям или к рекламным материалам.</li>
+<li>Вы хотите разместить рекламный сервер на собственной инфраструктуре. Например, если приложение будет работать внутри закрытой сети, не имеющей доступа в Интернет, или вы просто не доверяете Google.</li>
+<li>Вам необходимо сильно модифицированное решение, которое должно удовлетворять нестандартным требованиям к таргетингу, отчетности и т.д.</li>
+</ol>
+<p>Для того, чтобы упростить встраивание рекламы из OpenX в ваше Android приложение, мы написали виджет, который можно встроить в любое приложение, используя стандартные средства, предоставляемые платформой. Вы можете загрузить архив, включающий исходные коды виджета, документацию и примеры использования, <a href="/wp-content/uploads/2011/07/android-widget.tar.gz">здесь</a> или на <a href="http://labs.denivip.ru/projects/openx-android-widget">labs.denivip.ru</a>.</p>
+<p>Компонент был успешно протестирован совместно с сервером OpenX версии Community Edition 2.8.8-rc6 (самая последняя на данный момент), но должен так же работать и с более ранними версиями. По сути он представляет собой компонент WebView, к которому добавлен удобный программный интерфейс для загрузки рекламы из OpenX. Чтобы использовать его, достаточно добавить описание виджета в XML-файл layout-а для вашего activity. Например, так:</p>
+<pre><span class="nt">&lt;LinearLayout</span> <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+       <span class="na">xmlns:ox=</span><span class="s">"http://denivip.ru/schemas/android/openx/0.1"</span>
+            <span class="na">android:orientation=</span><span class="s">"vertical"</span>
+            <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+
+            <span class="na">android:layout_height=</span><span class="s">"match_parent"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ru.denivip.android.widgets.OpenxAdView</span>
+            <span class="na">android:id=</span><span class="s">"@+id/adview"</span>
+            <span class="na">android:layout_width=</span><span class="s">"88px"</span>
+            <span class="na">android:layout_height=</span><span class="s">"31px"</span> 
+            <span class="na">ox:delivery_url=</span><span class="s">"@string/openxDeliveryUrl"</span>
+
+            <span class="na">ox:zone_id=</span><span class="s">"3"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;ListView</span> <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+            <span class="na">android:id=</span><span class="s">"@+id/contactList"</span>
+            <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+
+            <span class="na">android:layout_weight=</span><span class="s">"1"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/LinearLayout&gt;</span></pre>
+<p>Кроме всех стандартных параметров компонента View, так же в описании layout-а для компонента OpenXAd можно указать следующие параметры, влияющие на доставку баннеров:</p>
+<ul>
+<li>delivery_url Путь к серверу OpenX и директории на сервере, в которой хранятся скрипты доставки рекламы. Например: openx.example.com/delivery.</li>
+<li>js_tag_url Имя скрипта OpenX, отвечающего за доставку рекламного кода с использование стандартного JavaScript тэга. В большинстве случаев этот параметр не нужно менять, его значение по-умолчанию ajs.php совпадает со именем скрипта из стандартной установки OpenX.</li>
+<li>zone_id Идентификатор зоны OpenX, из которой будет производиться выбор рекламных материалов. Этот параметр является обязательным, если только вы не используете метод загрузки рекламы load(int), в котором он указывается непосредственно.</li>
+<li>has_https Если взаимодействие с сервером OpenX происходит по протоколу HTTPS, то значение этого параметра необходимо установить в true. По-умолчанию: false.</li>
+<li>source Этот параметр не обязательно указывать. Его можно использовать для таргетинга рекламы.</li>
+</ul>
+<p>Все эти параметры, так же как и добавление самого компонента OpenXAd, можно задать не только через файл layout-а, но и непосредственно в коде приложения.</p>
+<p>В результате на экране activity вашего приложения появится область заданного размера, содержащая баннер, загруженный из сервера OpenX (см. скриншот вначале статьи). Так же как и при внедрении на веб-страницу, на этот баннер можно кликнуть и перейти на сайт рекламодателя.</p>
+<p>Ждем ваших отзывов о виджете OpenXAd в комментариях.</p>
+<p><a href="http://blog.denivip.ru/wp-content/uploads/2011/07/android-widget.tar.gz">android-widget.tar.gz</a></p>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/android/" title="Просмотреть все записи в рубрике &laquo;Android&raquo;" rel="category tag">Android</a>, <a href="http://blog.denivip.ru/index.php/category/tutorial/" title="Просмотреть все записи в рубрике &laquo;Разработка&raquo;" rel="category tag">Разработка</a>, <a href="http://blog.denivip.ru/index.php/category/%d1%80%d0%b5%d0%ba%d0%bb%d0%b0%d0%bc%d0%b0/" title="Просмотреть все записи в рубрике &laquo;Реклама&raquo;" rel="category tag">Реклама</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/android/" rel="tag">Android</a>, <a href="http://blog.denivip.ru/index.php/tag/openx/" rel="tag">OpenX</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0/" rel="tag">разработка</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%bc%d0%be%d0%b1%d0%b8%d0%bb%d1%8c%d0%bd%d1%8b%d1%85-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d0%b9/" rel="tag">разработка мобильных приложений</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2011/07/openx-android-inapp/" title="Permalink to Показ рекламы из сервера OpenX в приложениях под Android" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-1951 -->
+

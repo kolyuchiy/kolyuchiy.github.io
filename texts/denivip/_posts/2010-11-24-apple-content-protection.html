@@ -1,0 +1,39 @@
+---
+layout: default
+title: Защита видеоконтента на платформе Apple
+header: |
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+---
+<article id="post-600" class="post-600 post type-post status-publish format-standard hentry category-- tag-apple tag-drm tag-ipad tag-iphone tag-content-protection">
+	<header class="entry-header">
+		<h1 class="entry-title">Защита видеоконтента на платформе Apple</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2010/11/apple-content-protection/" title="22:40" rel="bookmark"><time class="entry-date" datetime="2010-11-24T22:40:09+00:00" pubdate>24.11.2010</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2010/11/apple-content-protection-en/?lang=en">Английский</a></p><p><a href="http://blog.denivip.ru/wp-content/uploads/2010/11/Apple-logo-with-DRM-lock-FLickr-user-shift_ctrl.png"><img src="http://blog.denivip.ru/wp-content/uploads/2010/11/Apple-logo-with-DRM-lock-FLickr-user-shift_ctrl-181x300.png" alt="" title="Apple-logo-with-DRM-lock-FLickr-user-shift_ctrl" width="181" height="300" class="aligncenter size-medium wp-image-610" /></a></p>
+<p>Технология DRM компании Apple называется FairPlay. Ее внутренние принципы работы держатся в секрете и не могут быть лицензированы третьим лицам для использования в магазинах отличных от iTunes и на не Apple-устройствах. Обоснование данного решения можно найти в <a href="http://www.apple.com/hotnews/thoughtsonmusic/">статье Стива Джобса</a>:</p>
+<p><span id="more-600"></span></p>
+<blockquote><p>
+Другой альтернативой может быть лицензирование технологии DRM FairPlay для настоящих и будущих конкурентов с целью достижения интероперабельности между плеерами и магазинами различных компаний. На первый взляд это кажется хорошей идеей, поскольку это даст потребителям больший выбор сейчас и в будущем. И Apple может извлечь выгоду, взимая небольшую плату за лицензирование. Однако, если глубже задуматься над этим вопросом, начинают всплывать проблемы. Самая серьезная из них — это то, что с лицензированием DRM связано разглашение части секретных деталей работы технологии многим людям во многих компаниях, а история учит нас, что это неизбежно приведет к утечке этих секретов. Интернет сделал такие утечки намного более болезненными, так как одна утечка может распространиться по всему миру за считанные минуты. Такие утечки могут мгновенно привести к появлению в сети бесплатных программ направленных на отключение защиты DRM, так что песни ранее бывшие защищенными становится возможным воспроизвести на неавторизованном устройстве.
+</p></blockquote>
+<p>По той же причине две наиболее востребованные технологии защиты контента Flash Access и Windows Media RMS не лицензируются.</p>
+<p>У Apple имеется собственная реализациия технологии HTTP-стриминга, основанная на <a href="http://tools.ietf.org/html/draft-pantos-http-live-streaming-05">черновике стандарта IETF</a>. Она не поддерживает DRM, о чем упоминается в <a href="http://developer.apple.com/resources/http-streaming/">документации Apple для разработчиков</a>. Однако, медиа-файлы можно зашифровать и доступ к ключу для расшифровки может быть ограничен с использованием аутентификации HTTPS.</p>
+<p><a href="http://blog.denivip.ru/wp-content/uploads/2010/11/Clipboard01.png"><img src="http://blog.denivip.ru/wp-content/uploads/2010/11/Clipboard01-300x203.png" alt="" title="Схема работы HTTP Live Streaming" width="300" height="203" class="aligncenter size-medium wp-image-601" /></a></p>
+<p>Медиа-файлы, содержащие сегменты потока могут быть зашифрованы по отдельности. Когда применяется шифрование, ссылки на соответствующие файлы ключей указываются в индексном файле, чтобы клиент мог получить эти ключи для расшифровки контента.</p>
+<p>Если файл ключа указан в индексном файле, то он содержит ключ шифрования, который должен быть использован для расшифровки последующих медиа-файлов, указанных в индексном файле. В настоящее время HTTP Live Streaming поддерживает шифрование по алгоритму AES-128 с использование 16-байтных ключей. Подобный алгоритм шифрования поддерживает и Wowza.</p>
+<p>Сегментировщик медиа-потока, который предлагает Apple, предоставляет возможность шифрования и поддерживает три варианта конфигурации шифрования.</p>
+<p><strong>Первый вариант</strong> позволяет указать путь к файлу ключей на диске. В этом режиме сегментировщик вставляет во все индексные файлы URL этого файла ключей и шифрует весь контент используя только этот ключ.</p>
+<p>Во <strong>втором варианте</strong> сегментировщик генерирует случайным образом файл ключа, сохраняет его в указанном месте и ссылается на него в индексном файле. Весь контент шифруется одним этим случайно сгенерированным ключом.</p>
+<p><strong>Третий вариант</strong> указывает сегментировщику на то, что нужно генерировать новый файл ключей на каждые N файлов контента. Этот режим называется ротацией ключа. Каждая группа из N файлов шифруется с использованием другого ключа. </p>
+<p>Файлы ключей можно отдавать по протоколу HTTP или HTTPS. Вы также можете защитить выдачу файлов ключей используя собственную схему аутентификации на основе сессий.</p>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/%d0%be%d0%bd%d0%bb%d0%b0%d0%b9%d0%bd-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" title="Просмотреть все записи в рубрике &laquo;Онлайн видео&raquo;" rel="category tag">Онлайн видео</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/apple/" rel="tag">Apple</a>, <a href="http://blog.denivip.ru/index.php/tag/drm/" rel="tag">DRM</a>, <a href="http://blog.denivip.ru/index.php/tag/ipad/" rel="tag">iPad</a>, <a href="http://blog.denivip.ru/index.php/tag/iphone/" rel="tag">iPhone</a>, <a href="http://blog.denivip.ru/index.php/tag/content-protection/" rel="tag">защита контента</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2010/11/apple-content-protection/" title="Permalink to Защита видеоконтента на платформе Apple" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+        </article><!-- #post-600 -->
+

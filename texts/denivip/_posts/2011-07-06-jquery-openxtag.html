@@ -1,0 +1,88 @@
+---
+layout: default
+title: OpenX jQuery плагин для вставки рекламного кода
+header: |
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+---
+<article id="post-1813" class="post-1813 post type-post status-publish format-standard hentry category-tutorial category-44 tag-jquery-openx- tag-openx tag-- tag--">
+	<header class="entry-header">
+		<h1 class="entry-title">OpenX jQuery плагин для вставки рекламного кода</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2011/07/jquery-openxtag/" title="22:13" rel="bookmark"><time class="entry-date" datetime="2011-07-06T22:13:12+00:00" pubdate>06.07.2011</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2011/07/jquery-openxtag-en/?lang=en">Английский</a></p><p><center><a href="http://blog.denivip.ru/wp-content/uploads/2011/07/openx-jquery.jpg"><img src="http://blog.denivip.ru/wp-content/uploads/2011/07/openx-jquery.jpg" alt="openx-jquery-lazy-load" title="openx-jquery-lazy-load" width="390" height="220" class="aligncenter size-full wp-image-1850" /></a></center><br />
+Несмотря на то, что компания OpenX фактически прекратила разработку открытой версии OpenX Community Edition, интерес к этому программному продукту все еще присутствует, так как это наиболее функциональное решение с открытыми исходными кодами для доставки рекламы. В этой статье мы покажем, как улучшить один из аспектов работы с этой системой &#8212; код загрузки рекламы для вставки на веб страницу. <span id="more-1813"></span></p>
+<p>Обычный код вставки баннера в OpenX с помощью JavaScript тэга выглядит примерно так:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br /></div></td><td><div class="text codecolorer">&lt;!--/* OpenX Javascript Tag v2.8.8-rc6 */--&gt;</div></td></tr></tbody></table></div>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br /></div></td><td><div class="text codecolorer">&lt;script type='text/javascript'&gt;&lt;!--//&lt;![CDATA[<br />
+var m3_u = (location.protocol=='https:'?'https://openx.local/openx-now/www/delivery/ajs.php':'http://openx.local/openx-now/www/delivery/ajs.php');<br />
+var m3_r = Math.floor(Math.random()*99999999999);<br />
+if (!document.MAX_used) document.MAX_used = ',';<br />
+document.write (&quot;&lt;scr&quot;+&quot;ipt type='text/javascript' src='&quot;+m3_u);<br />
+document.write (&quot;?zoneid=1&quot;);<br />
+document.write ('&cb=' + m3_r);<br />
+if (document.MAX_used != ',') document.write (&quot;&exclude=&quot; + document.MAX_used);<br />
+document.write (document.charset ? '&charset='+document.charset : (document.characterSet ? '&charset='+document.characterSet : ''));<br />
+document.write (&quot;&loc=&quot; + escape(window.location));<br />
+if (document.referrer) document.write (&quot;&referer=&quot; + escape(document.referrer));<br />
+if (document.context) document.write (&quot;&context=&quot; + escape(document.context));<br />
+if (document.mmm_fo) document.write (&quot;&mmm_fo=1&quot;);<br />
+document.write (&quot;'&gt;&lt;\/scr&quot;+&quot;ipt&gt;&quot;);<br />
+//]]&gt;--&gt;&lt;/script&gt;&lt;noscript&gt;&lt;a href='http://openx.local/openx-now/www/delivery/ck.php?n=a289d793&cb=INSERT_RANDOM_NUMBER_HERE' target='_blank'&gt;&lt;img src='http://openx.local/openx-now/www/delivery/avw.php?zoneid=1&cb=INSERT_RANDOM_NUMBER_HERE&n=a289d793' border='0' alt='' /&gt;&lt;/a&gt;&lt;/noscript&gt;</div></td></tr></tbody></table></div>
+<p>В нем довольно сложно разобраться неподготовленному пользователю, и фактически при необходимости изменить какие-либо его параметры приходится заходить в администраторский интерфейс OpenX и генерировать код заново. Помимо этого, он завязан на функцию document.write, что приводит к невозможности асинхронной загрузки баннеров на странице. Это означает, что при наличии в начале страницы баннера, страница не будет загружена целиком, пока не загрузится баннер. То есть ваш рекламный сервер становится узким местом для скорости загрузки страниц. Об этом мы уже писали ранее в статье <a href="http://blog.denivip.ru/index.php/2011/02/client-side-ad-loading-optimization/">Оптимизация загрузки рекламы на клиенте</a>.</p>
+<p>Чтобы решить эти проблемы, а также более тесно интегрировать рекламный код OpenX с библиотекой jQuery, которая приобрела популярность в последнее время, мы создали плагин для jQuery, позволяющий отказаться от использования громоздкого рекламного кода в пользу коротких и понятных конструкция на языке JavaScript. Плагин можно загрузить на <a href="http://plugins.jquery.com/project/openxtag">сайте jQuery</a>, а разработка ведется на <a href="https://github.com/denivip/jquery-openxtag">Github-е</a>.</p>
+<p>Помимо тесной интеграции с jQuery, использование этого плагина имеет следующие преимущества по сравнению со стандартным кодом вставки рекламы:</p>
+<ul>
+<li>Баннеры загружаются асинхронно, так что их загрузка не влияет на скорость загрузки страницы.</li>
+<li>Одним вызовом плагина можно загрузить баннеры сразу в несколько баннерных мест.</li>
+<li>Параметры запроса к рекламной системе можно задавать на нескольких уровнях: глобально для всех баннеров, которые загружаются с помощью плагина; в каждом вызове функции загрузки баннеров; непосредственно в HTML-коде элементов, в которые будет вставлен баннер, используя возможности, которые предоставляет плагин Metadata.</li>
+<li>Вы можете отлавливать момент загрузки баннера в своем JavaScript коде с помощью функции-колбэка.</li>
+</ul>
+<p>Плагин был успешно протестирован на простых баннерах формата изображение и SWF на сервере OpenX Community Edition последней на данный момент версии 2.8.8-rc6.</p>
+<h2>Примеры использования</h2>
+<p>Перед тем как начать использовать плагин, его необходимо подключить к веб-странице, добавив в head строки загрузки библиотеки jQuery, плагина Metadata (необходимо только если вы собираетесь использовать соответствующую функциональность), и плагина OpenX Tag:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br /></div></td><td><div class="text codecolorer">&lt;script src=&quot;jquery.min.js&quot;&gt;&lt;/script&gt;<br />
+&lt;script src=&quot;jquery.metadata.js&quot;&gt;&lt;/script&gt;<br />
+&lt;script src=&quot;jquery.openxtag.min.js&quot;&gt;&lt;/script&gt;</div></td></tr></tbody></table></div>
+<p>Для того чтобы задать обязательные параметры, общие для всех баннеров на странице (например, адрес вашего сервера OpenX), воспользуйтесь методом init:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br /></div></td><td><div class="text codecolorer">$.openxtag('init', {<br />
+delivery: 'http://example.com/openx/delivery',<br />
+deliverySSL: 'https://example.com/openx/delivery'<br />
+});</div></td></tr></tbody></table></div>
+<p>Код вставки баннера из зоны OpenX с ID 1 в элемент страницы с id &#171;zone1&#8243; будет выглядеть так (разница по сравнению со стандартным кодом очевидна):</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br /></div></td><td><div class="text codecolorer">$('#zone1').openxtag('zone', 1);</div></td></tr></tbody></table></div>
+<p>Зададим дополнительные параметры запроса к OpenX &#8212; включим параметр block, который позволяет сделать так, чтобы один и тот же баннер не загружался на одной странице несколько раз. Функция, заданная в третьем параметре вызова метода zone будет вызвана после того, как баннер загружен.</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br /></div></td><td><div class="text codecolorer">$('.banner').openxtag('zone', 1, {<br />
+block: true<br />
+}, function () {<br />
+console.log('loaded ad from zone ' + 1);<br />
+});</div></td></tr></tbody></table></div>
+<p>Зададим параметры загрузки баннеров непосредственно в HTML-коде:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br /></div></td><td><div class="text codecolorer">&lt;div class=&quot;banner {zoneID: 1, source: 'zone1'}&quot;&gt;&lt;/div&gt;<br />
+&lt;div class=&quot;banner {zoneID: 1, source: 'zone2'}&quot;&gt;&lt;/div&gt;</div></td></tr></tbody></table></div>
+<p>При этом вызов следующего кода будет использовать параметры заданные в каждом элементе.</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br /></div></td><td><div class="text codecolorer">$('.banner').openxtag('zone', function () {<br />
+console.log('loaded ad');<br />
+});</div></td></tr></tbody></table></div>
+<p>Дополнительные примеры вы можете посмотреть, <a href="http://plugins.jquery.com/files/jquery-openxtag-1.0.tar_0.gz">скачав плагин</a>. Надеемся, что наша разработка будем вам полезна, и ждем отзывов.</p>
+<p><strong>Обновление 15 июля 2011. Версия 1.1</strong></p>
+<p>В новой версии плагина добавлена поддержка запроса к серверу OpenX с помощью Single Page Call, что позволяет получить рекламный код для всех зон на странице, используя всего один запрос к серверу. Пример кода, иллюстрирующий использование этой функции:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br /></div></td><td><div class="text codecolorer">$('.banner').openxtag('spc', function () {<br />
+&nbsp; &nbsp; console.log('loaded ad');<br />
+});</div></td></tr></tbody></table></div>
+<p>Кроме того добавлен тэг типа iFrame. Вызов его производится аналогично. Но дополнительно необходимо указать ширину и высоту баннерного места.</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br /></div></td><td><div class="text codecolorer">$('.banner').openxtag('iframe', 1, {<br />
+&nbsp; &nbsp; width: 240,<br />
+&nbsp; &nbsp; height: 400<br />
+});</div></td></tr></tbody></table></div>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/tutorial/" title="Просмотреть все записи в рубрике &laquo;Разработка&raquo;" rel="category tag">Разработка</a>, <a href="http://blog.denivip.ru/index.php/category/%d1%80%d0%b5%d0%ba%d0%bb%d0%b0%d0%bc%d0%b0/" title="Просмотреть все записи в рубрике &laquo;Реклама&raquo;" rel="category tag">Реклама</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/jquery-openx-%d0%bf%d0%bb%d0%b0%d0%b3%d0%b8%d0%bd/" rel="tag">jQuery OpenX плагин</a>, <a href="http://blog.denivip.ru/index.php/tag/openx/" rel="tag">OpenX</a>, <a href="http://blog.denivip.ru/index.php/tag/%d0%be%d0%bd%d0%bb%d0%b0%d0%b9%d0%bd-%d1%80%d0%b5%d0%ba%d0%bb%d0%b0%d0%bc%d0%b0/" rel="tag">онлайн реклама</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%80%d0%b5%d0%ba%d0%bb%d0%b0%d0%bc%d0%bd%d1%8b%d0%b9-%d1%81%d0%b5%d1%80%d0%b2%d0%b5%d1%80/" rel="tag">рекламный сервер</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2011/07/jquery-openxtag/" title="Permalink to OpenX jQuery плагин для вставки рекламного кода" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-1813 -->
+

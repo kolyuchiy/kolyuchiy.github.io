@@ -1,0 +1,152 @@
+---
+layout: default
+title: OSMF плагин для сохранения позиции воспроизведения видео
+header: |
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+---
+<article id="post-1269" class="post-1269 post type-post status-publish format-standard hentry category-- category-tutorial tag-flash tag-osmf tag-13 tag-23">
+	<header class="entry-header">
+		<h1 class="entry-title">OSMF плагин для сохранения позиции воспроизведения видео</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2011/01/osmf-time-plugin/" title="18:29" rel="bookmark"><time class="entry-date" datetime="2011-01-18T18:29:34+00:00" pubdate>18.01.2011</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2011/01/osmf-plugin-to-save-video-playback-position/?lang=en">Английский</a></p><p style="text-align:center;"<a href="http://blog.denivip.ru/wp-content/uploads/2011/01/cropped-OSMF-Logo.jpg"><img src="http://blog.denivip.ru/wp-content/uploads/2011/01/cropped-OSMF-Logo-300x92.jpg" alt="" title="cropped-OSMF-Logo" width="300" height="92" class="aligncenter size-medium wp-image-1272" /></a></p>
+<p>В <a href="http://blog.denivip.ru/index.php/2011/01/fms-restore/">предыдущей статье</a> мы писали о том, какие подходы можно использовать для сохранения позиции, на которой пользователь остановил просмотр видеоконтента. В этой статье рассмотрим более подробно один из способов, показавшийся нам наиболее интересным, &#8212; использование сокетов, &#8212; и покажем как написать и использовать плагин для существующего OSMF-плеера, который будет отправлять на сервер информацию о текущей позиции. Плагин, о котором идет речь в статье, со всеми исходными кодами и примерами вы можете скачать на нашем сайте <a href="http://labs.denivip.ru/projects/osmf-position-plugin">labs.denivip.ru</a>. <span id="more-1269"></span></p>
+<p>Способ сохранения позиции с использованием сокета представляется наиболее удобным исходя из следующих соображений. Он не требует установки Flash Media Server-а и загрузки видео через RTMP. Количество запросов на сервер минимизировано за счет поддержания одного, постоянно открытого в ходе воспроизведения видео, соединения. Отправки на сервер минимального количества информации (время по событиям начала воспроизведения, паузы и перемотки) достаточно для того, чтобы достаточно точно установить время остановки воспроизведения вне зависимости от причин, по которым она произошла: для этого достаточно лишь иметь время, позицию в видеофайле и тип последнего события и время обрыва соединения. Далее приведен несколько упрощенный код реализации такого подхода, не принимающий во внимание некоторые важные при реальном применении аспекты, но тем не менее демонстрирующий принципиальную возможность реализации выбранного подхода.</p>
+<p><a href="http://www.opensourcemediaframework.com/">OSMF</a> (Open Source Media Framework) &#8212; фреймворк от Adobe для создания Flash-медиаплееров на языке ActionScript. Его задача в том, чтобы предоставить разработчикам унифицированный, удобный, гибкий и модульный вариант использования возможностей по показу видеоконтента, которые существуют в платформе Flash. Необходимость такого фреймворка продиктована широким распространением онлайн-видео в сети, основной технологией для показа которого до сих пор является Flash. Хотя в последнее время предпринимаются попытки добавить аналогичную функциональность в стандартные возможности HTML, но пока эти разработки еще очень сырые и им не хватает некоторых критически важных для крупных коммерческих внедрений функций.</p>
+<p>Перед началом разработки плагина потребуется выполнить следующие предварительные требования:</p>
+<ul>
+<li>Скачать и установить среду разработки Flash Builder. Полнофункциональная пробная версия доступна для загрузки на сайте Adobe. Она работает без активации 60 дней.</li>
+<li>Скачать и подключить к Flash Builder библиотеки Flex SDK версии не ниже 4.1, если они не были установлены вместе со средой.</li>
+<li>Скачать и установить плагин Flash Player версии не ниже 10.1. Для разработки предпочтительно использовать специальную <a href="http://www.adobe.com/support/flashplayer/downloads.html">отладочную версию плагина</a>.</li>
+<li>Скачать библиотеку OSMF последней версии (на момент написания статьи &#8212; версия 1.5).</li>
+</ul>
+<p><strong>Плеер</strong></p>
+<div id="attachment_1278" style="width: 200px" class="wp-caption aligncenter"><a href="http://blog.denivip.ru/wp-content/uploads/2011/01/Clipboard011.png"><img src="/texts/denivip/assets/Clipboard011.png" alt="" title="Структура проекта OSMF-плеера" width="190" height="300" class="size-medium wp-image-1278" /></a><p class="wp-caption-text">Структура проекта OSMF-плеера</p></div>
+<p>Сначала создадим простейший OSMF-плеер, и покажем как плагин подключается к плееру. Код этого плеера займет всего <a href="http://pastebin.com/cK7byFau">несколько строчек</a>. Создаем спрайт, в котором будет отображаться видео и добавляем его на сцену. Загружаем плагин.</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br /></div></td><td><div class="text codecolorer">public function Main()<br />
+{<br />
+&nbsp; &nbsp; sprite = new MediaPlayerSprite();<br />
+&nbsp; &nbsp; addChild(sprite);<br />
+&nbsp; &nbsp; factory = new DefaultMediaFactory();<br />
+&nbsp; &nbsp; factory.addEventListener(MediaFactoryEvent.PLUGIN_LOAD, onPluginLoad);<br />
+&nbsp; &nbsp; factory.loadPlugin(new PluginInfoResource(new StatsPluginInfo()));<br />
+}</div></td></tr></tbody></table></div>
+<p>После загрузки плагина, передаем полученный от него MediaElement в спрайт. Через метаданные ресурса передаем в плагин идентификатор пользователя, просматривающего контент.</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br /></div></td><td><div class="text codecolorer">private function onPluginLoad(event:MediaFactoryEvent):void<br />
+{<br />
+&nbsp; &nbsp; var resource:URLResource = new URLResource(&quot;http://openx.denivip.ru/test-portal/video/omlet.f4v&quot;);<br />
+&nbsp; &nbsp; resource.addMetadataValue(StatsPluginInfo.METADATA_USER_ID, 777);<br />
+&nbsp; &nbsp; var media:MediaElement = factory.createMediaElement(resource);<br />
+&nbsp; &nbsp; sprite.mediaPlayer.media = media;<br />
+&nbsp; &nbsp; sprite.addEventListener(MouseEvent.CLICK, onMouseClick);<br />
+}</div></td></tr></tbody></table></div>
+<p><strong>Плагин</strong></p>
+<p>Это все. Теперь нужно создать плагин. Для этого нужно создать новый Flex Library Project. Его структура представлена на скриншоте:</p>
+<div id="attachment_1285" style="width: 200px" class="wp-caption aligncenter"><a href="http://blog.denivip.ru/wp-content/uploads/2011/01/Clipboard02.jpg"><img src="/texts/denivip/assets/Clipboard02.jpg" alt="" title="Структура проекта плагина" width="190" height="300" class="size-medium wp-image-1285" /></a><p class="wp-caption-text">Структура проекта плагина</p></div>
+<p>Исходные файлы плагина имеют следующее назначение:</p>
+<ul>
+<li><a href="http://pastebin.com/9xSGFhX4">StatsPlugin.as</a> содержит стандартный код для всех OSMF-плагинов.</li>
+<li><a href="http://pastebin.com/RRYq8rT6">StatsPluginInfo.as</a> содержит информацию, необходимую фреймворку для того, чтобы определить, может ли этот плагин работать с определенным типом ресурса, и выполнить инициализацию плагина.</li>
+<li><a href="http://pastebin.com/WkrEMVci">StatsSocket.as</a> содержит код для открытия соединения с сервером, на который мы будем передавать информацию.</li>
+<li><a href="http://pastebin.com/AfKLzcPX">StatsTracker.as</a> содержит основной код, который непосредственно отслеживает текущее время воспроизведения и отправляет данные.</li>
+</ul>
+<p>Для того, чтобы фреймворк мог загрузить плагин, необходимо реализовать описание плагина, расширив стандартный класс PluginInfo. В его конструкторе мы задаем колбеки, которые будут вызваны для получения соответсвующей информации:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br /></div></td><td><div class="text codecolorer">var items:Vector.&lt;MediaFactoryItem&gt; = new Vector.&lt;MediaFactoryItem&gt;(); <br />
+var item:MediaFactoryItem = new MediaFactoryItem(NS, canHandleResourceFunction, mediaElementCreationFunction);<br />
+items.push(item);<br />
+super(items, creationNotificationFunction);</div></td></tr></tbody></table></div>
+<p>Метод canHandleResourceFunction возвращает true или false в зависимости от того, способен ли плагин работать с указанным типом ресурса. В нашем случае он всегда возвращает true.</p>
+<p>В методе mediaElementCreationFunction мы можем возвратить в плеер собственный объект подкласс ProxyElement, который будет переопределять функциональность стандартного MediaElement. В нашем случае это не требуется, поэтому метод всегда возвращает объект класса VideoElement.</p>
+<p>Метод creationNotificationFunction будет вызываться фреймворком при создании нового MediaElement-а, и именно здесь мы инициализируем код, который будет отслеживать позицию воспроизведения переданного MediaElement-а:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br /></div></td><td><div class="text codecolorer">private function creationNotificationFunction(media:MediaElement):void<br />
+{<br />
+&nbsp; &nbsp; trace('created media element');<br />
+&nbsp; &nbsp; var tracker:StatsTracker = new StatsTracker(media);<br />
+&nbsp; &nbsp; if (media.hasTrait(MediaTraitType.TIME)) {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; tracker.start();<br />
+&nbsp; &nbsp; }<br />
+}</div></td></tr></tbody></table></div>
+<p>Рассмотрим код класса StatsTracker. При создании экземпляра этого класса мы создаем таймер, чтобы периодически получать текущую позицию, и задаем обработчики событий traitAdd и traitRemove, чтобы запускать и останавливать таймер в зависимости от наличия в MediaElement-е TimeTrait-а, в котором и содержится информация о текущей позиции.</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br /></div></td><td><div class="text codecolorer">public function StatsTracker(media:MediaElement)<br />
+{<br />
+&nbsp; &nbsp; this.media = media;<br />
+&nbsp; &nbsp; this.timer = new Timer(500);<br />
+&nbsp; &nbsp; this.socket = new StatsSocket();<br />
+&nbsp; &nbsp; timer.addEventListener(TimerEvent.TIMER, function (event:TimerEvent):void {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; checkPosition();<br />
+&nbsp; &nbsp; });<br />
+&nbsp; &nbsp; media.addEventListener(MediaElementEvent.TRAIT_ADD, onTraitAdd);<br />
+&nbsp; &nbsp; media.addEventListener(MediaElementEvent.TRAIT_REMOVE, onTraitRemove);<br />
+}</div></td></tr></tbody></table></div>
+<p>Как только нужный нам Trait стал доступен, запускается таймер и происходит соединение с сервером:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br /></div></td><td><div class="text codecolorer">public function start():void<br />
+{<br />
+&nbsp; &nbsp; trace('start tracking');<br />
+&nbsp; &nbsp; socket.connect(SERVER_HOST, SERVER_PORT);<br />
+&nbsp; &nbsp; timer.start();<br />
+}</div></td></tr></tbody></table></div>
+<p>Если TimeTrait более недоступен, то сокет закрывается и таймер останавливается:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br /></div></td><td><div class="text codecolorer">public function stop():void<br />
+{<br />
+&nbsp; &nbsp; trace('do not track');<br />
+&nbsp; &nbsp; socket.close();<br />
+&nbsp; &nbsp; timer.stop();<br />
+}</div></td></tr></tbody></table></div>
+<p>Два раза в секунду мы отправляем через постоянно открытое соединение текущую позицию воспроизведения:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br /></div></td><td><div class="text codecolorer">private function checkPosition():void<br />
+{<br />
+&nbsp; &nbsp; var time:TimeTrait = media.getTrait(MediaTraitType.TIME) as TimeTrait;<br />
+&nbsp; &nbsp; trace(time.currentTime);<br />
+&nbsp; &nbsp; socket.writeln(time.currentTime.toString());<br />
+}</div></td></tr></tbody></table></div>
+<p><strong>Серверная часть</strong></p>
+<p>Серверная часть реализована с использованием Node.js и представляет собой код, который просто выводит на консоль сообщения о начале и окончании соединения и полученные от плагина данные:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br /></div></td><td><div class="text codecolorer">var net = require(&quot;net&quot;), <br />
+&nbsp; &nbsp; sys = require('sys');</div></td></tr></tbody></table></div>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br /></div></td><td><div class="text codecolorer">net.createServer(function(socket) {<br />
+&nbsp; &nbsp; socket.setEncoding(&quot;utf8&quot;);<br />
+&nbsp; &nbsp; socket.on(&quot;connect&quot;, function() {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; sys.puts('client connected');<br />
+&nbsp; &nbsp; });<br />
+&nbsp; &nbsp; socket.on(&quot;data&quot;, function(data) {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; sys.puts(sys.inspect(data, false));<br />
+&nbsp; &nbsp; });<br />
+&nbsp; &nbsp; socket.on(&quot;end&quot;, function() {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; sys.puts('client disconnected');<br />
+&nbsp; &nbsp; &nbsp; &nbsp; socket.end();<br />
+&nbsp; &nbsp; });<br />
+}).listen(8125, &quot;0.0.0.0&quot;);</div></td></tr></tbody></table></div>
+<p>Эта часть необходима, чтобы выдать Flash-у файл Cross-Domain Policy, который требуется для работы с сокетами.</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br /></div></td><td><div class="text codecolorer">net.createServer(function(socket) {<br />
+&nbsp; &nbsp; socket.write(&quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;\n&quot;);<br />
+&nbsp; &nbsp; socket.write(&quot;&lt;!DOCTYPE cross-domain-policy SYSTEM \&quot;http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd\&quot;&gt;\n&quot;);<br />
+&nbsp; &nbsp; socket.write(&quot;&lt;cross-domain-policy&gt;\n&quot;);<br />
+&nbsp; &nbsp; socket.write(&quot;&lt;allow-access-from domain=\&quot;*\&quot; to-ports=\&quot;*\&quot;/&gt;\n&quot;);<br />
+&nbsp; &nbsp; socket.write(&quot;&lt;/cross-domain-policy&gt;\n&quot;);<br />
+&nbsp; &nbsp; socket.end();<br />
+}).listen(843);</div></td></tr></tbody></table></div>
+<p>В итоге запустив плеер мы должны увидеть в консоли сервера сообщения, похожие на приведенные ниже:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br /></div></td><td><div class="text codecolorer">client connected<br />
+...<br />
+'91.708'<br />
+'91.708'<br />
+'91.708'<br />
+'91.708'<br />
+'92.292'<br />
+'92.792'<br />
+'93.375'<br />
+client disconnected</div></td></tr></tbody></table></div>
+<p><strong>Заключение</strong></p>
+<p>Представленный в этой статье код плагина и серверной части можно без труда расширить до полнофункционального решения, добавив отправку дополнительной информации о просмотре, такой как идентификатор видеоконтента, пользователя, возникающие в ходе воспроизведения события, и, добавив запись текущей позиции видеофайла в базу данных веб-сайта по обрыву соединения.</p>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/%d0%be%d0%bd%d0%bb%d0%b0%d0%b9%d0%bd-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" title="Просмотреть все записи в рубрике &laquo;Онлайн видео&raquo;" rel="category tag">Онлайн видео</a>, <a href="http://blog.denivip.ru/index.php/category/tutorial/" title="Просмотреть все записи в рубрике &laquo;Разработка&raquo;" rel="category tag">Разработка</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/flash/" rel="tag">flash</a>, <a href="http://blog.denivip.ru/index.php/tag/osmf/" rel="tag">OSMF</a>, <a href="http://blog.denivip.ru/index.php/tag/%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" rel="tag">видео</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0/" rel="tag">разработка</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2011/01/osmf-time-plugin/" title="Permalink to OSMF плагин для сохранения позиции воспроизведения видео" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-1269 -->
+
