@@ -1,7 +1,7 @@
 /* CSS Document */
 
 body {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: 'Lucida Grande', 'Lucida Sans', Verdana, Arial, Helvetica, sans-serif;
     padding: 1em;
 }
 h1 {
@@ -9,10 +9,14 @@ h1 {
     color: white;
     padding: 0.25em;
     display: inline-block;
+    font-family: 'Myriad Pro';
+    font-weight: bold;
 }
 h2 {
 	color: #E88833;
 	text-shadow: 0px 2px 2px white;
+    font-family: 'Myriad Pro';
+    font-weight: bold;
 }
 img#my-photo {
     background-color: gray;
