@@ -1,5 +1,7 @@
 /* CSS Document */
 
+@import "glitch.css";
+
 body {
 	font-family: 'Lucida Grande', 'Lucida Sans', Verdana, Arial, Helvetica, sans-serif;
     padding: 1em;
