@@ -1,8 +1,57 @@
 ---
 layout: default
-title: Статьи
+title: Статьи и выступления
 ---
-<h1>Статьи</h1>
+<h1>{{ page.title }}</h1>
+
+<h2>Highload++</h2>
+
+<ul>
+  {% for post in site.tags.highload %}
+    <li>
+        <a href="{{ post.url }}">{{ post.title }}</a> <span class="small">({{ post.date | date: "%-d.%m.%Y" }})</span>
+    </li>
+  {% endfor %}
+</ul>
+
+<h2><a href="https://medium.com/@kolyuchiy">Medium</a></h2>
+
+<ul>
+  {% for post in site.tags.medium %}
+    <li>
+        <a href="{{ post.url }}">{{ post.title }}</a> <span class="small">({{ post.date | date: "%-d.%m.%Y" }})</span>
+    </li>
+  {% endfor %}
+</ul>
+
+<h2>Учёба.ру совместно с IT.Mail.Ru</h2>
+
+<ul>
+    <li>
+        <a href="https://it.mail.ru/digital-heroes/hero-mobile-developer/">Мобильный разработчик: самый модный программист</a> <span class="small">(2015-2016)</span>
+    </li>
+</ul>
+
+<h2><a href="https://www.smashingmagazine.com/author/nikolaymorev/">Smashing Magazine</a></h2>
+
+<ul>
+  {% for post in site.tags.smashingmagazine %}
+    <li>
+        <a href="{{ post.url }}">{{ post.title }}</a> <span class="small">({{ post.date | date: "%-d.%m.%Y" }})</span>
+    </li>
+  {% endfor %}
+</ul>
+
+<h2><a href="https://habrahabr.ru/users/k011a/topics/">Хабрахабр</a></h2>
+
+<ul>
+  {% for post in site.tags.habr %}
+    <li>
+        <a href="{{ post.url }}">{{ post.title }}</a> <span class="small">({{ post.date | date: "%-d.%m.%Y" }})</span>
+    </li>
+  {% endfor %}
+</ul>
+
 <h2>Блог DENIVIP Group</h2>
 
 <p>English versions of most articles are available at <a href="http://blog.denivip.ru/?lang=en">blog.denivip.ru</a>.</p>
