@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Разработка видеоплеера для Android</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+    <article id="post-2204" class="post-2204 post type-post status-publish format-standard hentry category-android category-- tag-android tag--">
+	<header class="entry-header">
+		<h1 class="entry-title">Разработка видеоплеера для Android</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2011/09/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be%d0%bf%d0%bb%d0%b5%d0%b5%d1%80%d0%b0-%d0%b4%d0%bb%d1%8f-android/" title="21:00" rel="bookmark"><time class="entry-date" datetime="2011-09-08T21:00:32+00:00" pubdate>08.09.2011</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2011/09/developing-video-player-for-android/?lang=en">Английский</a></p><p><center><a href="http://blog.denivip.ru/wp-content/uploads/2011/09/Android-Video-Player.png"><img class="alignnone size-full wp-image-2226" title="Android Video Player" alt="Android Video Player" src="http://blog.denivip.ru/wp-content/uploads/2011/09/Android-Video-Player.png" width="540" height="440" /></a></center><br />
+Одна из задач, с которой вы можете столкнуться при разработке приложения для Android — это встраивание видео плеера в приложение, для воспроизведения видео контента. Стандартный SDK предоставляет два пути решения этой проблемы: использовать низкоуровневый класс MediaPlayer или готовый визуальный компонент VideoView совместно со стандартной панелью управления воспроизведением MediaController. Оба эти подхода обладают своими недостатками, поэтому мы решили разработать собственный видеокомпонент <a href="https://github.com/denivip/avideo">AVideo</a>. В этой статье мы расскажем о том как его использовать в своем приложении и какие преимущества он дает. <span id="more-2204"></span></p>
+<p>Сначала немного о недостатках стандартных классов. Класс MediaPlayer в силу своей низкоуровневости обладает максимальными возможностями, но весьма сложен в использовании, поэтому его не рекомендуется использовать напрямую. Специально для того, чтобы спрятать от разработчика всю сложность MediaPlayer, в SDK входит класс VideoView. Простейшая программа, использующая VideoView и MediaController выглядит примерно так:</p>
+<pre>public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.main);
+    mVideo = (VideoView) findViewById(R.id.videoView);
+    MediaController controller = new MediaController(this);
+    mVideo.setMediaController(controller);
+    mVideo.setVideoURI(Uri.parse(STREAM_URL));
+    mVideo.start();
+}</pre>
+<p>Но класс VideoView подходит только для простейших применений. Если вы захотите добавить в него какую-либо новую функциональность или даже просто сменить оформление элементов панели управления, то сделать это будет не просто, поскольку в SDK не предусмотрено такой возможности. Разработчику остается только реализовать собственный компонент на основе MediaPlayer с нуля или вырезать из находящихся в открытом доступе <a href="http://source.android.com/">исходных кодов Android</a> нужные компоненты и внести в них необходимые изменения. Именно так мы и решили поступить при разработке собственного плеера AVideo. В результате получился набор видео классов, совместимых по интерфейсу со стандартными, но реализующий дополнительно следующую функциональность:</p>
+<ul>
+<li>Измененное оформление элементов панели управления воспроизведением видео.</li>
+<li>Управление уровнем звука и кнопка выключения звука.</li>
+<li>Управление уровнем яркости подсветки экрана.</li>
+<li>Корректная работа компонента и контролов при встраивании в сложный layout, когда видео занимает только часть экрана.</li>
+<li>Переключение между обычным режимом отображения в layout-е и полноэкранным режимом по двойному нажатию на плеер с изменением размера элементов панели управления.</li>
+<li>Остановка воспроизведения и восстановление воспроизведения с запомненной позиции при отключении экрана устройства и при выходе из приложения.</li>
+</ul>
+<p>Использовать наши видео компоненты в собственном приложении очень просто. Загрузите архив, содержащий код компонентов и пример использования, с сайта <a href="https://github.com/denivip/avideo/downloads">github.com</a>. Импортируйте проекты из архива в рабочую область Eclipse и подключите их к своему приложению как библиотеки (Свойства проекта, Android, Library, Add&#8230;). Код простейшего видеоплеера с использованием этих компонентов получится абсолютно такой же, как если бы вы использовали стандартные компоненты, единственное, что изменится — это строки импорта соответствующих классов и к названию компонента VideoView в файле layout-а добавится наш package ru.denivip.android.video. Пример простейшего layout-а будет выглядеть так:</p>
+<pre style="font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; color: #000000; background-color: #eee; font-size: 12px; border: 1px dashed #999999; line-height: 14px; padding: 5px; overflow: auto; width: 100%;">
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br /></div></td><td><div class="text codecolorer">&nbsp; &nbsp; &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;<br />
+&nbsp; &nbsp; &lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp;android:id=&quot;@+id/videoContainer&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp;android:layout_width=&quot;wrap_content&quot; <br />
+&nbsp; &nbsp; &nbsp; &nbsp;android:layout_height=&quot;match_parent&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp;android:layout_weight=&quot;10&quot;&gt;<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;ru.denivip.android.video.VideoView<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;android:id=&quot;@+id/videoView&quot; android:layout_width=&quot;match_parent&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;android:layout_height=&quot;match_parent&quot;&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/ru.denivip.android.video.VideoView&gt;<br />
+<br />
+&nbsp; &nbsp; &lt;/FrameLayout&gt;</div></td></tr></tbody></table></div>
+
+</pre>
+<p>Кроме того, для корректного восстановления позиции воспроизведения при выходе из приложения или при повороте экрана, рекомендуется также добавить свойство android:configChanges=&quot;orientation&quot; к вашей activity и следующий Java-код:</p>
+<pre style="font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; color: #000000; background-color: #eee; font-size: 12px; border: 1px dashed #999999; line-height: 14px; padding: 5px; overflow: auto; width: 100%;">
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br /></div></td><td><div class="text codecolorer">@Override<br />
+protected void onPause() {<br />
+&nbsp; &nbsp; super.onPause();<br />
+&nbsp; &nbsp; mVideo.suspend();<br />
+}<br />
+<br />
+@Override<br />
+protected void onResume() {<br />
+&nbsp; &nbsp; super.onResume();<br />
+&nbsp; &nbsp; mVideo.resume();<br />
+}<br />
+<br />
+@Override<br />
+public void onConfigurationChanged(Configuration newConfig) {<br />
+&nbsp; &nbsp; super.onConfigurationChanged(newConfig);<br />
+}</div></td></tr></tbody></table></div>
+
+</pre>
+<p>Результат работы тестового приложения в обычном и в полноэкранном режиме вы можете видеть на скриншотах:</p>
+<p><a href="http://blog.denivip.ru/wp-content/uploads/2011/09/20110908_001h.jpg"><img class="aligncenter size-medium wp-image-2208" title="Обычный режим" alt="" src="/texts/denivip/assets/20110908_001h.jpg" width="300" height="229" /></a></p>
+<p><a href="http://blog.denivip.ru/wp-content/uploads/2011/09/20110908_002h.jpg"><img class="aligncenter size-medium wp-image-2209" title="Полноэкранный режим" alt="" src="/texts/denivip/assets/20110908_002h.jpg" width="300" height="228" /></a></p>
+<p>Мы надеемся, что наш видеокомпонент пригодится вам в работе, и ждем багрепорты, предложения и пожелания по реализации новой функциональности, а также патчи.</p>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/android/" title="Просмотреть все записи в рубрике &laquo;Android&raquo;" rel="category tag">Android</a>, <a href="http://blog.denivip.ru/index.php/category/%d0%be%d0%bd%d0%bb%d0%b0%d0%b9%d0%bd-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" title="Просмотреть все записи в рубрике &laquo;Онлайн видео&raquo;" rel="category tag">Онлайн видео</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/android/" rel="tag">Android</a>, <a href="http://blog.denivip.ru/index.php/tag/%d0%b2%d0%b8%d0%b4%d0%b5%d0%be-%d0%bf%d0%bb%d0%b5%d0%b5%d1%80/" rel="tag">видео плеер</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2011/09/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be%d0%bf%d0%bb%d0%b5%d0%b5%d1%80%d0%b0-%d0%b4%d0%bb%d1%8f-android/" title="Permalink to Разработка видеоплеера для Android" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-2204 -->
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Mon Jan 2 23:16:57 2017 +0300</span></p>
+    </div>
+
+  </body>
+</html>

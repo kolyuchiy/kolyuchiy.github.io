@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<Module>
+    <ModulePrefs title="__MSG_title__" 
+        description="__MSG_description__"
+        scrolling="true"
+        title_url="http://www.gismeteo.ru/towns/__UP_city__.htm" 
+        author="Kolia Morev"
+        author_email="kolyuchiy@gmail.com"
+        author_link="http://kolia.pp.ru/"
+        author_location="Vladimir, Russia"> 
+
+        <Locale messages="http://kolia.pp.ru/scripts/gismeteo/ALL_ALL.xml" />
+        <Locale lang="ru" messages="http://kolia.pp.ru/scripts/gismeteo/ru_ALL.xml" />
+    </ModulePrefs>
+    <UserPref name="city"   display_name="__MSG_city__" required="true" default_value="27532" />
+    <UserPref name="clouds" display_name="__MSG_clouds__" datatype="bool" default_value="false" />
+    <UserPref name="rain"   display_name="__MSG_rain__" datatype="bool" default_value="true" />
+    <UserPref name="temp"   display_name="__MSG_temperature__" datatype="bool" default_value="true" />
+    <UserPref name="press"  display_name="__MSG_pressure__" datatype="bool" default_value="false" />
+    <UserPref name="wind"   display_name="__MSG_wind_dir__" datatype="bool" default_value="false" />
+    <UserPref name="speed"  display_name="__MSG_wind_speed__" datatype="bool" default_value="false" />
+   <Content type="html"> 
+     <![CDATA[ 
+     
+<script type="text/javascript">
+
+  var prefs = new _IG_Prefs(__MODULE_ID__);
+  var city = prefs.getString("city");
+
+  function processFeed(feed) {
+    if (feed == null) return;
+
+    var output = "";
+
+    if (feed.ErrorMsg != null) {
+        output += "<span style='color: red'>__MSG_error_nodata__</span>";
+        _gel("OUT__MODULE_ID__").innerHTML = output;
+        return;
+    }
+
+    if (feed.Entry) {
+        for (var i = 0; i < feed.Entry.length; i++) {
+            output += "<div style='margin-bottom: 0.3em'>";
+            output += "<strong>"+feed.Entry[i].Title+"</strong>&nbsp;&nbsp;<br/>";
+
+            fields = feed.Entry[i].Summary.split(", ");
+
+            var prefs = new _IG_Prefs(__MODULE_ID__);
+            if (prefs.getBool("clouds")) {
+                output += fields[0] + "&nbsp;&nbsp;&nbsp;";
+            }
+            if (prefs.getBool("rain")) {
+                output += fields[1] + "&nbsp;&nbsp;&nbsp;";
+            }
+            if (prefs.getBool("temp")) {
+                output += fields[2] + "&nbsp;&nbsp;&nbsp;";
+            }
+            if (prefs.getBool("press")) {
+                output += fields[3] + "&nbsp;&nbsp;&nbsp;";
+            }
+            if (prefs.getBool("wind")) {
+                output += fields[4] + "&nbsp;&nbsp;&nbsp;";
+            }
+            if (prefs.getBool("speed")) {
+                output += fields[5] + "&nbsp;&nbsp;&nbsp;";
+            }
+
+            output += "</div>";
+        }
+    }
+
+    _gel("OUT__MODULE_ID__").innerHTML = output;
+  }
+
+  _IG_FetchFeedAsJSON("http://informer.gismeteo.ru/rss/27532.xml", processFeed, 9, true);
+
+</script>
+
+    <div style="font-size: smaller" id="OUT__MODULE_ID__"/>
+
+     ]]> 
+   </Content> 
+</Module>
+

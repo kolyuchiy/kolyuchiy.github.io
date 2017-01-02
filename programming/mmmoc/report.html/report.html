@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Использование ЯВУ C при написании учебной ОС в рамках курса &#171;Операционные системы&#187;</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<LINK REL="STYLESHEET" HREF="report.css">
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+    <H1 ALIGN="CENTER">Использование ЯВУ C при написании учебной ОС в рамках курса 
+&#171;Операционные системы&#187;</H1>
+<P ALIGN="CENTER"><STRONG>Морев Н.</STRONG></P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Содержание</A>
+</H2>
+<!--Table of Contents-->
+
+<UL>
+<LI><A NAME="tex2html18"
+  HREF="report.html">Введение</A>
+<LI><A NAME="tex2html19"
+  HREF="#SECTION00030000000000000000">Обзор компоновки объектных модулей</A>
+<LI><A NAME="tex2html20"
+  HREF="#SECTION00040000000000000000">Постановка учебной задачи</A>
+<UL>
+<LI><A NAME="tex2html21"
+  HREF="#SECTION00041000000000000000">Технические требования</A>
+</UL><BR>
+<LI><A NAME="tex2html22"
+  HREF="#SECTION00050000000000000000">Реализация учебной задачи</A>
+<UL>
+<LI><A NAME="tex2html23"
+  HREF="#SECTION00051000000000000000">Исходный текст программы</A>
+<LI><A NAME="tex2html24"
+  HREF="#SECTION00052000000000000000">На что следует обратить внимание</A>
+</UL><BR>
+<LI><A NAME="tex2html25"
+  HREF="#SECTION00060000000000000000">Заключение</A>
+<LI><A NAME="tex2html26"
+  HREF="#SECTION00070000000000000000">Список литературы</A>
+<LI><A NAME="tex2html27"
+  HREF="#SECTION00080000000000000000">О документе...</A>
+</UL>
+<!--End of Table of Contents-->
+
+<H1><A NAME="SECTION00020000000000000000">
+Введение</A>
+</H1>
+
+В рамках практикума по курсу &#171;Операционные системы&#187; студентам 
+предлагается создать небольшую учебную ОС, основанную на архитектуре 
+микропроцессора i386.
+
+Создание ОС&nbsp;-- это достаточно сложная работа, которая, чтобы быть успешной, 
+может опираться не только на творческий и конструктивный  подход к делу, 
+но и на использование удобных инструментов в процессе ее создания.
+
+Написание ОС полностью на ассемблере не оправдано по ряду причин:
+
+<OL>
+<LI>Ассемблер не нагляден, исходные тексты написанные на нем очень плохо 
+читаются. 
+</LI>
+<LI>В ассемблере отсутствуют средства для структурного программирования.
+</LI>
+<LI>ЯВУ обеспечивают более высокий уровень абстракции.
+</LI>
+</OL>
+<H1><A NAME="SECTION00030000000000000000">
+Обзор компоновки объектных модулей</A>
+</H1>
+
+Для решения различных достаточно сложных проблем часто разбивают задачу на 
+отдельные подзадачи. В программировании данный приём используется также 
+очень широко. При написании программы, её исходники разбиваются на 
+несколько отдельных файлов (модулей) в соответствии с их 
+функциональностью. При сборке проекта эти файлы компилируются в объектные 
+модули, которые затем компонуются в исполняемый файл.
+
+Среди достоинств данного 
+подхода необходимо отметить возможность написания отдельных исходных 
+модулей на разных языках программирования. Все что для этого нужно&nbsp;-- это 
+чтобы компиляторы используемых языков могли генерировать объектные файлы 
+определенного формата, который распознается компоновщиком. Например, если 
+использовать любые компиляторы фирмы <EM>Borland</EM> для <EM>DOS</EM>, то с 
+этим не будет никаких проблем, т.&nbsp;к. все они совместимы на уровне 
+объектных модулей с компоновщиком <EM>Tubro Link</EM> той же фирмы.
+
+<H1><A NAME="SECTION00040000000000000000">
+Постановка учебной задачи</A>
+</H1>
+
+Необходимо скомпоновать исполняемый файл учебной ОС из отдельных объектных 
+модулей, скомпилированных из исходных файлов на C и ассемблере.
+
+<H2><A NAME="SECTION00041000000000000000">
+Технические требования</A>
+</H2>
+
+Для реализации поставленной задачи необходимо:
+
+<UL>
+<LI>компилятор <EM>Turbo Assembler</EM> (<TT>tasm</TT>), т.&nbsp;к. именно его 
+использование рекомендуется в [<A
+ HREF="report.html#barkov">2</A>];
+
+</LI>
+<LI>компоновщик объектных модулей <EM>Turbo Link</EM> (<TT>tlink</TT>);
+
+</LI>
+<LI>компилятор <EM>Borland C</EM> (<TT>bcc</TT>).
+</LI>
+</UL>
+
+Исходя из технических требований видно, что студенту, приступившему к 
+выполнению данной работы, необходимы следующие знания:
+
+<UL>
+<LI>навыки работы с командной строкой <EM>MS&nbsp;DOS</EM>;
+</LI>
+<LI>знание языков программирования ассемблер для x86 и C.
+</LI>
+</UL>
+<H1><A NAME="SECTION00050000000000000000">
+Реализация учебной задачи</A>
+</H1>
+
+Так как непосредственно написание учебной ОС не входит в рассмотрение 
+этого текста, примером реализации учебной задачи будет небольшая 
+программка, которая выполняет следующие действия:
+
+<OL>
+<LI>Переходит в защищенный режим процессора i386.
+</LI>
+<LI>Выводит на экран строку. Причем процедура вывода 
+строки находится в исходном файле на C.
+</LI>
+<LI>Переходит обратно в реальный режим процессора.
+</LI>
+<LI>Завершается.
+</LI>
+</OL>
+
+Также из рассмотрения будут выключены некоторые куски кода связанные с 
+инициализацией защищенного режима и&nbsp;т.&nbsp;п.
+
+<H2><A NAME="SECTION00051000000000000000">
+Исходный текст программы</A>
+</H2>
+
+Исходный текст программы состоит из следующих файлов (<a href="https://github.com/kolyuchiy/i386-c-asm-example">полные исходные тексты</a>, <a href="https://github.com/kolyuchiy/i386-c-asm-example/zipball/master">в архиве</a>):
+<DL>
+<DT><STRONG>startup.asm</STRONG></DT>
+<DD>инициализация защищенного режима, вызов функции <TT>
+main()</TT>, завершение программы;
+</DD>
+<DT><STRONG>startup.mac</STRONG></DT>
+<DD>различные макросы, не имеющие непосредственного 
+отношения к поставленной задаче;
+</DD>
+<DT><STRONG>main.c</STRONG></DT>
+<DD>основной модуль программы, содержит процедуру вывода строки 
+на экран <TT>puts()</TT> и два ее вызова в функции <TT>main()</TT>;
+</DD>
+<DT><STRONG>Makefile</STRONG></DT>
+<DD>файл описания последовательности сборки программы, 
+используется утилитой <TT>make</TT>.
+</DD>
+</DL>
+<H3><A NAME="SECTION00051100000000000000">
+startup.asm</A>
+</H3>
+
+<BR>
+<PRE>; FOO_OS -- учебная операционная система
+; (c) 2003, Kolia Morev &lt;kolyuchiy@gmail.com&gt;
+;
+; Начальная загрузка ОС.
+
+.386p
+
+include startup.mac
+
+; Из main.c
+extrn  C main:proc
+
+DGROUP        group        _DATA,_BSS
+        assume        cs:_TEXT,ds:DGROUP
+_DATA        segment word public use16 'DATA'
+
+gdt        label  word
+;
+gdt_null   descr  &lt;0,0,0,0,0,0&gt;
+sel_code   = 10q
+gdt_code   descr  &lt;0FFFFh,,,10011010b&gt;
+sel_data   = 20q
+gdt_data   descr  &lt;0FFFFh,,,10010010b&gt;
+sel_stack  = 30q
+gdt_stack  descr  &lt;size _stack-1,,,10010010b&gt;
+sel_screen = 40q
+gdt_screen descr  &lt;3999,8000h,0bh,0f2h&gt;
+;
+gdt_size = $ - gdt
+
+idt  label word
+     intr  256 dup (&lt;&gt;)
+idt_size = 256 * size intr
+
+; Поля данных программы
+tmpdescr        descr &lt;&gt;
+message_exit    db    '* exit: PeaJIbHbIu Pe&gt;|&lt;uM.$'
+
+_DATA   ends
+
+_BSS    segment word public use16 'BSS'
+_BSS    ends
+
+
+_TEXT   segment byte public use16 'CODE'
+        assume cs:_TEXT,ds:DGROUP
+
+startup:
+        mov     ax,dgroup
+        mov     ds,ax
+
+        perehod_v_prot_mode
+
+; Переход в защищённый режим
+        mov     eax,cr0
+        or      eax,1b
+        mov     cr0,eax
+
+; Теперь процессор работает в защищённом режиме
+; Загрузка в CS селектора сегмента команд,
+; перезагрузка буфера команд
+        db      0eah
+        dw      offset continue
+        dw      sel_code
+continue:
+
+; Инициализируем сегментные регистры
+        mov     ax,sel_data
+        mov     ds,ax
+        mov     ax,sel_stack
+        mov     ss,ax
+        mov     ax,sel_screen
+        mov     es,ax
+        mov     ax,0
+        mov     gs,ax
+        mov     fs,ax
+
+; Запускаем ядро ОС
+        call    main
+
+        perehod_v_real_mode
+
+; Проверим выполнение функций DOS и завершим программу
+        mov     ah,09h
+        mov     dx,offset message_exit
+        int     21h
+        mov     ax,4c00h
+        int     21h
+
+_TEXT   ends
+
+_STACK  segment stack 'stack'
+        org 200h
+_STACK  ends
+
+        end     startup
+</PRE>
+<H3><A NAME="SECTION00051200000000000000">
+main.c</A>
+</H3>
+
+<BR>
+<PRE>/* FOO_OS -- учебная операционная система
+ * (c) 2003, Kolia Morev &lt;kolyuchiy@gmail.com&gt;
+ *
+ * Главный модуль.
+ */
+
+#define VERSION "npuBeT u3 protected mode\n" \
+                "build: "__TIME__", "__DATE__"\n"
+#define GOODBYE "DocBuDaHu9I!!!\n"
+
+void puts(char *string);
+
+void main(void)
+{
+        puts(VERSION);
+        puts(GOODBYE);
+}
+
+
+
+
+int pos = 640;
+
+/* Выводит символ на экран */
+#define putc(c,pos,attr)        \
+        _AL = c;                \
+        _AH = attr;             \
+        _DI = pos;              \
+        __asm stosw;
+
+/* Выводит на экран строку в текущую позицию
+ * в видеобуфере.
+ */
+void puts(char *string) 
+{
+        int i = 0;
+
+        while(string[i]!=0) {
+                _AL = string[i];
+                if(_AL==0x0a) {
+                        pos += 80*2 - pos%(80*2);
+                } else {
+                        putc(_AL,pos,7);
+                        pos += 2;
+                }
+                i++;
+        }
+}
+</PRE>
+<H3><A NAME="SECTION00051300000000000000">
+Makefile</A>
+</H3>
+
+<BR>
+<PRE># FOO_OS -- учебная операционная система
+# (c) 2003, Kolia Morev &lt;kolyuchiy@gmail.com&gt;
+# 
+# Makefile.
+
+CC = bcc
+AS = tasm
+LD = tlink 
+
+CFLAGS  = -3 -c -v
+ASFLAGS = /m2
+LDFLAGS = /3
+
+LISTING = ,
+ASDEBUG = /zi  
+LDDEBUG = /v /m
+
+OBJS = startup.obj main.obj
+
+
+all:  foo_os.exe
+
+foo_os.exe:  $(OBJS) makefile
+  $(LD) $(LDFLAGS) $(LDDEBUG) $(OBJS), foo_os.exe,,
+
+.asm.obj:
+  $(AS) $(ASFLAGS) $(ASDEBUG) $&lt;, $(LISTING)
+
+.c.obj:
+  $(CC) $(CFLAGS) $&lt;
+
+# Зависимости
+startup.obj:  makefile startup.asm startup.mac \
+        main.obj
+main.obj: makefile main.c
+</PRE>
+<H2><A NAME="SECTION00052000000000000000">
+На что следует обратить внимание</A>
+</H2>
+
+В <TT>startup.asm</TT> сегменты организованы и названы именно так, как
+их создает по умолчанию и <TT>bcc</TT><A NAME="tex2html1"
+  HREF="#foot76"><SUP>1</SUP></A>. Это нужно для того, чтобы код и данные из разных 
+объектных модулей находились в одном сегменте исполняемого модуля.
+
+Чтобы переменные или функции из ассемблерного объектного модуля были видны 
+в другом объектном модуле, их надо объявить, как <TT>public</TT>, а чтобы 
+получить к ним доступ из другого файла, в описании надо использовать 
+ключевое слово <TT>extrn</TT> для ассемблера или <TT>extern</TT> для C. 
+Например, сделаем указатель на IDT, определенный в <TT>startup.asm</TT>, 
+видимым для <TT>ints.asm</TT> и <TT>sys.c</TT>:
+<PRE>
+startup.asm:
+        idt     label   word
+                intr    256 dup (&lt;&gt;)
+        public  C idt
+
+ints.asm:
+        extrn   C idt
+
+sys.c:
+        extern gate_desc_t idt[256];
+
+</PRE>
+Опция <TT>C</TT> в <TT>public</TT> и <TT>extrn</TT> указывает на то, что указатель 
+объявлен по правилам принятым для языка C, т.&nbsp;е. в объектном модуле его 
+имя представлено не как <TT>idt</TT>, а как <TT>_idt</TT>.
+
+<TT>bcc</TT> по умолчанию описывает все переменные как <TT>public</TT>.
+
+<H1><A NAME="SECTION00060000000000000000">
+Заключение</A>
+</H1>
+
+Использование ЯВУ при написании учебной ОС позволит вам не заострять 
+внимание на несущественных особенностях оптимизации кода,
+использования регистров, адресации и системы команд процессора каждый раз, 
+когда вы хотите просто организовать цикл или разделить два числа, что 
+позволит существенно сократить время кодирования и уделить больше внимания
+проектированию.
+
+<H2><A NAME="SECTION00070000000000000000">
+Список литературы</A>
+</H2><DL COMPACT><DD><P></P><DT><A NAME="orlov">1</A>
+<DD> Орлов С.&nbsp;Б. Программа-справочник по системе 
+программирования Турбо Ассемблер 2.0: Руководство пользователя, справочное 
+руководство. М.: 1990.
+
+<P></P><DT><A NAME="barkov">2</A>
+<DD> Барков В.&nbsp;А. Лабораторный практикум по дисциплине 
+&lt;&lt;Операционные системы&gt;&gt;. (01.04.2003).
+</DL>
+<H1><A NAME="SECTION00080000000000000000">
+О документе...</A>
+</H1>
+ <STRONG>Использование ЯВУ C при написании учебной ОС в рамках курса 
+&#171;Операционные системы&#187;</STRONG><P>
+This document was generated using the
+<A HREF="http://www-texdev.mpce.mq.edu.au/l2h/docs/manual/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2K.1beta (1.48)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+<A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, 
+Computer Based Learning Unit, University of Leeds.
+<BR>Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>-nonavigation -split 0 -local_icons -address kolyuchiy@gmail.com -no_auto_link report.tex</TT>
+<P>
+The translation was initiated by Kolia Morev on 2003-05-15<BR><HR><H4>Сноски</H4>
+<DL>
+<DT><A NAME="foot76">...<TT>bcc</TT></A><A NAME="foot76"
+ HREF="report.html#tex2html1"><SUP>1</SUP></A>
+<DD>В чём можно убедиться с 
+помощью команды <TT>bcc -S main.c</TT>, которая переводит исходник на C в 
+исходник на ассемблере.
+
+</DL><BR><HR>
+<ADDRESS>
+kolyuchiy@gmail.com
+</ADDRESS>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Tue Apr 15 21:27:20 2014 +0400</span></p>
+    </div>
+
+  </body>
+</html>

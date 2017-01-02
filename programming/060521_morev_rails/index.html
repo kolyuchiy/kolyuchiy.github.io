@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Разработка web-приложений в среде Ruby on Rails - Морев Н. В., 2006-05-21</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.0" />
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+        <p xmlns="">Н. В. Морев, 2006-05-21</p>
+    <div class="article" lang="ru" xml:lang="ru">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h1 class="title"><a id="id419213"></a>Разработка web-приложений в среде Ruby on Rails</h1>
+          </div>
+          <div></div>
+        </div>
+        <hr />
+      </div>
+      <div class="toc">
+        <p>
+          <b>Содержание</b>
+        </p>
+        <dl>
+          <dt>
+            <span class="section">
+              <a href="#intro">Введение</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="section">
+              <a href="#ruby-lang">Язык Ruby</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="section">
+              <a href="#rails-review">Обзор Ruby on Rails</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="section">
+                  <a href="#model">Model</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="section">
+                  <a href="#view">View</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="section">
+                  <a href="#controller">Controller</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="section">
+              <a href="#ide">Среда разработки</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="section">
+              <a href="#setup">Установка</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="section">
+              <a href="#application">Приложение</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="section">
+                  <a href="#database">Модель данных</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="section">
+                  <a href="#use-cases">Варианты использования</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="section">
+                  <a href="#scaffold">Создание шаблона приложения</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="section">
+              <a href="#extending">Расширение</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="section">
+              <a href="#critique">Критика и сравнение с другими фреймворками</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="section">
+              <a href="#conclusions">Вывод</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="bibliography">
+              <a href="#bibliography">Литература</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <div class="section" lang="ru" xml:lang="ru">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="intro"></a>Введение</h2>
+            </div>
+          </div>
+        </div>
+        <p>Ruby On Rails — фреймворк для разработки веб-приложений.
+        Он был разработан фирмой <span class="emphasis"><em><a href="http://www.37signals.com/" target="_top">37signals</a></em></span> и
+        выпущен как бесплатный продукт с открытыми исходниками. С
+        использованием RoR этой фирмой были разработаны несколько довольно
+        успешных продуктов, работа с которыми осуществляется по платной
+        подписке или бесплатно: обеспечение совместной работы над проектами,
+        веб-чат, органайзер и другие. За очень короткое время (версия 1.0 была
+        выпущена в декабре 2005 года) этот фреймворк приобрел огромную
+        популярность среди разработчиков небольших и средних веб-приложений.
+        Об этом свидетельствует хотя бы то, что количество возвращаемых
+        Google-ом результатов по запросу «Ruby on Rails» сравнимо с
+        запросом «Struts», являющимся одним из самых известных
+        веб-фреймворков в мире Java, — 13 и 19 миллионов упоминаний
+        соответственно.  </p>
+        <p>Каковы же основные особенности данного фреймворка?</p>
+        <p><b>Язык <a href="http://www.ruby-lang.org/en/" target="_top">Ruby</a>. </b>
+        Интерпретируемый скриптовый язык для быстрого и простого
+        объектно-ориентированного программирования.  </p>
+        <p><b>Паттерн MVC. </b> 
+        Наиболее широко используемый паттерн для разработки веб-приложений в
+        большинстве фреймворков.  </p>
+        <p><b>Ajax. </b>
+        Встроенная поддержка XMLHttpRequest: автоматическая генерация
+        клиентского JavaScript кода, методы Ajax не отличаются от обычных,
+        набор визуальных эффектов (drag-n-drop, автодополнение, сортировки).
+    </p>
+        <p><b>Rapid Application Development. </b>
+        Фреймворк поддерживает концепцию быстрой разработки приложений. Это
+        означает, что вполне функциональное веб-приложение можно разработать
+        буквально за несколько минут. Это приложение будет использовать
+        всевозможные встроенные в систему умолчания (стандартные наименования
+        часто используемых полей в БД, стандартное оформление, и т.д.). После
+        этого можно последовательно вносить изменения в код программы, чтобы
+        довести ее до требуемого состояния. Такой подход очень хорошо
+        согласуется с так называемыми «гибкими» (Agile)
+        методологиями разработки, самая известная из которых Extreme
+        Programming.  </p>
+      </div>
+      <div class="section" lang="ru" xml:lang="ru">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="ruby-lang"></a>Язык Ruby</h2>
+            </div>
+          </div>
+        </div>
+        <p> Ruby — это интерпретируемый скриптовый язык
+          программирования для быстрого и простого объектно-ориентированного
+          программирования. Он включает различные средства для обработки
+          текстовых файлов и решения задач администрирования. Язык Ruby
+          расширяемый, переносимый, свободно-распространяемый.  </p>
+        <p>Характеристики Ruby:</p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li> Простой синтаксис, частично заимствованный из таких
+              языков, как Ada и Eiffel. </li>
+            <li> Поддержка исключений. </li>
+            <li> Переопределение операторов. </li>
+            <li> Чистый, полностью объектно-ориентированный язык. Все
+              данные являются объектами, без исключений. </li>
+            <li> Возможность добавлять методы к объекту или к классу во
+              время выполнения так, что при необходимости, два экземпляра
+              одного класса могут отличаться друг от друга. </li>
+            <li> Поддерживается только единственное наследование. Но
+            существует понятие модуля, как коллекции методов, которые можно
+            импортировать в класс. Существует мнение, что такой
+            способ — более красивый, чем множественное наследование,
+            которое сложнее и реже используется. </li>
+            <li> Анонимные функции и замыкания (closures). </li>
+            <li> Возможно структурировать код в блоки 
+            <code class="literal">{ ... }</code> или <code class="literal">do ... end</code>,
+            которые можно передавать методам в качестве аргумента. </li>
+            <li> Сборщик мусора. </li>
+            <li> Возможность написания расширений на C, с использованием
+            специального API, в котором поддерживается сборка мусора. Есть
+            поддержка генератора C-расширений для скриптовых языков SWIG.
+        </li>
+            <li> Поддерживается два типа целых чисел: малые
+            <code class="classname">Fixnum</code> и большие
+            <code class="classname">Bignum</code>. При этом программисту не нужно
+            беспокоиться о том, какой тип использовать, преобразование
+            происходит автоматически. </li>
+            <li> Не требуется объявление переменных. Область видимости
+            переменной описывается в ее имени с помощью следующего соглашения:
+            <code class="literal">var</code> — локальная переменная,
+            <code class="literal">@var</code> — переменная экземпляра класса,
+            <code class="literal">$var</code> — глобальная переменная.
+        </li>
+            <li> Независимая от платформы поддержка многопоточности.
+        </li>
+            <li> Язык портирован на все используемые в настоящее время
+            платформы: Linux и другие разновидности UNIX, DOS, все версии
+            MS Windows, MacOS, BeOS, OS/2 и т.д.
+        </li>
+          </ul>
+        </div>
+        <p>Поясним подробнее некоторые использованные выше понятия.</p>
+        <p> Скриптовыми обычно называют языки, обладающие большинством из
+        следующих характеристик: язык спроектирован для применения в конкретной
+        предметной области или может быть легко модифицирован для этого,
+        обладает упрощенным синтаксисом, не компилируемый, интерпретатор может
+        работать в режиме диалога, простота программирования в ущерб
+        производительности, динамическая типизация.  </p>
+        <p> Анонимная функция — это функция, которая может не иметь
+        имени. Обычно это простая функция, используемая в программе
+        единственный раз. Анонимную функцию можно создавать непосредственно на
+        этапе выполнения программы и передавать в качестве аргумента. Например,
+        сложить два числа с помощью анонимной функции можно так: </p>
+        <pre class="screen">
+
+irb(main):008:0&gt; proc {|x, y| x + y}.call 4, 5
+=&gt; 9
+
+irb(main):025:0&gt; def add(num)
+irb(main):026:1&gt;   proc {|x| x+num }
+irb(main):027:1&gt; end
+=&gt; nil
+
+irb(main):028:0&gt; add10 = add(10)
+=&gt; #&lt;Proc:0x07c459e0@(irb):26&gt;
+
+irb(main):031:0&gt; add10.call(10)
+=&gt; 20
+
+    </pre>
+        <p>Часто анонимные функции применяют в качестве callback-процедур.
+    </p>
+        <pre class="programlisting">
+
+trap "SIGINT", proc { puts "^C was pressed." }
+
+    </pre>
+        <p> Замыкание (closure) — это функция, которая обращается к
+        свободным переменным в собственном контексте. Замыкание —
+        это объединение кода функции и ее собственной области видимости
+        переменных на момент создания. Пример с созданием функции
+        <code class="function">add10</code>, приведенный выше, демонстрирует замыкания.
+        Функция <code class="function">add</code> возвращает динамически созданную
+        функцию, содержащую в себе ссылку на переменную <code class="varname">num</code>,
+        которая существовала при создании функции и продолжает существовать
+        далее, при ее вызове. Следующий пример показывает, что в замыкании
+        сохраняется именно область видимости, а не просто значение переменной:
+    </p>
+        <pre class="screen">
+
+irb(main):045:0&gt; def add_inc(num)
+proc {|x| num = num+1; x+num}
+end
+=&gt; nil
+irb(main):048:0&gt; add_inc10 = add_inc(10)
+=&gt; #&lt;Proc:0x07be3790@(irb):46&gt;
+irb(main):049:0&gt; add_inc10.call(10)
+=&gt; 21
+irb(main):050:0&gt; add_inc10.call(10)
+=&gt; 22
+irb(main):051:0&gt; add_inc10.call(10)
+=&gt; 23
+
+    </pre>
+        <p> Замыкания могут применяться, например, разработчиками программных
+        библиотек, чтобы позволить пользователю библиотеки расширять ее,
+        передавая замыкания в качестве аргументов определенных функций. С
+        помощью замыканий можно определять управляющие структуры типа ветвлений
+        и циклов. Несколько функций можно замкнуть на одну область видимости,
+        так что они смогут обмениваться между собой значениями. </p>
+      </div>
+      <div class="section" lang="ru" xml:lang="ru">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="rails-review"></a>Обзор Ruby on Rails</h2>
+            </div>
+          </div>
+        </div>
+        <p> Ruby on Rails — это свободно-распространяемый фреймворк
+          для разработки веб-приложений, основанный на архитектуре
+          Model-View-Controller (MVC), и базирующийся на языке программирования
+          Ruby. Его цель — упростить разработку и позволить
+          создавать реальные приложения в меньшем количестве кода, чем в других
+          фреймворках, и с минимальным конфигурированием. Всего это достигается
+          за счет развитых возможностей метапрограммирования языка Ruby.
+      </p>
+        <p> Основные принципы RoR — исключить повторение кода,
+          несущего одинаковую смысловую нагрузку, и стараться исключить
+          необходимость конфигурирования, вводя общепринятые соглашения, где
+          это возможно. Компоненты RoR интегрированы так, что программисту не
+          требуется писать дескрипторы для их связи между собой или повторять
+          одни и те же определения в реляционной базе данных и в коде
+          программы. </p>
+        <p> Сам фреймворк и дополнительные расширения для него
+          распространяются через систему RubyGems, стандартизующую формат
+          пакетов и каналы распространения. </p>
+        <div class="section" lang="ru" xml:lang="ru">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a id="model"></a>Model</h3>
+              </div>
+            </div>
+          </div>
+          <p> Классы моделей в RoR строятся на основе библиотеки <a href="http://rails.rubyonrails.org/files/vendor/rails/activerecord/README.html" target="_top">Active Record</a>, которая реализует объектно-реляционное
+              отображение данных, хранящихся в БД.  Отображения Active Record
+              обладают следущими возможностями: </p>
+          <div class="itemizedlist">
+            <ul type="disc">
+              <li> Автоматическое отображение между классами и таблицами,
+                  аттрибутами и колонками. Достаточно просто унаследовать класс
+                  от класса <code class="classname">ActiveRecord::Base</code> и он
+                  автоматически отображается на таблицу с именем,
+                  соответствующим имени созданного класса.  </li>
+              <li> Отношения между объектами поддерживаются с помощью
+                  простых макросов <code class="literal">has_many</code> (ссылается на
+                  множество объектов другого класса),
+                  <code class="literal">has_one</code> (ссылка на объект другого класса),
+                  <code class="literal">belongs_to</code> (другой объект ссылается на
+                  этот).  </li>
+              <li> Агрегация одних объектов в другие
+                  (<code class="literal">composed_of</code>). </li>
+              <li> Правила валидации полей объекта. </li>
+              <li> Возможность представления записей в виде списков или
+                  деревьев. </li>
+              <li> Возможность задать действия, производимые на различных
+                  этапах жизненного цикла объекта (создание, сохранение,
+                  удаление, валидация и т.д.) как в самой модели так и в
+                  отдельном классе (паттерн Observer). </li>
+              <li> Иерархии наследования. </li>
+              <li> Поддержка транзакций как на уровне объектного
+                  представления, так и на уровне базы данных. </li>
+              <li> Отражения (reflections) колонок, ассоциаций,
+                  агрегаций. </li>
+              <li> Абстрагирование от конкретной СУБД. Поддерживаются все
+                  основные СУБД (MySQL, PostgreSQL, Oracle, SQLServer, DB2).
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="section" lang="ru" xml:lang="ru">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a id="view"></a>View</h3>
+              </div>
+            </div>
+          </div>
+          <p> Для отображения пользовательского интерфейса в RoR
+              предусмотрен класс <a href="http://rails.rubyonrails.org/classes/ActionView/Base.html" target="_top"><code class="classname">ActionView</code></a>,
+              реализующий развитую шаблонную систему наподобие JSP, в которой
+              инструкции языка Ruby включаются в текст внутри тегов
+              <code class="literal">&lt;% %&gt;</code> или 
+              <code class="literal">&lt;%= %&gt;</code>. Для отображения шаблона служит
+              функция <code class="function">render</code>, которую можно использовать
+              как внутри контроллера, так и внутри шаблона для отображения
+              подшаблона. </p>
+        </div>
+        <div class="section" lang="ru" xml:lang="ru">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a id="controller"></a>Controller</h3>
+              </div>
+            </div>
+          </div>
+          <p> Классы взаимодействия с пользователем в RoR строятся на основе
+              классов <code class="classname">ActionController</code>. В контроллере
+              определяются методы, которые затем становятся доступны через веб
+              по URL вида
+              <code class="literal">http://example.com/app/class/method</code>. С каждым
+              методом по-умолчанию связан шаблон представления
+              <code class="filename">/app/views/class/method.rhtml</code>. В
+              ActionController определяются различные вспомогательные методы
+              для управления всеми аспектами взаимодействия с пользователем и
+              генерации частоиспользуемого кода, например, для операций Create,
+              Remove, Update, Delete (CRUD) при работе с базой данных. </p>
+        </div>
+      </div>
+      <div class="section" lang="ru" xml:lang="ru">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="ide"></a>Среда разработки</h2>
+            </div>
+          </div>
+        </div>
+        <p> В Ruby on Rails прежде всего разработчики предусмотрели вариант,
+          когда не используется никакая интегрированная среда разработки, кроме
+          обычного текстового редактора (<a href="http://wiki.rubyonrails.com/rails/pages/Editors" target="_top">рекомендуемые редакторы</a>) и консоли. На этот случай существует набор
+          скриптов для командной строки, которые позволяют легко выполнять
+          наиболее часто встречающиеся при разработке задачи, такие как:
+          создание файловой иерархии нового веб-приложения, создание новых
+          контроллеров, моделей, запуск отладочного сервера веб-приложений и
+          <a href="http://wiki.rubyonrails.com/rails/pages/UnderstandingTheScriptFiles" target="_top">многое другое</a>. </p>
+        <p> Для разработки и тестирования в состав RoR входит легковесный
+          сервер приложений WEBrick. При внедрении готового приложения
+          рекомендуется использовать Apache HTTP Server или Lighttpd с
+          расширением FastCGI или mod_ruby. </p>
+        <p> Проект <a href="http://www.radrails.org/" target="_top">RadRails</a>
+          сводит все эти средства в единую интегрированную среду, которая
+          доступна как в виде расширения для Eclipse IDE, так и в виде
+          отдельной программы. </p>
+        <p> При использовании Eclipse будет полезно кроме RadRails также
+          установить следующие расширения: </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <a href="http://rubyeclipse.sourceforge.net/" target="_top">Ruby Development Tools</a>
+            </li>
+            <li>
+              <a href="http://csseditor.sourceforge.net/" target="_top">CSS Editor</a>
+            </li>
+            <li>
+              <a href="http://xmlbuddy.com/" target="_top">XMLBuddy</a>
+            </li>
+            <li>
+              <a href="http://jseditor.sourceforge.net/" target="_top">JSEditor</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="section" lang="ru" xml:lang="ru">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="setup"></a>Установка</h2>
+            </div>
+          </div>
+        </div>
+        <div class="orderedlist">
+          <ol type="1">
+            <li> Скачать и установить язык Ruby. </li>
+            <li> Скачать и установить систему RubyGems. </li>
+            <li> С помощью RubyGems установить Ruby on Rails. </li>
+          </ol>
+        </div>
+        <p> Скачать платформу Ruby под Windows можно с <a href="http://www.ruby-lang.org/en/" target="_top">официального сайта языка Ruby</a>. Последняя стабильная версия Ruby на момент
+          написания работы — 1.8.4. Дистрибутив имеет объем около
+          16 МБ.  Процедура установки стандартная для Windows-приложений.
+      </p>
+        <p> Скачать систему установки расширений RubyGems можно с <a href="http://rubygems.org/" target="_top">ее сайта</a>. Программа
+          поставляется в виде zip-архива, который необходимо распаковать в
+          любую папку на диске, после чего запустить скрипт установки, введя в
+          командной строке <strong class="userinput"><code>ruby setup.rb</code></strong>. </p>
+        <p> Для установки Ruby on Rails необходимо ввести в командной строке
+          <strong class="userinput"><code>gem install rails --include-dependencies</code></strong>. При
+          этом система RubyGems скачает все необходимые пакеты и установит их.
+          После чего можно переходить к созданию веб-приложения. </p>
+        <p> Для разработки можно использовать любой текстовый редактор.
+          Например, процесс настройки Eclipse под RoR описан здесь:
+          <a href="http://www.napcs.com/howto/railsonwindows.html" target="_top">http://www.napcs.com/howto/railsonwindows.html</a>.
+      </p>
+      </div>
+      <div class="section" lang="ru" xml:lang="ru">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="application"></a>Приложение</h2>
+            </div>
+          </div>
+        </div>
+        <p> Разрабатываемое приложение представляет собой базу данных
+          абонентов электронной почты, которая предназначена для регистрации
+          абонентов и для конфигурирования программного обеспечения почтового
+          сервера. Полный исходный код приложения находится на <a href="https://github.com/kolyuchiy/maildb-sample">github-е</a> (<a href="https://github.com/kolyuchiy/maildb-sample/zipball/master">в архиве</a>).</p>
+        <div class="section" lang="ru" xml:lang="ru">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a id="database"></a>Модель данных</h3>
+              </div>
+            </div>
+          </div>
+          <p> Требуемая почтовым сервером модель: </p>
+          <div class="literallayout">
+            <p><br />
+virtual_id_maps: id, alias<br />
+virtual_gid_maps: gid, alias<br />
+virtual_mailbox_maps: maildir, alias<br />
+virtual_maps: rcpt, alias<br />
+transport_maps: transport, domain<br />
+authmysqlrc: password, id, gid, login, maildir, info, quota<br />
+smtpd_sender_restrictions: action, alias<br />
+</p>
+          </div>
+          <p> Эту модель можно свести к следующим таблицам MySQL: </p>
+          <pre class="programlisting">
+
+CREATE TABLE `mailboxes` (
+	`id` int(11) NOT NULL,
+	`gid` int(11) NOT NULL,
+	`login` varchar(255) NOT NULL,
+	`password` varchar(255) NOT NULL,
+	`alias` varchar(255) NOT NULL,
+	`maildir` varchar(255) NOT NULL,
+	`quota` int(11) NOT NULL default '0',
+	`info` varchar(255) default NULL,
+	PRIMARY KEY  (`id`),
+	UNIQUE KEY `alias` (`alias`)
+);
+
+CREATE TABLE `remote_aliases` (
+	`alias` varchar(255) NOT NULL,
+	`rcpt` varchar(255) NOT NULL,
+	UNIQUE KEY `alias` (`alias`)
+);
+
+CREATE TABLE `transports` (
+	`domain` varchar(255) NOT NULL,
+	`transport` varchar(255) NOT NULL,
+	UNIQUE KEY `domain` (`domain`)
+);
+
+CREATE TABLE `rcpt_accesses` (
+	`alias` varchar(255) NOT NULL,
+	`action` varchar(255) NOT NULL,
+	UNIQUE KEY `alias` (`alias`)
+);
+
+</pre>
+          <p> Создадим соответствующие этим таблицам классы моделей
+            приложения. </p>
+          <pre class="screen">
+
+MailDB&gt; ruby script/generate model Mailbox
+MailDB&gt; ruby script/generate model RemoteAlias
+MailDB&gt; ruby script/generate model Transport
+MailDB&gt; ruby script/generate model RcptAccess
+
+</pre>
+        </div>
+        <div class="section" lang="ru" xml:lang="ru">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a id="use-cases"></a>Варианты использования</h3>
+              </div>
+            </div>
+          </div>
+          <p> Перечислим возможные сценарии использования программы: </p>
+          <div class="itemizedlist">
+            <ul type="disc">
+              <li> добавление почтового ящика </li>
+              <li> редактирование почтового ящика </li>
+              <li> удаление почтового ящика </li>
+              <li> просмотр информации о ящике </li>
+            </ul>
+          </div>
+        </div>
+        <div class="section" lang="ru" xml:lang="ru">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a id="scaffold"></a>Создание шаблона приложения</h3>
+              </div>
+            </div>
+          </div>
+          <div class="figure">
+            <a id="pic-scaffold"></a>
+            <p class="title">
+              <b>Рисунок 1. Результаты работы генератора
+                scaffold</b>
+            </p>
+            <div class="figure-contents">
+              <div>
+                <img src="scaffold.png" alt="Результаты работы генератора scaffold" />
+              </div>
+            </div>
+          </div>
+          <br class="figure-break" />
+          <p> Запустим генератор scaffold: </p>
+          <pre class="screen">
+
+MailDB&gt; ruby script/generate scaffold Mailbox
+
+</pre>
+          <p> Этот генератор создаст шаблон будущего приложения. Получившийся
+            код всего в 60 строк (без шаблонов страниц) представляет собой
+            простой интерфейс к БД, умеющий выдавать список записей,
+            просматривать отдельные записи, создавать, изменять и удалять
+            записи (<a href="#pic-scaffold" title="Рисунок 1. Результаты работы генератора&#10;                scaffold">Результаты работы генератора
+                scaffold</a>). 
+            Далее будем добавлять к приложению отдельные функции,
+            демонстрирующие основные возможности RoR. </p>
+        </div>
+      </div>
+      <div class="section" lang="ru" xml:lang="ru">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="extending"></a>Расширение</h2>
+            </div>
+          </div>
+        </div>
+        <p> Хотя наше приложение уже полностью функционально, нам все же
+          необходимо добавить туда некоторые возможности, облегчающие его
+          использование.  </p>
+        <p><b>Изменение списка выводимых колонок в списке
+              пользователей. </b> 
+          Если открыть шаблон страницы списка пользователей, там можно увидеть
+          следующие строки: </p>
+        <pre class="programlisting">
+
+&lt;% for column in Mailbox.columns %&gt;
+  &lt;th&gt;&lt;%= column.human_name %&gt;&lt;/th&gt;
+&lt;% end %&gt;
+...
+&lt;% for column in Mailbox.columns %&gt;
+  &lt;td&gt;&lt;%=h mailbox.send(column.name) %&gt;&lt;/td&gt;
+&lt;% end %&gt;
+
+</pre>
+        <p> Чтобы показывать только интересные нам строки, добавим в класс
+            модели: </p>
+        <pre class="programlisting">
+
+@column_names_to_show = ["id", "login", "alias", "maildir", "quota", "info"]
+
+def self.columns_to_show
+    unless @columns_to_show
+        @columns_to_show = columns
+        @columns_to_show.delete_if {|column| not @column_names_to_show.include? column.name }
+    end
+    @columns_to_show
+end    
+
+</pre>
+        <p> И после этого меняем в шаблоне <code class="varname">columns</code> на
+            <code class="varname">columns_to_show</code>. Этот пример также демонстрирует
+            использование в языке Ruby блоков там, где мы использовали бы цикл
+            в Java.  </p>
+        <p><b>Изменение списка полей в форме создания пользователя. </b>
+            Для этого необходимо всего лишь отредактировать шаблон формы,
+            хранящийся в файле <code class="filename">_form.rhtml</code>, удалив
+            ненужные поля.  </p>
+        <p><b>Задание значений по-умолчанию для формы. </b>
+            Эти значения можно задать в методе <code class="literal">new</code>
+            контроллера: </p>
+        <pre class="programlisting">
+
+def new
+  @mailbox = Mailbox.new
+  @mailbox.login = "p3cc"
+  @mailbox.password = random_password(8)
+  @mailbox.alias = ".elcom.ru"
+end
+
+</pre>
+        <p> Здесь мы используем метод <code class="function">random_password</code>,
+          который задается в контроллере <code class="filename">application.rb</code>. В
+          нем определяются методы, доступные из всех контроллеров приложения.
+      </p>
+        <p> Значения по-умолчанию для полей, которые пользователю не
+          предлагается заполнять самостоятельно, описываются в методе
+          <code class="function">create</code>, который вызывается при создании нового
+          объекта.  </p>
+        <p><b>Валидация полей формы. </b> 
+          В Rails валидация полей производится на уровне класса модели. Для
+          этого существуют простые макросы: </p>
+        <pre class="programlisting">
+
+class Mailbox &lt; ActiveRecord::Base
+    validates_presence_of :login, :password, :alias
+    validates_uniqueness_of :login, :alias
+    validates_format_of :alias, :with =&gt; /^((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+...
+
+</pre>
+        <div class="figure">
+          <a id="pic-validation"></a>
+          <p class="title">
+            <b>Рисунок 2. Ошибки валидации полей формы</b>
+          </p>
+          <div class="figure-contents">
+            <div>
+              <img src="validation.png" alt="Ошибки валидации полей формы" />
+            </div>
+          </div>
+        </div>
+        <br class="figure-break" />
+        <p> Проверим работоспособность валидации, указав дублирующие или
+          неверные значения полей. Приложение укажет нам на эти ошибки,
+          высветив ошибочно заполненные поля (<a href="#pic-validation" title="Рисунок 2. Ошибки валидации полей формы">Ошибки валидации полей формы</a>).  </p>
+        <p><b>Установка внешней библиотеки. </b>
+          Пароли почтовых ящиков хранятся в базе данных в зашифрованном виде.
+          Чтобы автоматически шифровать их при добавлении, необходимо
+          установить соответствующую библиотеку. На репозитории библиотек
+          <a href="http://raa.ruby-lang.org/" target="_top">Ruby Application
+              Archive</a> находим требуемую библиотеку md5_crypt и видим
+          упоминание, что она перенесена в коллекцию методов <a href="http://facets.rubyforge.org/" target="_top">Ruby Facets</a>. С сайта
+          скачиваем пакет с расширением <code class="filename">.gem</code> и
+          устанавливаем его утилитой gem. После этого его можно использовать в
+          методе <code class="function">create</code>: </p>
+        <pre class="programlisting">
+
+require 'facets/more/crypt'
+...
+@mailbox.password = Crypt.crypt(@mailbox.password, :md5)
+
+</pre>
+        <p><b>Ajax. </b>
+            Добавим функциональность удаление строки без перезагрузки страницы.
+            Для этого сначала добавим уникальный аттрибут <code class="varname">id</code>
+            в HTML-код каждой строки таблицы.  </p>
+        <pre class="programlisting">
+
+&lt;tr id="mbox-&lt;%= mailbox.id %&gt;"&gt;
+
+</pre>
+        <p> Включим в шаблон страницы все необходимые библиотеки JavaScript:
+      </p>
+        <pre class="programlisting">
+
+&lt;%= javascript_include_tag :defaults %&gt;
+
+</pre>
+        <p> И назначим действие, выполняемое при удалении строки: </p>
+        <pre class="programlisting">
+
+&lt;td class="controls"&gt;&lt;%= link_to_remote 'Удалить',
+    :url =&gt; { :action =&gt; 'destroy', :id =&gt; mailbox.id },
+    :success =&gt; update_element_function( 'mbox-' + mailbox.id.to_s,
+        :action =&gt; :remove) %&gt;&lt;/td&gt;
+
+</pre>
+        <p><b>Web Services. </b>
+            Сгенерируем код, реализующий веб-сервис. Для простоты веб-сервис
+            реализует только операцию удаления пользователя.  </p>
+        <pre class="screen">
+
+MailDB&gt; script/generate web_service Mailboxes destroy
+      create  app/apis/
+      exists  app/controllers/
+      exists  test/functional/
+      create  app/apis/mailboxes_api.rb
+overwrite app/controllers/mailboxes_controller.rb? [Ynaq] n
+        skip  app/controllers/mailboxes_controller.rb
+      create  test/functional/mailboxes_api_test.rb
+
+</pre>
+        <p> В класс контроллера добавим строку: </p>
+        <pre class="programlisting">
+
+class MailboxesController &lt; ApplicationController
+  web_service_api MailboxesApi
+
+</pre>
+        <p> Веб-сервис готов. Чтобы получить его WSDL-описание, достаточно
+          направить браузер по адресу
+          <code class="literal">http://localhost:3000/mailboxes/wsdl</code>.  </p>
+      </div>
+      <div class="section" lang="ru" xml:lang="ru">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="critique"></a>Критика и сравнение с другими фреймворками</h2>
+            </div>
+          </div>
+        </div>
+        <p> Существует большое количество фреймворков для разработки
+          веб-приложений для самых разных языков. Понятие о том, какой набор
+          функций должен реализовывать такой фреймворк более или менее
+          устоялось: разделение различных аспектов разработки с помощью
+          паттерна MVC, средства валидации форм, средства для работы с БД,
+          объектно-реляционное отображение данных, отображение URL на методы
+          контроллера и т.д. Даже если сам фреймворк не полностью реализует
+          этот набор, можно воспользоваться сторонними библиотеками. Поэтому
+          сравнивать фреймворки по набору функций не имеет большого смысла.
+      </p>
+        <p> Главная отличительная черта Ruby on Rails, на которую делается
+          упор разработчиками и популяризаторами этого фреймворка, —
+          это значительное более простая и быстрая разработка приложений, что
+          сказывается на общей стоимости разработки. Добиваются этого,
+          используя свойства языка Ruby: динамическая типизация, ООП, удобные
+          управляющие конструкции, возможность генерировать код на этапе
+          выполнения.  Естественно, за это приходится платить более низкой
+          скоростью работы.  Утверждается, что дополнительные затраты на
+          вычислительные ресурсы окупаются снижением стоимости разработки
+          приложения.  </p>
+        <p> На сегодняшний день один из общепризнанных индустриальных
+          стандартов в веб-разработке — язык Java и сопутствующие
+          технологии. Сравним фреймворки, основанные на языка Java и Ruby on
+          Rails.  </p>
+        <div class="figure">
+          <a id="pic-stack"></a>
+          <p class="title">
+            <b>Рисунок 3. Архитектура Rails и J2EE</b>
+          </p>
+          <div class="figure-contents">
+            <div>
+              <img src="stack.png" alt="Архитектура Rails и J2EE" />
+            </div>
+          </div>
+        </div>
+        <br class="figure-break" />
+        <p> <a href="#pic-stack" title="Рисунок 3. Архитектура Rails и J2EE">Рисунок</a> показывает, что
+          фундаментальных архитектурных отличий у этих двух подходов
+          практически нет. Различия заключаются в том, как это все реализовано.
+      </p>
+        <p><b>Контроллер. </b>
+          Чтобы указать какой код выполнять при вводе пользователем
+          определенного URL, в Struts программисту необходимо написать
+          специальный XML-дескриптор, содержащий отображения URL на
+          Action-классы. Rails же находит соответствующий класс
+          ActionController и его метод автоматически, руководствуясь разумными
+          общепринятыми правилами. Например адрес вида
+          <code class="literal">http://example.com/order/delete/4</code> будет обработан
+          экземпляром класса <code class="classname">OrderController</code> из файла
+          <code class="filename">app/controllers/order_controller.rb</code>, будет
+          вызван его метод {\tt delete}, а значение <code class="literal">4</code> будет
+          передано в качестве переменной экземпляра класса.  </p>
+        <p><b>Действия. </b>
+          В Struts код каждого действия должен храниться в отдельном классе,
+          наследующем класс <code class="classname">Action</code>. Сделано это так для
+          того, чтобы в условиях статической типизации можно было единообразно
+          вызывать различные действия, пользуясь единым интерфейсом Action.
+          Однако, логичнее и проще было бы реализовывать несколько действий,
+          производимых над одним объектом (save, delete, list), в виде методов
+          одного класса, как это и сделано в Rails.  </p>
+        <p><b>Сохраняемость. </b>
+          Самым популярным фреймворком хранения объектов в реляционной БД в
+          мире Java является Hibernate. ActiveRecord, входящий в Rails,
+          реализует аналогичный набор функций.  </p>
+        <p> Чтобы задать сохраняемый объект в Hibernate необходимо: 1) описать
+          класс этого объекта, задав все поля и методы-аксессоры для них; 2)
+          описать отображение реляционной таблицы на этот объект в
+          XML-дескрипторе. В Rails же всего этого не требуется. Rails
+          автоматически определяет, что класс <code class="classname">Order</code>,
+          унаследованный от <code class="classname">ActiveRecord::Base</code>,
+          отображается на таблицу <code class="literal">orders</code>, и самостоятельно
+          подхватывает из базы имена полей класса и задает методы-аксессоры.
+      </p>
+        <p><b>Масштабирование. </b>
+          Понятие масштабируемости не связано напрямую со скоростью выполнения.
+          Масштабируемость означает возможность получить гарантированный
+          прирост производительности, добавив дополнительные вычислительные
+          ресурсы (например, дополнительный сервер). Приложения, написанные на
+          RoR, масштабируются также просто или сложно, как и на PHP, Perl,
+          Java. Т.е. в зависимости от того, предусмотрено ли это в самом
+          приложении.  </p>
+        <p><b>Производительность. </b>
+          Скорость выполнения приложений на Ruby меньше, чем на Java. Это
+          связано с интерпретируемостью языка и тем, что большее количество
+          действий откладывается на этап выполнения. Естественно, это проблема
+          решается кэшированием на разных уровнях. Однако, скорость отличается
+          не сильно (не на порядки), а <a href="http://developers.slashdot.org/article.pl?sid=05/04/04/1520227" target="_top">некоторые
+              разработчики</a> даже умудряются превзойти Java по этому
+          показателю.  Кроме того, готовится к выпуску новый, <a href="http://www.atdot.net/yarv/" target="_top">оптимизированный по скорости интерпретатор Ruby</a>.  
+      </p>
+      </div>
+      <div class="section" lang="ru" xml:lang="ru">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="conclusions"></a>Вывод</h2>
+            </div>
+          </div>
+        </div>
+        <p>
+          Ruby on Rails — относительно новый и многообещающий
+          фреймворк. Он не заменит общепризнанные и испытанные компоненты,
+          которые предоставляет платформа Java, для разработки приложений
+          уровня enterprise. Однако, он вполне может и должен потеснить такие
+          широко использумые инструменты, как PHP и Perl, для малых и средних
+          веб-приложений, благодаря простоте и широким возможностям языка Ruby
+          и полнофункционального интегрированного фреймворка Ruby on Rails.
+      </p>
+        <p>
+          Java-сообщество также пытается не отставать от общей тенденции к
+          упрощению разработки. Так в новой версии языка Java реализованы
+          дополнительные возможности для этого (generics, аннотации), а в сфере
+          веб-разработки запущен проект <a href="https://trails.dev.java.net/" target="_top">Trails</a>. Этот проект
+          вдохновлен Rails. В нем пытаются упростить разработку с помощью
+          динамического генерирования очевидных частей кода. При этом не
+          разрабатывают полностью интегрированный фреймворк с нуля, а
+          используют уже существующие технологии типа Spring, Tapestry,
+          Hibernate.  </p>
+      </div>
+      <div class="bibliography">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title"><a id="bibliography"></a>Литература</h2>
+            </div>
+          </div>
+        </div>
+        <div class="biblioentry">
+          <a id="id419604"></a>
+          <p>
+            <span class="title"><i>Ruby on Rails</i>. </span>
+            <span class="releaseinfo">URL: <a href="http://rubyonrails.org/" target="_top">http://rubyonrails.org/</a>. </span>
+          </p>
+        </div>
+        <div class="biblioentry">
+          <a id="id419619"></a>
+          <p>
+            <span class="title"><i>Ruby Home Page</i>. </span>
+            <span class="releaseinfo">URL: <a href="http://ruby-lang.org/" target="_top">http://ruby-lang.org/</a>. </span>
+          </p>
+        </div>
+        <div class="biblioentry">
+          <a id="id419635"></a>
+          <p>
+            <span class="title"><i>Java</i>. </span>
+            <span class="releaseinfo">URL: <a href="http://java.sun.com/" target="_top">http://java.sun.com/</a>. </span>
+          </p>
+        </div>
+        <div class="biblioentry">
+          <a id="id419650"></a>
+          <p>
+            <span class="title"><i>Open Source Web Frameworks in Java</i>. </span>
+            <span class="releaseinfo">URL: <a href="http://java-source.net/open-source/web-frameworks" target="_top">http://java-source.net/open-source/web-frameworks</a>. </span>
+          </p>
+        </div>
+        <div class="biblioentry">
+          <a id="id419668"></a>
+          <p>
+            <span class="author"><span class="firstname">Aaron</span> <span class="surname">Rustad</span>. </span>
+            <span class="title"><i>Ruby on Rails and J2EE: Is there room for both?</i>. </span>
+            <span class="releaseinfo">URL: <a href="http://www-128.ibm.com/developerworks/java/library/wa-rubyonrails/index.html?ca=drs-" target="_top">http://www-128.ibm.com/developerworks/java/library/wa-rubyonrails/index.html?ca=drs-</a>. </span>
+            <span class="publisher">
+              <span class="publishername">IBM developerWorks. </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Tue Apr 15 21:27:20 2014 +0400</span></p>
+    </div>
+
+  </body>
+</html>

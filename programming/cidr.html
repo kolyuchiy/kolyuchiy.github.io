@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Decimal to Binary to CIDR converter</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+    <script>
+    function doIt() {
+        decimal = document.getElementById("decimal");
+        binary = document.getElementById("binary");
+        classes = document.getElementById("classes");
+
+        binary.value = dec2bin(decimal.value);
+        classes.value = bin2cls(binary.value);
+    }
+
+    function doBin() {
+        decimal = document.getElementById("decimal");
+        binary = document.getElementById("binary");
+        classes = document.getElementById("classes");
+
+        decimal.value = bin2dec(binary.value);
+        classes.value = bin2cls(binary.value);
+    }
+
+    function dec2bin(decimal) {
+        if (decimal == 0) return 0;
+
+        i = decimal.valueOf();
+        res = "";
+        do {
+            if (i % 2 == 0) res = "0" + res
+                else res = "1" + res;
+            i = Math.floor(i / 2);
+        } while (i >= 1);
+
+        return res;
+    }
+
+    function bin2dec(binary) {
+        res = 0;
+        for (i=binary.length-1; i>=0; i--) {
+            if (binary[i] == 1) res += 1 << (binary.length - i - 1);
+        }
+        return res;
+    }
+
+    function bin2cls(binary) {
+        res = "";
+        cls = 32;
+        for (i = binary.length-1; i >= 0; i--) {
+            if (binary[i] == 1)	res = "/" + cls + (res.length > 0 ? "," : "") + res;
+            cls--;
+        }
+        return res;
+    }
+</script>
+
+<div class="col-md-6">
+    <p>Онлайн конвертер десятичное-двоичное-CIDR помогает по количеству IP-адресов определить список префиксов сетей. Может быть полезен при составлении заявок на блоки IP-адресов в RIPE (впрочем, <a href="http://www.potaroo.net/tools/ipv4/index.html">скоро он перестанет быть полезен</a>).</p>
+</div>
+
+<div class="col-md-6">
+    <p>Online converter between decimal, binary, and CIDR. It helps to determine a list of CIDR prefixes from a number of IP addresses. This may be helpful when filing requests to RIPE (<a href="http://www.potaroo.net/tools/ipv4/index.html">not anymore though</a>).</p>
+</div>
+
+<div class="col-md-12">
+<table style="margin: auto">
+    <form>
+        <tr>
+            <td style="text-align: right">Decimal:&nbsp;</td><td><input type="text" id="decimal" name="decimal" onkeyup="doIt()" /></td>
+        </tr>
+        <tr>
+            <td style="text-align: right">Binary:&nbsp;</td> <td><input type="text" id="binary" name="binary" onkeyup="doBin()" /></td>
+        </tr>
+        <tr>
+            <td style="text-align: right">Network classes:&nbsp;</td><td><input type="text" id="classes" name="classes" /></td>
+        </tr>
+    </form>
+</table>
+</div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Sun Apr 20 12:06:21 2014 +0400</span></p>
+    </div>
+
+  </body>
+</html>

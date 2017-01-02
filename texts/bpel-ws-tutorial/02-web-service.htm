@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Создание веб-сервиса</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;}
+@font-face
+	{font-family:"\@MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:6.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+h1
+	{margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	text-align:center;
+	page-break-after:avoid;
+	font-size:16.0pt;
+	font-family:Arial;}
+h2
+	{margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	page-break-after:avoid;
+	font-size:14.0pt;
+	font-family:Arial;
+	font-style:italic;}
+h3
+	{margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	page-break-after:avoid;
+	font-size:13.0pt;
+	font-family:Arial;}
+p.MsoCaption, li.MsoCaption, div.MsoCaption
+	{margin-top:6.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+p.MsoListBullet2, li.MsoListBullet2, div.MsoListBullet2
+	{margin-top:6.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:32.15pt;
+	text-indent:-18.0pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	font-style:italic;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:9.0pt;
+	font-family:"Courier New";}
+span.a
+	{font-style:italic;}
+span.GUI
+	{color:navy;}
+span.PlainTextChar
+	{font-family:"Courier New";}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:2.0cm 42.5pt 2.0cm 3.0cm;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+    <div class=Section1>
+
+<h1>Создание веб-сервиса</h1>
+
+<h2>Цель работы</h2>
+
+<p class=MsoNormal>Лабораторная работа дает навыки создания и развертывания
+веб-сервиса с использованием среды <span class=a><span lang=EN-US>Eclipse</span></span>,
+сервера приложений <span class=a><span lang=EN-US>Apache</span></span><span
+class=a><span lang=EN-US> </span><span lang=EN-US>Tomcat</span></span><span
+lang=EN-US> </span>и контейнера <span class=a><span lang=EN-US>Apache</span></span><span
+class=a><span lang=EN-US> </span><span lang=EN-US>Axis</span></span>, а также развертывания
+и удаленной отладки <span lang=EN-US>BPEL</span>-процесса в среде <span
+class=a><span lang=EN-US>ActiveBPEL</span></span><span class=a><span
+lang=EN-US> </span><span lang=EN-US>Designer</span></span>.</p>
+
+<h2>Задачи</h2>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Реализовать веб-сервис по имеющемуся <span lang=EN-US>WSDL</span>-описанию.</li>
+ <li class=MsoNormal>Выполнить развертывание веб-сервиса на сервере приложений
+     и испытать его работоспособность.</li>
+ <li class=MsoNormal>Выполнить развертывание имеющегося <span lang=EN-US>BPEL</span>-процесса.</li>
+ <li class=MsoNormal>Проверить работоспособность <span lang=EN-US>BPEL</span>-процесса
+     и осуществить пошаговое выполнение процесса на сервере.</li>
+</ol>
+
+<h2>Предварительные требования</h2>
+
+<p class=MsoNormal>Для выполнения работы на компьютере должно быть установлено
+следующее ПО:</p>
+
+<p class=MsoListBullet2><span lang=EN-US style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US><a
+href="http://java.sun.com/javase/downloads/index.jsp"><i><span lang=RU>JDK</span></i></a>
+</span>версии <span lang=EN-US>1.5 </span>или выше<span lang=EN-US>.</span></p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US><a href="http://www.eclipse.org/"><i><span
+lang=RU>Eclipse IDE</span></i></a></span><span lang=EN-US> </span>версии 3.2.1
+или выше с установленными расширениями <span lang=EN-US><a
+href="http://www.eclipse.org/webtools/"><i><span lang=RU>J2EE Standard Tools</span></i></a></span>
+1.5.2 или выше и <span lang=EN-US><a href="http://www.eclipse.org/webtools/"><i><span
+lang=RU>Web Standard Tools</span></i></a></span> 1.5.2 или выше.</p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US><a href="http://www.active-endpoints.com/"><i><span
+lang=RU>ActiveBPEL Designer</span></i></a> </span>версии <span lang=EN-US>2.0.</span></p>
+
+<p class=MsoNormal>В ходе выполнения работы потребуется следующая информация об
+установленном ПО:</p>
+
+<p class=MsoListBullet2><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Папка установки сервера приложений, входящего в комплект <span
+class=a><span lang=EN-US>ActiveBPEL</span></span><span class=a><span
+lang=EN-US> </span><span lang=EN-US>Designer</span></span>.</p>
+
+<p class=MsoNormal>Переменная окружения <span class=PlainTextChar><span
+style='font-size:9.0pt'>JAVA_HOME</span></span> должна указывать на папку, в
+которую установлен <span class=a><span lang=EN-US>JDK</span></span> (это
+требуется при запуске сервера приложений).</p>
+
+<p class=MsoNormal>Для успешного запуска сервера приложений требуются файлы <span
+class=PlainTextChar><span style='font-size:9.0pt'>xalan.jar</span></span> и <span
+class=PlainTextChar><span style='font-size:9.0pt'>serializer.jar</span></span> из
+дистрибутива <span lang=EN-US><a href="http://xml.apache.org/xalan-j/"><i>Xalan</i><i><span
+lang=RU>-</span>Java</i></a></span>. Их следует поместить в папку <span
+class=PlainTextChar><span style='font-size:9.0pt'>common\lib</span></span> сервера
+приложений.</p>
+
+<p class=MsoNormal>Для проверки работоспособности <span lang=EN-US>BPEL</span>-процесса,
+вызывающего удаленный веб-сервис потребуется доступ в Интернет.</p>
+
+<p class=MsoNormal>При реализации бизнес-процесса потребуются знания технологии
+веб-сервисов и в частности <span lang=EN-US>WSDL</span>, а также знание языка <span
+lang=EN-US>Java</span>.</p>
+
+<h2>Ход работы</h2>
+
+<h3>Реализация веб-сервиса</h3>
+
+<p class=MsoNormal>Взяв за основу <span lang=EN-US>WSDL</span>-описание,
+созданное в предыдущей лабораторной работе, сгенерируйте необходимые заглушки и
+напишите класс реализации веб-сервиса. Для этого воспользуйтесь мастером
+создания веб-сервисов среды <span class=a><span lang=EN-US>Eclipse</span></span>.
+</p>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Запустите среду <span lang=EN-US>Eclipse</span> и откройте
+     проект, созданный в предыдущей лабораторной работе.</li>
+ <li class=MsoNormal>Создайте новый веб-сервис (<span class=GUI>File &#8594;
+     New &#8594; Other &#8594; Web Services &#8594; Web Service</span>). В поле
+     <span class=GUI><span lang=EN-US>Web Service Type</span></span><span
+     lang=EN-US> </span>выберите <span class=GUI><span lang=EN-US>Top down Java
+     bean Web Service</span></span><span lang=EN-US>. </span>Укажите
+     расположение <span lang=EN-US>WSDL</span>-файла. Установите ползунок на
+     уровень <span class=GUI>Deploy Service</span>. Будут сгенерированы все исходные
+     файлы веб-сервиса и дескриптор развертывания.</li>
+ <li class=MsoNormal>Откройте <span lang=EN-US>WSDL</span>-файл в папке <span
+     class=PlainTextChar><span style='font-size:9.0pt'>WebContent\WSDL</span></span>
+     и исправьте ссылку на веб-сервис, которая могла быть изменена мастером
+     создания веб-сервисов. </li>
+ <li class=MsoNormal>Откройте файл реализации веб-сервиса <span
+     class=PlainTextChar><span style='font-size:9.0pt'>&lt;имя&gt;Impl.java</span></span>
+     и напишите свою реализацию операции вместо шаблонной.</li>
+</ol>
+
+<h3>Развертывание веб-сервиса</h3>
+
+<p class=MsoNormal>Веб-сервис будет работать на том же сервере, в котором
+установлен <span lang=EN-US>BPEL</span>-контейнер. Это сервер приложений <span
+class=a><span lang=EN-US>Apache</span></span><span class=a><span lang=EN-US> </span><span
+lang=EN-US>Tomcat</span></span> 5.0, входящий в поставку <span class=a><span
+lang=EN-US>ActiveBPEL</span></span><span class=a><span lang=EN-US> </span><span
+lang=EN-US>Designer</span></span>. </p>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>В контекстном меню проекта в среде <span class=a><span
+     lang=EN-US>Eclipse</span></span><span lang=EN-US> </span>выберите пункт <span
+     class=GUI>Export</span>. Экспортируйте проект в <span lang=EN-US>WAR-</span>файл.</li>
+ <li class=MsoNormal>Запустите сервер приложений через скрипт <span
+     class=PlainTextChar><span style='font-size:9.0pt'>bin\startup.bat</span></span>,
+     находящийся в папке сервера. Появится окно консоли сервера. Об успешном
+     запуске свидетельствует сообщение <span class=PlainTextChar><span
+     style='font-size:9.0pt'>INFO: Server startup in 7375 ms</span></span> и
+     отсутствие <span lang=EN-US>Java</span>-исключений. </li>
+ <li class=MsoNormal>Поместите <span lang=EN-US>WAR</span>-файл в папку <span
+     class=PlainTextChar><span style='font-size:9.0pt'>webapps</span></span> на
+     сервере приложений и по сообщениям в консоли сервера и отсутствию
+     сообщений об ошибках убедитесь, что веб-приложение было установлено успешно.</li>
+ <li class=MsoNormal>Затем необходимо развернуть веб-сервис. В <span class=a><span
+     lang=EN-US>Axis</span></span><span lang=EN-US> </span>это делается с
+     помощью специального системного веб-сервиса <span lang=EN-US>AdminService</span>,
+     на вход которому подается дескриптор развертывания <span
+     class=PlainTextChar><span style='font-size:9.0pt'>deploy.wsdd</span></span>.
+     Для вызова этого сервиса существует готовый клиент. Используйте для
+     развертывания веб-сервиса <span lang=EN-US>bat</span>-файл следующего
+     содержания, предварительно изменив его под свою систему:</li>
+</ol>
+
+<p class=MsoPlainText><span lang=EN-US>set TOMCAT_HOME=G:\Program Files\Active
+Endpoints\ActiveBPEL Designer\Server\ActiveBPEL_Tomcat (</span>путь установки сервера
+приложений<span lang=EN-US>)</span></p>
+
+<p class=MsoPlainText><span lang=EN-US>set LIBS=%TOMCAT_HOME%\shared\lib</span></p>
+
+<p class=MsoPlainText><span lang=EN-US>set SERVLET_URL=http://localhost:8080/&lt;</span>имя<span
+lang=EN-US>-</span>проекта<span lang=EN-US>&gt;/services/AdminService</span></p>
+
+<p class=MsoPlainText><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoPlainText>java -cp
+&quot;%LIBS%\axis.jar&quot;;&quot;%LIBS%\commons-discovery.jar&quot;;&quot;%LIBS%\commons-logging.jar&quot;;&quot;%LIBS%\jaxrpc.jar&quot;;&quot;%LIBS%\saaj.jar&quot;;&quot;%LIBS%\wsdl4j.jar&quot;
+org.apache.axis.client.AdminClient -l%SERVLET_URL% deploy.wsdd</p>
+
+<ol style='margin-top:0cm' start=5 type=1>
+ <li class=MsoNormal>При успешном развертывании сервиса будет выведено
+     сообщение</li>
+</ol>
+
+<p class=MsoPlainText>&lt;Admin&gt;Done processing&lt;/Admin&gt;</p>
+
+<ol style='margin-top:0cm' start=6 type=1>
+ <li class=MsoNormal>Проверьте, что сервис был успешно развернут, введя в
+     адресной строке браузера ссылку, указанную в <span lang=EN-US>WSDL</span>-файле.
+     Должна появиться страница, сообщающая, что по этому адресу установлен <span
+     lang=EN-US>AXIS</span><span lang=EN-US> </span>сервис. Добавьте в конце
+     адреса <span class=PlainTextChar><span style='font-size:9.0pt'>?WSDL</span></span>
+     и будет выведено <span lang=EN-US>WSDL</span>-описание сервиса.</li>
+ <li class=MsoNormal>Попробуйте выполнить операцию веб-сервиса через <span
+     lang=EN-US>Web</span><span lang=EN-US> </span><span lang=EN-US>Services</span><span
+     lang=EN-US> </span><span lang=EN-US>Explorer</span><span lang=EN-US> </span>в
+     среде <span lang=EN-US>Eclipse</span> (<span class=GUI>Run &#8594; Launch
+     the Web Services Explorer</span>). Проверьте правильность работы
+     веб-сервиса при различных входных данных.</li>
+</ol>
+
+<p class=MsoCaption style='page-break-after:avoid'>Рисунок 1 – Испытание веб-сервиса в <span lang=EN-US>Web</span><span lang=EN-US> </span><span
+lang=EN-US>Services</span><span lang=EN-US> </span><span lang=EN-US>Explorer</span></p>
+
+<p class=MsoNormal><img border=0 width=570 height=459
+src="02-web-service_files/image001.jpg"></p>
+
+<h3>Развертывание <span lang=EN-US>BPEL-</span>процесса</h3>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Загрузите <span class=a><span lang=EN-US>ActiveBPEL</span></span><span
+     class=a><span lang=EN-US> </span><span lang=EN-US>Designer</span></span><span
+     lang=EN-US> </span>и откройте проект, созданный в предыдущей лабораторной
+     работе.</li>
+ <li class=MsoNormal>Создайте новый дескриптор развертывания для <span
+     lang=EN-US>BPEL</span>-процесса (<span class=GUI>File &#8594; New &#8594;
+     Deployment Descriptor</span>). Укажите файл <span lang=EN-US>BPEL</span>-процесса.
+     В окне <span lang=EN-US>Partner</span><span lang=EN-US> </span><span
+     lang=EN-US>Links</span><span lang=EN-US> </span>для <span lang=EN-US>Partner</span><span
+     lang=EN-US> </span><span lang=EN-US>Link</span>-ов, напротив которых стоят
+     красные крестики, укажите значение <span class=GUI>Endpoint Type</span> равное
+     <span lang=EN-US>static</span>, как на рисунке:</li>
+</ol>
+
+<p class=MsoNormal><img border=0 width=624 height=633
+src="02-web-service_files/image002.jpg"></p>
+
+<ol style='margin-top:0cm' start=3 type=1>
+ <li class=MsoNormal>Для <span lang=EN-US>Partner</span><span lang=EN-US> </span><span
+     lang=EN-US>Link</span>, соответствующего <span lang=EN-US>BPEL</span>-процессу
+     установите поле <span class=GUI>Binding</span> в значение <span
+     lang=EN-US>RPC</span><span lang=EN-US> </span><span lang=EN-US>Encoded</span>.
+     Остальные поля оставьте со значениями по-умолчанию. Будет создан
+     дескриптор в файле с расширением <span lang=EN-US>pdd.</span></li>
+ <li class=MsoNormal>Создайте в проекте папку <span class=PlainTextChar><span
+     style='font-size:9.0pt'>deploy</span></span>, куда потом будут помещаться
+     файлы, связанные с развертыванием (<span class=GUI>File &#8594; New
+     &#8594; Other &#8594; Simple &#8594; Folder</span>). </li>
+ <li class=MsoNormal>Создайте <span lang=EN-US>BPR</span>-файл – архив <span
+     lang=EN-US>BPEL</span>-процесса, который будет развернут в <span
+     lang=EN-US>BPEL</span>-контейнер. Для этого в контекстном меню проекта
+     выберите пункт <span class=GUI>Export</span>, <span class=GUI>Business
+     Process Archive File</span>. Пометьте дескриптор развертывания, созданный
+     на предыдущем этапе. В поле <span class=GUI><span lang=EN-US>Select the export
+     destination</span></span><span lang=EN-US> </span>укажите имя <span
+     lang=EN-US>BPR-</span>файла в папке <span class=PlainTextChar><span
+     lang=EN-US style='font-size:9.0pt'>deploy</span></span><span lang=EN-US>. </span>Выберите
+     <span class=GUI><span lang=EN-US>Deployment Type</span></span><span
+     lang=EN-US> – <span class=GUI>File</span> </span>и в поле <span class=GUI><span
+     lang=EN-US>Deployment Location</span></span><span lang=EN-US> </span>укажите
+     папку <span class=PlainTextChar><span lang=EN-US style='font-size:9.0pt'>bpr</span></span><span
+     lang=EN-US> </span>сервера приложений<span lang=EN-US>. </span>Нажмите <span
+     class=GUI>Finish</span> и <span lang=EN-US>BPEL</span>-процесс установится
+     в контейнер, при этом в консоли сервера появятся соответствующие
+     сообщения.</li>
+ <li class=MsoNormal>Убедиться, что процесс успешно установлен в контейнер
+     можно также через панель администрирования <span class=a><span lang=EN-US>BPEL</span></span><span
+     class=a><span lang=EN-US> </span><span lang=EN-US>Engine</span></span><span
+     lang=EN-US> </span>– она находится по адресу <a
+     href="http://localhost:8080/BpelAdmin/"><i>http://localhost:8080/BpelAdmin/</i></a>.
+     В случае неудачного развертывания, посмотрите содержимое <span lang=EN-US>Deployment</span><span
+     lang=EN-US> </span><span lang=EN-US>Log</span><span lang=EN-US> </span>в
+     панели.</li>
+ <li class=MsoNormal>После развертывания <span lang=EN-US>BPEL</span>-процесс
+     доступен для использования как веб-сервис. Вы можете его найти по адресу
+     вида <i><a
+     href="http://localhost:8080/active-bpel/services/%3cтип-partner-link-процесса%3eService">http://localhost:8080/active-bpel/services/&lt;тип-<span
+     lang=EN-US>partner</span>-<span lang=EN-US>link</span>-процесса&gt;Service</a></i>.</li>
+</ol>
+
+<h3>Проверка <span lang=EN-US>BPEL</span>-процесса</h3>
+
+<p class=MsoNormal>Проверьте работоспособность созданного <span lang=EN-US>BPEL</span>-процесса
+с помощью <span class=a><span lang=EN-US>Web</span></span><span class=a><span
+lang=EN-US> </span><span lang=EN-US>Services</span></span><span class=a><span
+lang=EN-US> </span><span lang=EN-US>Explorer</span></span>. Используйте
+различные значения переменных, чтобы проверить все пути выполнения.</p>
+
+<p class=MsoCaption style='page-break-after:avoid'>Рисунок 2 – Результаты выполнения процесса – стоимость доставки контейнера из Нью-Йорка в Вашингтон</p>
+
+<p class=MsoNormal><img border=0 width=570 height=471
+src="02-web-service_files/image003.jpg"></p>
+
+<p class=MsoNormal>Осуществите пошаговое выполнение <span lang=EN-US>BPEL</span>-процесса.
+Для этого:</p>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Откройте <span lang=EN-US>BPEL</span>-процесс в <span
+     class=a><span lang=EN-US>ActiveBPEL</span></span><span class=a><span
+     lang=EN-US> </span><span lang=EN-US>Designer</span></span>. Выберите блок <span
+     lang=EN-US>Receive</span><span lang=EN-US> </span>и установите на нем
+     точку останова (контекстное меню &#8594; <span class=GUI>Add Breakpoint</span>).
+     </li>
+ <li class=MsoNormal>Создайте конфигурацию для выполнения удаленной сессии
+     отладки. Для этого выберите пункт меню <span class=GUI>Run &#8594; Debug</span>.
+     Создайте новую конфигурацию, нажав на кнопку <span class=GUI>New</span>. Нажмите
+     кнопку <span class=GUI>Debug</span>, чтобы начать отладку.</li>
+</ol>
+
+<p class=MsoCaption style='page-break-after:avoid'>Рисунок 3 – Конфигурация для удаленной отладки</p>
+
+<p class=MsoNormal><img border=0 width=624 height=560
+src="02-web-service_files/image004.jpg"></p>
+
+<ol style='margin-top:0cm' start=3 type=1>
+ <li class=MsoNormal>Запустите сервис <span lang=EN-US>BPEL</span>-процесса
+     через <span class=a><span lang=EN-US>Web</span></span><span class=a><span
+     lang=EN-US> </span><span lang=EN-US>Services</span></span><span class=a><span
+     lang=EN-US> </span><span lang=EN-US>Explorer</span></span><span
+     lang=EN-US> </span>и вернитесь в <span class=a><span lang=EN-US>ActiveBPEL</span></span><span
+     class=a><span lang=EN-US> </span><span lang=EN-US>Designer</span></span><span
+     lang=EN-US> </span>и выполните пошагово процесс, так же как при моделировании
+     в предыдущей лабораторной работе.</li>
+</ol>
+
+<p class=MsoCaption style='page-break-after:avoid'>Рисунок 4 – Сессия удаленной отладки <span lang=EN-US>BPEL</span>-процесса</p>
+
+<p class=MsoNormal><img border=0 width=624 height=449
+src="02-web-service_files/image005.jpg"></p>
+
+<h2>Результаты</h2>
+
+<p class=MsoNormal>В результате выполнения данной работы был реализован,
+установлен и развернут веб-сервис, а также развернут и отлажен <span
+lang=EN-US>BPEL</span>-процесс, соответствующий бизнес-процессу из выбранной
+предметной области.</p>
+
+<h2>Вопросы для самоконтроля</h2>
+
+<ol style='margin-top:0cm' start=1 type=1>
+ <li class=MsoNormal>Почему используется контейнер <span class=a><span
+     lang=EN-US>Apache</span></span><span class=a><span lang=EN-US> </span><span
+     lang=EN-US>Axis</span></span> для реализации веб-сервисов?</li>
+ <li class=MsoNormal>Чем «<span lang=EN-US>Top</span><span lang=EN-US> </span><span
+     lang=EN-US>down</span>» реализация веб-сервиса отличается от «<span
+     lang=EN-US>Bottom</span><span lang=EN-US> </span><span lang=EN-US>up</span>»?</li>
+ <li class=MsoNormal>Как определить, что сервер приложений был успешно запущен?</li>
+ <li class=MsoNormal>Как развернуть веб-сервис в контейнере <span class=a><span
+     lang=EN-US>Apache</span></span><span class=a><span lang=EN-US> </span><span
+     lang=EN-US>Axis</span></span>?</li>
+ <li class=MsoNormal>Перечислите все способы убедиться в том, что веб-сервис
+     был успешно развернут в контейнере.</li>
+ <li class=MsoNormal>Какая информация помещается в дескриптор развертывания <span
+     lang=EN-US>BPEL</span>-процесса?</li>
+ <li class=MsoNormal>Какие возможности предоставляет панель администрирования <span
+     class=a><span lang=EN-US>BPEL</span></span><span class=a><span lang=EN-US>
+     </span><span lang=EN-US>Engine</span></span>?</li>
+ <li class=MsoNormal>Перечислите все признаки, по которым можно судить об
+     успешном развертывании <span lang=EN-US>BPEL</span>-процесса.</li>
+ <li class=MsoNormal>Как запустить пошаговую удаленную отладку <span
+     lang=EN-US>BPEL</span>-процесса?</li>
+</ol>
+
+</div>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Tue Apr 15 21:27:20 2014 +0400</span></p>
+    </div>
+
+  </body>
+</html>

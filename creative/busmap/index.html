@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Схемы общественного транспорта города Владимира</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="css/jqzoom.css" rel="stylesheet" type="text/css" />
+<style>
+    a img {
+        border: none;
+    }
+</style>
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+            <h1>Схемы общественного транспорта города Владимира</h1>
+
+        <p>На этой странице выложены мои эксперименты в области инфографики.
+        Представленные здесь схемы не являются точными или актуальными.</p>
+
+        <p><a href="images/bus1.png" class="zoomable" title="Схема автобусных маршрутов">
+            <img src="images/bus1_small.png" title="Схема автобусных маршрутов" />
+        </a></p>
+
+        <div style="clear: both"></div>
+
+        <p><a href="images/troll1.png" class="zoomable" title="Схема троллейбусных маршрутов">
+            <img src="images/troll1_small.png" title="Схема троллейбусных маршрутов" />
+        </a></p>
+
+        <div style="clear: both"></div>
+
+        <p><a href="images/pobeda.png" class="zoomablev" title="Схема движения на пл. Победы">
+            <img src="images/pobeda_small.png" title="Схема движения на пл. Победы" />
+        </a></p>
+
+        <div style="clear: both"></div>
+
+        <p>А это результаты работы различных алгоритмов автоматического расположения графов.</p>
+
+        <p><a href="images/graph1.png" class="zoomablev" title="Круговое расположение">
+            <img src="images/graph1_small.png" title="Круговое расположение" />
+        </a></p>
+
+        <div style="clear: both"></div>
+
+        <p><a href="images/graph2.png" class="zoomablev" title="Органическое расположение">
+            <img src="images/graph2_small.png" title="Органическое расположение" />
+        </a></p>
+
+        <div style="clear: both"></div>
+
+        <p><a href="images/graph3.png" class="zoomablev" title="С ортогонализацией ребер">
+            <img src="images/graph3_small.png" title="С ортогонализацией ребер" />
+        </a></p>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script type='text/javascript' src='js/jquery-1.5.js'></script>
+<script type='text/javascript' src='js/jquery.jqzoom-core.pack.js'></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var options = {
+            zoomWidth: 300,
+            zoomHeight: 250,
+            xOffset: 10,
+            yOffset: 0,
+            position: "right"
+        };
+        $('.zoomable').jqzoom(options);
+        var optionsv = {
+            zoomWidth: 338,
+            zoomHeight: 338,
+            xOffset: 10,
+            yOffset: 0,
+            position: "right"
+        };
+        $('.zoomablev').jqzoom(optionsv);
+    });
+</script>
+
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Tue Apr 15 22:22:58 2014 +0400</span></p>
+    </div>
+
+  </body>
+</html>

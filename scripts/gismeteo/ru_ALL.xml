@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<messagebundle>
+    <msg name="title">Погода GISMETEO.ru</msg>
+    <msg name="description">Погода на сутки по 4000+ городам мира по данным сайта gismeteo.ru</msg>
+    <msg name="city">Город</msg>
+    <msg name="clouds">Облачность</msg>
+    <msg name="rain">Осадки</msg>
+    <msg name="temperature">Температура</msg>
+    <msg name="pressure">Давление</msg>
+    <msg name="wind_dir">Направление ветра</msg>
+    <msg name="wind_speed">Скорость ветра</msg>
+    <msg name="error_nodata">Не могу получить данные</msg>
+</messagebundle>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Воспроизведение видео в iOS приложениях</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+    <article id="post-2810" class="post-2810 post type-post status-publish format-standard hentry category-- category-tutorial tag-apple tag-avfoundation tag-dynamic-streaming tag-http-live-streaming tag-ios tag-ipad tag-iphone tag-- tag-23">
+	<header class="entry-header">
+		<h1 class="entry-title">Воспроизведение видео в iOS приложениях</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2012/07/apple-ios-video-development/" title="16:52" rel="bookmark"><time class="entry-date" datetime="2012-07-02T16:52:02+00:00" pubdate>02.07.2012</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2012/07/video-playback-in-ios-applications/?lang=en">Английский</a></p><p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/iOS-video-player.png"><img src="http://blog.denivip.ru/wp-content/uploads/2012/07/iOS-video-player.png" alt="iOS video player" title="iOS video player" width="480" height="320" class="alignnone size-full wp-image-2907" /></a></center></p>
+<p>Мобильные устройства Apple на операционной системе iOS заслуженно снискали всеобщую популярность среди покупателей. За каждым событием компании следят с большим интересом, ожидая появления новых и улучшения существующих функций. Но обычные пользователи могут лишь поверхностно оценивать внешнюю составляющую продукта. Взгляду разработчиков же открывается гораздо больше. Из всей четырехдневной конференции WWDC публично освещается обычно всего один доклад &#8212; keynote, кратко рассказывающий об основных нововведениях. Все остальные доклады, а всего их около ста, посвящены разработчикам. Это соотношение позволяет оценить скрытую часть айсберга, которая не менее интересна, чем то, что видно на поверхности. Начиная цикл статей о разработке под iOS, мы расскажем о функциональности встроенных в устройства Apple фреймворков для работы с онлайн-видео. <span id="more-2810"></span></p>
+<p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/frameworksBlockDiagram.jpeg"><img src="http://blog.denivip.ru/wp-content/uploads/2012/07/frameworksBlockDiagram.jpeg" alt="" title="frameworksBlockDiagram" width="504" height="207" class="aligncenter size-full wp-image-2893" /></a></center> </p>
+<p>Иерархия фреймворков iOS для работы с видео включает следующие библиотеки:</p>
+<ul>
+<li>Media Player Framework &#8212; простой в использовании, поддерживающий большинство функций &#171;из коробки&#187;, достаточный для большинства приложений плеер с привычным пользовательским интерфейсом.</li>
+<li>AV Foundation Framework &#8212; предоставляет полный набор функций для управления воспроизведением видео и позволяет реализовать плеер любой сложности. Кроме того он включает функции съемки, редактирования, записи и перекодирования аудио и видео. В этой статье мы подробно остановимся на воспроизведении.</li>
+<li>Core Media и Core Video Framework &#8212; описывают низкоуровневые типы данных и системные интерфейсы для манипулирования медиаконтентом.</li>
+</ul>
+<h2>Media Player Framework</h2>
+<p>Media Player Framework содержит класс MPMoviePlayerController, который реализует полностью готовый к использованию в собственных приложениях видеоплеер, который практически полностью повторяет плеер стандартного приложения &#171;Видео&#187;.</p>
+<p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/06/IMG_0144.png"><img src="http://blog.denivip.ru/wp-content/uploads/2012/06/IMG_0144-300x200.png" alt="" title="Стандартное приложение &quot;Видео&quot;" width="300" height="200" class="aligncenter size-medium wp-image-2833" /></a></center></p>
+<p>В простейшем варианте вы можете запустить плеер буквально в несколько строк кода, используя MPMoviePlayerViewController. В этом случае происходит переход на контроллер плеера, а интерфейс вашего приложения становится недоступен пользователю до тех пор, пока вы не закроете плеер:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br /></div></td><td><div class="text codecolorer">MPMoviePlayerViewController* theMoviePlayer =<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[[MPMoviePlayerViewController alloc]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; initWithContentURL:[NSURL URLWithString:media_url]];<br />
+[self presentMoviePlayerViewControllerAnimated:theMoviePlayer];</div></td></tr></tbody></table></div>
+
+</pre>
+<p>В чуть более сложном варианте, экземпляр MPMoviePlayerController инициализируется с указанием ссылки на контент, после чего его свойство view можно добавить в иерархию текущего контроллера. В этом случае плеер точно также отображается в развернутом на весь экран виде, но теперь мы может добавить собственные компоненты поверх него.</p>
+<p>Вы можете подписаться на оповещения, отправляемые плеером, и реагировать на них в собственном коде при совершении пользователем следующих действий: начало воспроизведения, пауза, перемотка, начало и конец воспроизведения через AirPlay, изменение режима масштабирования, переход в полноэкранный режим, изменения статуса загрузки видео, получение метаинформации. Все те же действия можно выполнять и программно через протокол MPMediaPlayback.</p>
+<p>Media Player позволяет воспроизводить контент в фоновом режиме, когда приложение свернуто или экран устройства заблокирован. Для этого в настройках приложения требуется указать параметр UIBackgroundModes со значением audio и задать категорию аудиосессии AVAudioSessionCategoryPlayback, используя API класса AVAudioSession.</p>
+<p>Проблемы с этим фреймворком начинаются, когда требуется изменить функциональность плеера, реализовать какую-либо отсутствующую в стандартном плеере функцию или изменить его визуальное оформление. В таких случаях на помощь разработчику приходит фреймворк AV Foundation.</p>
+<h2>AV Foundation Framework</h2>
+<p>AV Foundation не содержит готовых визуальных компонентов наподобие MPMoviePlayerController, но зато предоставляет более детализированный программный интерфейс для работы с медиаданными и позволяет реализовать собственный плеер целиком с нуля.</p>
+<p>Перечислим основные классы фреймворка, которые используются для воспроизведения.</p>
+<p>AVAsset - базовый класс, описывающий единицу медиаконтента, как единое целое, включающее треки, метаинформацию и прочее. Важной особенностью при работе с этим классом является то, что он может быть не готов к использованию сразу после инициализации. Многие свойства контента, такие как длительность, наличие треков и вообще возможность воспроизведения, становятся доступными асинхронно, а могут и вовсе не быть получены, например, в случае недоступности контента при загрузке по сети. Состояние воспроизведения asset-а отделено в отдельный класс AVPlayerItem, что позволяет одновременно воспроизводить один и тот же asset независимо друг от друга в нескольких плеерах. Экземпляры класса AVPlayerItem воспроизводятся с помощью объекта AVPlayer, перенаправляющего вывод на специальный слой Core Animation, имеющий тип AVPlayerLayer. К этому слою применимы все эффекты оформления, анимации, геометрические преобразования, как и к обычным слоям. Краткий обзор минимального кода, необходимого для воспроизведения видео, приведен в разделе руководства для разработчиков <a href="https://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/02_Playback.html#//apple_ref/doc/uid/TP40010188-CH3-SW2">Putting it all Together: Playing a Video File Using AVPlayerLayer</a>.</p>
+<p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/iPhone-AVPlayer.jpeg"><img src="http://blog.denivip.ru/wp-content/uploads/2012/07/iPhone-AVPlayer-300x200.jpg" alt="" title="Скриншот приложения AVPlayer" width="300" height="200" class="aligncenter size-medium wp-image-2895" /></a></center></p>
+<p>Помимо базовой функциональности воспроизведения, AV Foundation совместно с другими фреймворками iOS предоставляет богатый набор других возможностей, позволяющих выполнять с медиаконтентом практически все, что только можно придумать. Перечислим наиболее интересные из них.</p>
+<p>Класс AVAssetImageGenerator позволяет независимо от текущего воспроизведения вытаскивать из видеоресурса отдельные кадры, последовательности кадров или их уменьшенные копии для целей предварительного просмотра. </p>
+<p>Класс AVAssetReader позволяет получить наиболее полный контроль над воспроизведением контента. С его помощью можно считывать и получать в удобном для дополнительной обработки виде отдельные сэмплы аудио- и видеодорожек asset-а. Затем эти сэмплы можно обработать любым доступным способом и показать пользователю или записать в файл с помощью AVAssetWriter. Например, добавить звуковые эффекты, отобразить визуальное представление аудиотрека, добавить различные фильтры к видео, натянуть воспроиводящееся видео как текстуру на трехмерный объект, и т.д. В общем, возможности ограничиваются фантазией разработчика, а также скоростью обработки кадров, так как при работе с AVAssetReader не может гарантироваться скорость считывания сэмплов в реальном времени. </p>
+<p>Объект asset может содержать несколько альтернативных аудиодорожек и субтитров, например для разных языков. С помощью метода [AVPlayerItem selectMediaOption:inMediaSelectionGroup:] можно выбрать из них подходящие в том или ином случае. </p>
+<p>Технология AirPlay позволяет авторам приложений для мобильных устройств задействовать телевизор подключенный к приставке Apple TV 2 как для зеркалирования основного экрана, так и для отображения дополнительного контента. В фреймворке AV Foundation для работы с AirPlay предусмотрено свойство объекта AVPlayer usesAirPlayVideoWhileAirPlayScreenIsActive, позволяющее установкой одного флага включить поддержку этой технологии. AirPlay может работать не только для нативных приложений, но и в веб среде.</p>
+<p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/airplay_screen.png"><img src="http://blog.denivip.ru/wp-content/uploads/2012/07/airplay_screen-300x199.png" alt="" title="Скриншот девайса в включенным AirPlay" width="300" height="199" class="aligncenter size-medium wp-image-2897" /></a></center></p>
+<p>Класс AVSynchronizedLayer позволяет синхронизировать время в других слоях приложения с временем воспроизведения контента. Это может быть полезно, например, если вы хотите, чтобы скорость анимации элементов интерфейса зависела от скорости воспроизведения видео, или, чтобы анимация воспроизводилась в обратном направлении при перемотке видео назад.</p>
+<h2>Apple HTTP Live Streaming</h2>
+<p>Технология HTTP Live Streaming, которой мы уделяем большое внимание в блоге, занимает ключевое место в разработке приложений для просмотра онлайн-видео. Она обеспечивает на транспортном уровне всю расширенную функциональность помимо простого воспроизведения, которая доступна через AV Foundation. Стандарт HTTP LS разработан и запатентован компанией Apple. Он приобретает огромную популярность в онлайн видеовещании в последнее время, так как обладает рядом характеристик, делающих его идеальной технологией для передачи видео по сети. Он поддерживается большинством мобильных устройств и устройств ориентированных на просмотр видео, таких как телевизоры. Все новые функции описанные в стандарте появляются на устройствах Apple в первую очередь. Одним из основных достоинств технологии HTTP LS является  возможность автоматически подстраивать вещание видеопотока под доступную ширину канала. Другие функции, которые становятся возможными благодаря ей, включают:</p>
+<ul>
+<li>Вещание видеопотоков в прямом эфире (Live) с возможностью перемещения по потоку в пределах последних N часов (Sliding window).</li>
+<li>Шифрование передаваемого контента и защищенная аутентификация зрителей по протоколу HTTPS.</li>
+<li>Корректная работа с большинством сервером отдачи контента, медиа дистрибуторами, системами кэширования, роутерами и файрволами, благодаря работе поверх протокола HTTP.</li>
+<li>Альтернативные потоки могут использоваться не только для мультибитрейта, но и для обеспечения отказоустойчивости. Вы можете указать в плейлисте два потока, обслуживающихся разными датацентрами, и приложение автоматически выберет из них тот, который доступен в данный момент.</li>
+<li>Передача метаданных, привязанных к времени воспроизведения. Это может использоваться, например, для вставки рекламы или показа информации о начинающейся передаче при просмотре телеканала.</li>
+<li>Субтитры.</li>
+<li>Ускоренная перемотка и скрабинг по ключевым кадрам.</li>
+</ul>
+<h2>Требования Apple к приложениям</h2>
+<p>При проверке приложений перед выкладыванием в App Store тестировщики Apple среди прочего проверяют и функциональность приложения, связанную с видеовещанием. Перечислим основные требования, которые необходимо соблюсти:</p>
+<ul>
+<li>Видеовещание по каналам сотовой связи должно в обязательном порядке осуществляться с использованием HTTP LS.</li>
+<li>Аудиодорожки у альтернативных видеопотоков с разным битрейтом должны быть полностью идентичны, чтобы избежать звуковых артефактов при переключении потоков.</li>
+<li>По той же причине соотношение сторон у всех видеопотоков должно совпадать.</li>
+<li>Один из альтернативных потоков должен быть закодирован с полосой 64 кбит/с и содержать только аудиодорожку.</li>
+</ul>
+<p>Максимальные и рекомендуемые параметры кодирования видео для передачи по сети можно найти на странице <a href="http://developer.apple.com/library/ios/#technotes/tn2224/_index.html">Best Practices for Creating and Deploying HTTP Live Streaming Media for the iPhone and iPad</a>.</p>
+<h2>* * *</h2>
+<p>В этой статье мы перечислили лишь те возможности платформы iOS, которые лежат на поверхности, но на самом деле их гораздо больше. Количество различных комбинаций, которые можно составить, используя функции доступных фреймворков, безгранично. К сожалению, пока еще в iOS SDK существуют и некоторые заметные пробелы. Открытые API системы не включают средств для живого вещания медиапотока, снимаемого камерой и микрофоном устройства, в сеть в реальном времени. Те приложения, которые это делают, &#8212; Facetime, Skype, Ustream, &#8212; используют закрытый код, недоступный среднему разработчику. Другой пробел, особенно заметный при работе с профессиональным видео, &#8212; отсутствие полноценной системы DRM, наподобие Adobe Access (в iOS встроено воспроизведение шифрованного контента, а для управления ключами требуется интеграция сторонних библиотек &#8212; например, Adobe Access или Widevine). Система FairPlay, с помощью которой защищает контент сама Apple не является доступной для сторонних разработчиков даже на коммерческой основе.</p>
+<p>При составлении этого обзора были использованы следующие источники:</p>
+<ul>
+<li><a href="https://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/AVFoundationPG">AV Foundation Programming Guide</a></li>
+<li><a href="http://developer.apple.com/library/ios/#DOCUMENTATION/AVFoundation/Reference/AVFoundationFramework/_index.html">AV Foundation Framework Reference</a></li>
+<li>Презентации и примеры кода, представленные на конференции <a href="https://developer.apple.com/videos/wwdc/2010/">WWDC 2010</a> и <a href="https://developer.apple.com/videos/wwdc/2011/">WWDC 2011</a> (доступны только зарегистрированным разработчикам).</li>
+</ul>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/%d0%be%d0%bd%d0%bb%d0%b0%d0%b9%d0%bd-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" title="Просмотреть все записи в рубрике &laquo;Онлайн видео&raquo;" rel="category tag">Онлайн видео</a>, <a href="http://blog.denivip.ru/index.php/category/tutorial/" title="Просмотреть все записи в рубрике &laquo;Разработка&raquo;" rel="category tag">Разработка</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/apple/" rel="tag">Apple</a>, <a href="http://blog.denivip.ru/index.php/tag/avfoundation/" rel="tag">avfoundation</a>, <a href="http://blog.denivip.ru/index.php/tag/dynamic-streaming/" rel="tag">Dynamic Streaming</a>, <a href="http://blog.denivip.ru/index.php/tag/http-live-streaming/" rel="tag">HTTP Live Streaming</a>, <a href="http://blog.denivip.ru/index.php/tag/ios/" rel="tag">iOS</a>, <a href="http://blog.denivip.ru/index.php/tag/ipad/" rel="tag">iPad</a>, <a href="http://blog.denivip.ru/index.php/tag/iphone/" rel="tag">iPhone</a>, <a href="http://blog.denivip.ru/index.php/tag/%d0%b2%d0%b8%d0%b4%d0%b5%d0%be-%d0%bf%d0%bb%d0%b5%d0%b5%d1%80/" rel="tag">видео плеер</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0/" rel="tag">разработка</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2012/07/apple-ios-video-development/" title="Permalink to Воспроизведение видео в iOS приложениях" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-2810 -->
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Mon Jan 2 23:16:57 2017 +0300</span></p>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Стандарты видеорекламы и связка OpenX + OSMF</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+    <article id="post-1987" class="post-1987 post type-post status-publish format-standard hentry category-tutorial category-44 tag-mast tag-openx tag-osmf tag-vast tag-vpaid tag-13 tag-389">
+	<header class="entry-header">
+		<h1 class="entry-title">Стандарты видеорекламы и связка OpenX + OSMF</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2011/08/videoads-openx-osmf/" title="12:28" rel="bookmark"><time class="entry-date" datetime="2011-08-03T12:28:25+00:00" pubdate>03.08.2011</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2011/08/video-advertising-standards-used-with-openx-osmf/?lang=en">Английский</a></p><p><center><a href="http://blog.denivip.ru/wp-content/uploads/2011/08/vpaid_toyota.gif"><img class="aligncenter size-medium wp-image-1993" title="vpaid_toyota" alt="" src="http://blog.denivip.ru/wp-content/uploads/2011/08/vpaid_toyota-300x138.gif" width="300" height="138" /></a></center><br />
+В этой статье мы подробнее раскроем тему видеорекламы в интернете. Мы расскажем о том, какие технические стандарты в области видеорекламы являются наиболее широко используемыми, какие возможности в этой области предоставляет открытый рекламный сервер OpenX, и рассмотрим, как можно использовать средства для работы с видеорекламой, встроенные в фреймворк для разработки видео-плееров OSMF, совместно с OpenX. <span id="more-1987"></span></p>
+<h2>Что такое VAST, какие еще бывают стандарты</h2>
+<p>Задача рекламного сервера в процессе доставки интернет-рекламы заключается в том, чтобы на запрос отправленный с веб-страницы или из видеоплеера вернуть в ответ некий рекламный код, соответствующий рекламному материалу, который сервер выбирает из набора возможных материалов по заранее заданным менеджером правилам и по параметрам контекста, в котором должна быть показана реклама. Стандарты интернет-рекламы регламентируют формат который используется для передачи этого рекламного кода.</p>
+<p>Реклама в виде баннеров-картинок имеет долгую историю в интернете, она появилась еще в тот период развития сети, когда возможности браузеров были ограничены, поэтому рекламный код таких баннеров до сих пор представляет собой исполняемый непосредственно в браузере JavaScript-код или просто тэг iframe, внутри которого загружаются изображения или текст. У каждой баннерной сети или рекламного сервера свой собственный формат рекламного кода, и необходимости его стандартизировать никогда не возникало, так как он выполняется непосредственно браузером.</p>
+<p>Совсем иная ситуация с видеорекламой, встраиваемой в видеоплееры. Существует огромное количество различных видеоплееров под различные платформы и технологии: Flash, HTML5, родные приложения, специальные медиа-плагины на различных мобильных и бытовых устройствах. Фактически каждый серьезный сайт, занимающийся показом видео, разрабатывает собственный плеер, а зачастую и не один. У всех этих разработок не существует общего языка, который можно было бы использовать для показа рекламы, какими в браузерах являются HTML и JavaScript, поэтому потребовалось стандартизировать рекламный код, сообщающий плееру какой рекламный ролик воспроизводить в тот или иной момент.</p>
+<p>Наиболее известными такими форматами являются VAST, MAST и VPAID. Каждый из них выполняет собственную функцию и может быть использован совместно с другими стандартами. Расскажем поподробнее о каждом из них.</p>
+<p>Стандарт <a href="http://www.iab.net/vast">VAST</a> (Video Ad Serving Template, текущая версия 2.0) разрабатывается организацией <a href="http://www.iab.net/">Interactive Advertising Bureau</a>, которая занимается созданием различных стандартов в интернет рекламе. VAST-шаблон представляет собой XML-документ, который запрашивается видеоплеером и содержит информацию о рекламном сообщении, которое следует показать. Стандарт поддерживает следующие виды видеорекламы: врезка &#8212; ролик воспроизводящийся до или после основного видео, или во время рекламной паузы, оверлей &#8212; рекламное сообщение в виде текста и/или картинки, отображающееся поверх основного видео без прерывания воспроизведения, и совместный баннер &#8212; реклама, которая отображается на веб-странице за пределами видеоплеера, но ее показ связан с определенными событиями, возникающими в плеере, например начало или конец врезки или переход на следующее видео по плейлисту. Шаблон также содержит URL-ы, которые плеер должен вызывать для отслеживания событий просмотра рекламного ролика, по которым затем рекламным сервером будет сформирована статистика. Отправка событий в соответсвии со стандартом согласуется с рекомендациями той же организации по измерению показателей видеорекламы. Рекламный шаблон VAST помимо непосредственно описания рекламных сообщений может также содержать отсылку на рекламное сообщение в формате VAST с другого сервера. Для добавления собственных нестандартных расширений в стандарте предусмотрен специальный тэг Extensions.</p>
+<p>VAST не определяет все аспекты показа видеорекламы. Например, используя его, невозможно описать какие-либо сложные взаимодействия между плеером, веб-страницей и рекламным сообщением. VAST-шаблон не задает место и время показа рекламы, так как считается, что видеоплееру доступна большая информация о текущем контексте, поэтому он и должен принимать эти решения.</p>
+<p>Другой стандарт &#8212; <a href="http://openvideoplayer.sourceforge.net/mast/mast_specification.pdf">MAST</a> (Media Abstract Sequencing Template). Он был разработан компанией Akamai в рамках инициативы <a href="http://openvideoplayer.sourceforge.net/">Open Video Player</a> специально для того, чтобы стандартизировать на уровне плеера такие аспекты, как задание последовательности показа рекламы и ее расположения. MAST спроектирован с учетом совместимости с VAST и VPAID.</p>
+<p>MAST представляет собой XML-документ, в котором описывается сценарий того, когда и где должны быть показаны те или иные рекламные сообщения. Сама же реклама, то есть то что должно быть показано, задается средствами VAST. Это описание состоит из триггеров (то есть действий), условий их срабатывания и окончания, источников рекламы и мест показа рекламы. Формат содержимого и семантика этих элементов стандартом не задается строго и является предметом рассмотрения конкретной реализации движка MAST. Пример реализации приведен в спецификации стандарта.</p>
+<p>Стандарт <a href="http://www.iab.net/vpaid">VPAID</a> (Video Player-Ad Interface Definition) также разрабатывается организацией IAB. Он регламентирует интерфейс взаимодействия между интерактивным рекламными форматами и видеоплеером. Он призван решить проблему несовместимости между собой сложных специфических рекламных форматов и видеоплееров, разрабатываемых различными компаниями. Применять этот стандарт не обязательно, если необходимо показывать только простые форматы типа врезки или оверлея. Но если те же самые форматы каким-то образом взаимодействуют с плеером, например, выполняют скрипты или останавливают воспроизведение основного видео, чтобы начать взаимодействие с пользователем, тогда использование VPAID может быть обосновано.</p>
+<p>Методы интерфейса VPAID реализуются на стороне рекламного материала. Возможность рекламного материала влиять на поведение плеера ограничена только отправкой событий. Реклама не может повлиять на то, как плеер реагирует на эти события, таким образом обеспечивается безопасность плеера от возможного вредоносного кода встроенного в рекламный материал. Рекламный материал может иметь следующие методы, свойства и события, доступные для плеера:</p>
+<ul>
+<li>инициализация, во время которой реклама может задать свое первоначальное состояние и подгрузить дополнительные ресурсы;</li>
+<li>оповещение о необходимости заново рассчитать размеры рекламы при изменении размеров плеера;</li>
+<li>управление воспроизведением рекламы &#8212; запуск, окончание, пауза, продолжение;</li>
+<li>управление режимом показа рекламы &#8212; раскрытый в полный размер или свернутый;</li>
+<li>признаки режима работы рекламы: линейный или нелинейный, развернутый или свернутый, оставшееся время показа, громкость рекламного сообщения;</li>
+<li>события жизненного цикла рекламного сообщения: загрузка, начало, конец; оповещение об изменение свойств; оповещение о необходимости отправки событий для рекламной отчетности; различные пользовательские взаимодействия с рекламой.</li>
+</ul>
+<p>Примеры сложных рекламных форматов, для которых имеет смысл использовать VPAID, чтобы добиться максимальной совместимости с плеерами: видео-врезка, поверх которой отображается оверлей, по которому можно кликнуть и перейти на сайт рекламодателя; оверлей, по клику на который запускается видео-врезка.</p>
+<p>Стандарт VPAID имеет некоторые ограничения. И реклама и видеоплеер должны быть реализованы с использованием одного и того же стека технологий. Так, например, взаимодействие плеера на Silverlight с рекламой на Adobe Flash невозможно.</p>
+<h2>Использование стандартов при разработке</h2>
+<p>Рекламный сервер OpenX после установки плагина OpenX Video Ads, поставляющегося с ним в комплекте, поддерживает отдачу видеорекламы в стандарте VAST. Реализация MAST или форматов, использующих VPAID в OpenX по-умолчанию отсутствует.</p>
+<p>OpenX поддерживает два основных формата видеорекламы: врезка (пре-ролл, мид-ролл, пост-ролл) и оверлей. Оверлей может представлять собой изображение, текст, SWF-файл или HTML-код. Конкретные особенности того, как тот или иной рекламный формат будет представлен пользователю, должны быть реализованы в самом видеоплеере.</p>
+<p>Для видеорекламы OpenX предоставляет все те же возможности таргетинга и статистики, что и для обычных форматов. Прочитать о них вы можете в статье <a href="http://blog.denivip.ru/index.php/2010/11/openx-features/">Подробнее о возможностях OpenX</a>. Кроме того, отчеты по видеорекламе включают не только стандартные показатели количества просмотров и кликов, но статистику по специфическим для видео событиям: квартили просмотра видео, пауза, стоп, отключение звука. А благодаря встроенной в OpenX возможности добавлять к событиям собственные параметры, такие как ID видеоконтента, внутри которого была показана реклама, статистика OpenX может быть доработана для построения самых разных отчетов, учитывающих требования конкретной рекламной площадки. Например, отчет о разделении доходов от показа рекламы с правообладателями контента.</p>
+<p>На клиентской стороне поддержка VAST реализована с помощью библиотеки <a href="http://www.longtailvideo.com/open-video-ads/">Open Video Ads</a> в таких популярных флэш-плеерах, как JW Player и Flowplayer. Кроме того эта библиотека доступна для загрузки и использования в собственном плеере по лицензии GPL. Эта же библиотека поддерживает и стандарт VPAID.</p>
+<p>Фреймворк OSMF включает в виде плагинов поддержку всех трех стандартов. Рассмотрим как встроить в ваш OSMF плеер показ пре-роллов. Для того, чтобы попробовать этот пример самостоятельно, вам потребуется установить сервер OpenX с плагином OpenX Video Ads и добавить несколько тестовых роликов. О том, как это сделать мы писали в статье <a href="/index.php/2010/07/показ-рекламы-в-системе-openx/">Показ рекламы в системе OpenX</a>. Кроме того, потребуетcя загрузить полный архив <a href="http://www.osmf.org/">OSMF</a> с исходными кодами, чтобы воспользоваться плагином VASTNew.</p>
+<p>Сначала создадим спрайт, который будет содержать наш плеер.</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br /></div></td><td><div class="text codecolorer">sprite = new MediaContainer();<br />
+addChild(sprite);</div></td></tr></tbody></table></div>
+
+</pre>
+<p>Затем, до загрузки основного видео необходимо выполнить запрос к рекламному серверу для получения рекламного кода. Ссылка для запроса рекламного кода из OpenX почти всегда будет выглядеть так, как в примере, за исключением адреса до вашего собственного сервера OpenX. Единственное, на что следует обратить внимание &#8212; это номер зоны, указанный в параметре zones. Он должен совпадать с зоной, с которой вы связали рекламные видеоролики.</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br />21<br />22<br />23<br />24<br />25<br />26<br />27<br />28<br />29<br />30<br />31<br /></div></td><td><div class="text codecolorer">loadVASTDocument(&quot;http://openx.denivip.ru/openx/www/delivery/fc.php&quot;<br />
++ &quot;?script=bannerTypeHtml:vastInlineBannerTypeHtml:vastInlineHtml&quot;<br />
++ &quot;&zones=pre-roll0-0%3D16&nz=1&source=&r=R0.622637958265841&quot;<br />
++ &quot;&format=vast&charset=UTF-8&quot;);<br />
+<br />
+...<br />
+<br />
+private function loadVASTDocument(vastURL:String):void<br />
+{<br />
+&nbsp; &nbsp; var loadTrait:VASTLoadTrait = new VASTLoadTrait(new VASTLoader(), <br />
+&nbsp; &nbsp; &nbsp; &nbsp; new URLResource(vastURL));<br />
+&nbsp; &nbsp; loadTrait.addEventListener(LoadEvent.LOAD_STATE_CHANGE, <br />
+&nbsp; &nbsp; &nbsp; &nbsp; onLoadStateChange);<br />
+&nbsp; &nbsp; loadTrait.load();<br />
+<br />
+&nbsp; &nbsp; function onLoadStateChange(event:LoadEvent):void<br />
+&nbsp; &nbsp; {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; if (event.loadState == LoadState.READY)<br />
+&nbsp; &nbsp; &nbsp; &nbsp; {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loadTrait.removeEventListener(LoadEvent.LOAD_STATE_CHANGE, <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; onLoadStateChange);<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; var generator:VASTMediaGenerator = new VASTMediaGenerator();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; var mediaElements:Vector.&lt;MediaElement&gt; = <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; generator.createMediaElements(loadTrait.vastDocument);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loadMediaWithAd(mediaElements.length &gt; 0 <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ? mediaElements[0] <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : null);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; }<br />
+}</div></td></tr></tbody></table></div>
+
+</pre>
+<p>Средства для загрузки и парсинга VAST-шаблона, а также для создания специальных медиаэлементов для видеорекламы встроены в OSMF. Все что остается сделать после этого &#8212; создать SerialElement для последовательного воспроизведения двух роликов &#8212; сначала пре-ролл, а потом основное видео.</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br /></div></td><td><div class="text codecolorer">private function loadMediaWithAd(adElement:MediaElement):void<br />
+{<br />
+&nbsp; &nbsp; var serialElement:SerialElement = new SerialElement();<br />
+<br />
+&nbsp; &nbsp; if (adElement != null)<br />
+&nbsp; &nbsp; {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; serialElement.addChild(adElement);<br />
+&nbsp; &nbsp; }<br />
+<br />
+&nbsp; &nbsp; serialElement.addChild(new VideoElement(<br />
+&nbsp; &nbsp; &nbsp; &nbsp; new URLResource(&quot;http://openx.denivip.ru/&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; + &quot;test-portal/video/omlet.f4v&quot;)));<br />
+<br />
+&nbsp; &nbsp; sprite.addMediaElement(serialElement);<br />
+&nbsp; &nbsp; mediaPlayer.media = serialElement;<br />
+}</div></td></tr></tbody></table></div>
+
+</pre>
+<p>Фреймворк сам позаботится об отправке событий на сервер OpenX и о создании поверх видео слоя, по которому можно кликнуть и перейти на сайт рекламодателя.</p>
+<p>Если вас заинтересовал открытый рекламный сервер OpenX, предлагаем также ознакомиться и с <a href="http://blog.denivip.ru/index.php/tag/openx/">другими статьями по этой теме</a>.</p>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/tutorial/" title="Просмотреть все записи в рубрике &laquo;Разработка&raquo;" rel="category tag">Разработка</a>, <a href="http://blog.denivip.ru/index.php/category/%d1%80%d0%b5%d0%ba%d0%bb%d0%b0%d0%bc%d0%b0/" title="Просмотреть все записи в рубрике &laquo;Реклама&raquo;" rel="category tag">Реклама</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/mast/" rel="tag">MAST</a>, <a href="http://blog.denivip.ru/index.php/tag/openx/" rel="tag">OpenX</a>, <a href="http://blog.denivip.ru/index.php/tag/osmf/" rel="tag">OSMF</a>, <a href="http://blog.denivip.ru/index.php/tag/vast/" rel="tag">VAST</a>, <a href="http://blog.denivip.ru/index.php/tag/vpaid/" rel="tag">VPAID</a>, <a href="http://blog.denivip.ru/index.php/tag/%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" rel="tag">видео</a>, <a href="http://blog.denivip.ru/index.php/tag/%d0%b2%d0%b8%d0%b4%d0%b5%d0%be%d1%80%d0%b5%d0%ba%d0%bb%d0%b0%d0%bc%d0%b0/" rel="tag">видеореклама</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2011/08/videoads-openx-osmf/" title="Permalink to Стандарты видеорекламы и связка OpenX + OSMF" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-1987 -->
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Mon Jan 2 23:16:57 2017 +0300</span></p>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Emacs как среда разработки приложений на C++</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<LINK REL="STYLESHEET" HREF="emacs-cxx.css">
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+    <H1 ALIGN="CENTER">Emacs как среда разработки приложений на C++</H1>
+<P ALIGN="CENTER"><STRONG>Морев&nbsp;Н.&nbsp;В. &lt;kolyuchiy@gmail.com&gt;</STRONG></P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Содержание</A>
+</H2>
+<!--Table of Contents-->
+
+<UL>
+<LI><A NAME="tex2html31"
+  HREF="emacs-cxx.html">Введение</A>
+<LI><A NAME="tex2html32"
+  HREF="#SECTION00030000000000000000">Основы работы с Emacs</A>
+<LI><A NAME="tex2html33"
+  HREF="#SECTION00040000000000000000">Написание-запуск-отладка программ</A>
+<UL>
+<LI><A NAME="tex2html34"
+  HREF="#SECTION00041000000000000000">Работа с файлами</A>
+<LI><A NAME="tex2html35"
+  HREF="#SECTION00042000000000000000">Ввод и компиляция</A>
+<LI><A NAME="tex2html36"
+  HREF="#SECTION00043000000000000000">Отладка</A>
+<LI><A NAME="tex2html37"
+  HREF="#SECTION00044000000000000000">Ошибки при компиляции</A>
+<LI><A NAME="tex2html38"
+  HREF="#SECTION00045000000000000000">Автоматическая расстановка отступов</A>
+<LI><A NAME="tex2html39"
+  HREF="#SECTION00046000000000000000">Дополнительные возможности</A>
+</UL><BR>
+<LI><A NAME="tex2html40"
+  HREF="#SECTION00050000000000000000">Заключение</A>
+<LI><A NAME="tex2html41"
+  HREF="#SECTION00060000000000000000">Введение в Makefile</A>
+<UL>
+<LI><A NAME="tex2html42"
+  HREF="#SECTION00061000000000000000">Возможности <TT>make</TT></A>
+<LI><A NAME="tex2html43"
+  HREF="#SECTION00062000000000000000">&lt;&lt;Правила&gt;&gt; и &lt;&lt;цели&gt;&gt; <TT>make</TT></A>
+<LI><A NAME="tex2html44"
+  HREF="#SECTION00063000000000000000">Пример Makefile'а</A>
+</UL><BR>
+<LI><A NAME="tex2html45"
+  HREF="#SECTION00070000000000000000">Настройка Emacs</A>
+<LI><A NAME="tex2html46"
+  HREF="#SECTION00080000000000000000">Список литературы</A>
+<LI><A NAME="tex2html47"
+  HREF="#SECTION00090000000000000000">О документе...</A>
+</UL>
+<!--End of Table of Contents-->
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Введение</A>
+</H1>
+
+<P>
+Emacs&nbsp;-- это расширяемый, настраиваемый, само-документированный
+текстовый редактор<A NAME="tex2html1"
+  HREF="#foot19"><SUP>1</SUP></A>. Его первая версия была
+создана Ричардом Столлманом<A NAME="tex2html2"
+  HREF="#foot20"><SUP>2</SUP></A> в 1976 году. 
+
+<P>
+Большая часть Emacs'а написана на специальном диалекте Lisp'а,
+называемом Emacs Lisp. Это интерпретируемый язык, позволяющий с
+лёгкостью расширять возможности редактора без перекомпиляции или
+перезагрузки редактора. Это способствовало появлению огромного
+количества различных дополнений для Emacs. Так, например, современные
+версии Emacs включают в стандартной поставке встроенный веб-браузер,
+программу для чтения почты и групп Usenet, тетрис и виртуального
+психотерапевта. 
+
+<P>
+Одна из эмблем Emacs&nbsp;-- кухонная мойка, потому что говорят, что в
+Emacs'е реализовано все, кроме кухонной мойки. Многие фанаты Emacs
+используют его как свою основную операционную систему&nbsp;-- все
+программы, с которыми они работают запускаются только из-под
+Emacs. Есть и такие, которые считают себя адептами Церкви
+Emacs<A NAME="tex2html3"
+  HREF="#foot149"><SUP>3</SUP></A>, во главе
+которой стоит святой ИГНУсий&nbsp;-- Ричард
+Столлман<A NAME="tex2html4"
+  HREF="#foot22"><SUP>4</SUP></A>. Короче
+говоря, Emacs&nbsp;-- это культовый и легендарный текстовый редактор.
+
+<P>
+Emacs&nbsp;-- работает не только под GNU/Linux. Он был портирован на
+множество других операционных систем, включая и MS Windows.
+
+<P>
+Как и многие другие удачные opensource-проекты, Emacs разделился на
+несколько независимых друг от друга ветвей, разработка которых ведётся
+отдельно. Сегодня наиболее популярными версиями Emacs являются
+GNU&nbsp;Emacs<A NAME="tex2html5"
+  HREF="#foot23"><SUP>5</SUP></A> и
+XEmacs<A NAME="tex2html6"
+  HREF="#foot24"><SUP>6</SUP></A>. Они различаются во множестве
+мелких деталей, но по большому счету очень похожи, поэтому все, что
+будет сказано об одной версии скорее всего будет работать и на
+другой. Обе версии поддерживают работу как в текстовой консоли так и в
+графическом режиме. При написании этого текста использовался XEmacs
+версии 21.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Основы работы с Emacs</A>
+</H1>
+
+<P>
+При запуске Emacs показывает в своём окне минимальную информацию
+необходимую для начала работы с редактором. Это основные сочетания
+клавиш для вызова различных функций. (&#171;<TT>C</TT>-&#187; означает клавишу Control,
+&#171;<TT>M</TT>-&#187;&nbsp;-- клавишу Meta, которую на PC заменяет Alt)
+
+<P>
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT" COLSPAN=2>Встроенная помощь</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>C-h F</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=283>Список часто задаваемых вопросов о Emacs и ответов на них</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>C-h t</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=283>Небольшой текст, рекомендуемый для прочтения, чтобы
+научиться эффективно работать с редактором</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>f1</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=283>Помощь</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>C-h i</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=283>Читать встроенную документацию</TD>
+</TR>
+<TR><TD ALIGN="LEFT" COLSPAN=2>Полезные сочетания клавиш</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>C-x C-f</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=283>открыть или создать файл</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>C-x C-s</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=283>сохранить изменения в текущем файле</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>C-x u</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=283>откат изменений</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>C-x C-c</TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=283>выход из редактора</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Написание-запуск-отладка программ</A>
+</H1>
+
+<P>
+Покажем возможности Emacs как IDE на примере разработки одной
+небольшой программы на C++.
+
+<P>
+В Emacs существуют специальные режимы (major modes) практически для
+любого языка программирования, реализующие функции подсветки
+синтаксиса, автодополнения, автоматических отступов, подсветки скобок
+и кавычек, вызова соответствующих программ компиляции и запуска и т.д.
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+Работа с файлами</A>
+</H2>
+
+<P>
+Для манипулирования файлами и каталогами в Emacs существует режим
+редактирования директорий (Dired mode). Он запускается по нажатию <TT>C-x d</TT> или <TT>M-x dired</TT>. Создадим новый каталог для хранения
+проекта. Для этого, находясь в домашнем каталоге, нажмём <TT>+</TT> и
+введём имя нового каталога. Затем перейдём в этот каталог и создадим
+новый файл проекта<A NAME="tex2html7"
+  HREF="#foot151"><SUP>7</SUP></A> с помощью сочетания клавиш <TT>C-x C-f</TT>, о котором мы
+уже упоминали выше. Откроется новый буфер для этого файла. В этом
+буфере автоматически загрузится режим для редактирования исходников
+C++ (c++-mode).
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000">
+Ввод и компиляция</A>
+</H2>
+
+<P>
+Сначала введём комментарии к программе. Для этого нажмите <TT>M-;</TT>.
+Далее введём саму программу (см.&nbsp;рис.&nbsp;<A HREF="emacs-cxx.html#a">1</A>). 
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="a"></A><A NAME="158"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Рисунок:</STRONG>
+Введённая программа</CAPTION>
+<TR><TD><DIV ALIGN="CENTER">
+<IMG
+ WIDTH="292" HEIGHT="204" ALIGN="BOTTOM" BORDER="0"
+ SRC="./a.png"
+ ALT="Image ./a.png">
+ 
+</DIV></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+Теперь сохраним нашу программу (<TT>C-x C-s</TT>) и скомпилируем (<TT>M-x compile</TT>). Будет запрошена команда для компиляции. По
+умолчанию&nbsp;-- это <TT>make -k</TT>. Но так как мы ещё не написали
+Makefile, указывающий команде <TT>make</TT>, как нужно компилировать
+программу, мы вводим <TT>make -k hello</TT>, и <TT>make</TT> сам вызовет
+компилятор <TT>g++</TT> с нужными ключами. Такой способ работает только
+для небольших программ, состоящих из одного модуля. В более сложных
+случаях мы должны написать соответствующий Makefile.
+
+<P>
+Если мы собираемся отлаживать нашу программу в отладчике <TT>gdb</TT>, то
+при компиляции нужно задать опцию <TT>-g</TT>, чтобы в получившийся
+исполняемый файл была включена отладочная информация. В этом случае
+команда для компиляции будет <TT>g++ -g -o hello hello.cc</TT>.
+
+<P>
+Теперь, чтобы запустить программу, мы загружаем встроенный в Emacs
+shell (<TT>M-x shell</TT>). Затем в нем запускаем наш исполняемый
+модуль (см.&nbsp;рис.&nbsp;<A HREF="emacs-cxx.html#b">2</A>).
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="b"></A><A NAME="165"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Рисунок:</STRONG>
+Запуск программы</CAPTION>
+<TR><TD><DIV ALIGN="CENTER">
+<IMG
+ WIDTH="299" HEIGHT="90" ALIGN="BOTTOM" BORDER="0"
+ SRC="./b.png"
+ ALT="Image ./b.png">
+ 
+</DIV></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<H2><A NAME="SECTION00043000000000000000">
+Отладка</A>
+</H2>
+
+<P>
+В Emacs'е кроме всего прочего есть ещё и фронтенд для отладчика <TT>gdb</TT>. Чтобы войти в соответствующий режим введите <TT>M-x gdb</TT>, затем
+имя исполняемого модуля, предназначенного для отладки.
+
+<P>
+Появится командная строка <TT>gdb</TT>. Там введём две команды <TT>break
+main</TT> и <TT>run</TT>. Первая устанавливает брейкпоинт на функцию <TT>main()</TT>, а вторая запускает программу. Команда <TT>N</TT> в командной
+строке отладчика исполняет следующую строку программы. Чтобы получить
+справку по всем командам <TT>gdb</TT> введите в командной строке <TT>help</TT>. Более полную информацию об отладчике можно получить по команде
+<TT>C-h i m gdb</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00044000000000000000">
+Ошибки при компиляции</A>
+</H2>
+
+<P>
+Предположим, что мы забыли написать точку с запятой после <TT>endl</TT>. В этом случае компилятор выдаст соответствующую ошибку. Чтобы
+автоматически перейти к строке, содержащей ошибку, нажмите <TT>C-x
+`</TT>.
+
+<P>
+Режим компиляции в Emacs умеет отлавливать не только ошибки, которые
+выдаёт <TT>g++</TT>, он понимает и множество других компиляторов, включая
+MS Visual C++.
+
+<P>
+
+<H2><A NAME="SECTION00045000000000000000">
+Автоматическая расстановка отступов</A>
+</H2>
+
+<P>
+Как вы, наверное, уже успели заметить, при вводе программы Emacs может
+автоматически (или по нажатию кнопки <TT>Tab</TT>) вставлять нужное
+количество пробелов в начале строки. Есть также возможность
+автоматически расставить отступы в уже готовой программе. Для этого
+выделите весь текст в текущем буфере (<TT>C-x H</TT>) и нажмите
+<TT>M-x indent-region</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00046000000000000000">
+Дополнительные возможности</A>
+</H2>
+
+<P>
+Кроме того, о чем уже говорилось выше, в Emacs есть ещё некоторые
+возможности, делающие процесс написания программ удобным. Перечислим
+их кратко. 
+
+<P>
+<DL>
+<DT><STRONG>фолдинг (folding)</STRONG></DT>
+<DD>позволяет временно &#171;свернуть&#187; определённые
+части программы, не удаляя их физически из файла, для того, чтобы
+вместить на экран больше информации, полезной на данном этапе
+редактирования.
+
+<P>
+</DD>
+<DT><STRONG>контроль версий</STRONG></DT>
+<DD>в Emacs интегрирована поддержка самых
+популярных систем контроля версий: CVS, RCS, SCCS и Subversion. Это
+позволяет, не выходя из редактора, работать с репозиториями, которые
+могут физически находиться на удалённом сервере или на локальной
+машине. 
+
+<P>
+</DD>
+<DT><STRONG>тэги (tags)</STRONG></DT>
+<DD>-- это база данных, которая хранит все имена
+функций и типов, определённых в исходниках программы, вместе с их
+местоположением. Она облегчает поиск нужных определений в большой
+программе.
+
+<P>
+</DD>
+<DT><STRONG>speedbar</STRONG></DT>
+<DD>показывает в виде дерева содержимое файловой системы
+и содержимое текущего буфера. Например, для исходников на C это могут
+быть функции, определённые в данном файле.
+
+<P>
+</DD>
+<DT><STRONG>сравнение файлов</STRONG></DT>
+<DD>позволяет выделить различающиеся строки и их
+части в двух (или трёх) файлах и легко переносить изменения из одного
+файла в другой.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Заключение</A>
+</H1>
+
+<P>
+Emacs&nbsp;-- это настоящая интегрированная среда разработки (IDE). Для
+расширения своей функциональности Emacs активно использует внешние
+утилиты, стандартные для большинства Unix-систем. В этом смысле, он
+гораздо лучше интегрирован в Linux, чем многие другие существующие
+коммерческие IDE. В Emacs можно найти практически все, что может
+понадобиться для редактирования текстов, и даже больше того. Но если
+все-таки, что-то там отсутствует, то программист всегда имеет
+возможность написать это самостоятельно.
+
+<P>
+Невозможно изучить весь Emacs, но чем больше вы о нем знаете, тем
+эффективнее сможете работать. В Emacs есть несколько способов
+получения дополнительных сведений. Во-первых, встроенная в редактор
+справка, которая вызывается нажатием <TT>C-h</TT>. Во-вторых, режим для
+просмотра документации в формате Info (<TT>C-h i</TT>). В-третьих, режим
+для просмотра документации в формате man (<TT>M-x manual-entry</TT>).
+
+<P>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+Введение в Makefile</A>
+</H1>
+
+<P>
+<TT>make</TT><A NAME="tex2html10"
+  HREF="#foot105"><SUP>8</SUP></A>&nbsp;--
+это утилита, которая контролирует процесс получения
+исполняемых файлов или других неисходных файлов программы из исходных
+файлов. <TT>make</TT> получает знания о том, как компилировать программу,
+из специального файла, называемого Makefile, в котором перечисляются все
+неисходные файлы и как их получить из исходных файлов. Чтобы
+использовать <TT>make</TT> для сборки программы из исходных кодов,
+необходимо написать Makefile.
+
+<P>
+
+<H2><A NAME="SECTION00061000000000000000">
+Возможности <TT>make</TT></A>
+</H2>
+
+<P>
+
+<UL>
+<LI>Позволяет пользователю собрать и установить программу без знаний
+о том, как это должно быть сделано, потому что все эти сведения
+записаны в Makefile'е.
+
+<P>
+</LI>
+<LI>Ускоряет процесс повторной сборки больших проектов, компилируя
+только те файлы, в которых были сделаны изменения. А также компилирует
+исходные модули в правильном порядке, благодаря знанию о зависимостях
+модулей друг от друга.
+
+<P>
+</LI>
+<LI>Не ограничивается сборкой исходных файлов, написанных на
+каком-либо одном языке.
+
+<P>
+</LI>
+<LI>Не ограничивается только сборкой программ и может быть
+использован для автоматизации любой часто повторяющейся
+последовательности действий.
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00062000000000000000">
+&#171;Правила&#187; и &#171;цели&#187; <TT>make</TT></A>
+</H2>
+
+<P>
+Правило в Makefile'е задаёт последовательность действий, необходимых
+для получения целевого файла из исходных файлов. Оно также задаёт
+список зависимостей целевого файла. Этот список должен включать в себя
+все файлы, которые используются при сборке цели.
+
+<P>
+Вот как может выглядеть простое правило:
+
+<P>
+<PRE>
+target:	  dependencies ...
+          commands
+          ...
+</PRE>
+
+<P>
+При запуске <TT>make</TT> можно указать целевое правило. Если оно не
+будет указано, то <TT>make</TT> собирает первую цель, указанную в
+Makefile'е.
+
+<P>
+Дополнительную информацию о <TT>make</TT> и Makefile'ах можно найти в
+документации <TT>make</TT> (<TT>C-h i m make</TT>).
+
+<P>
+
+<H2><A NAME="SECTION00063000000000000000">
+Пример Makefile'а</A>
+</H2>
+
+<P>
+Предположим, что нам необходимо собрать проект из нескольких исходных
+модулей на C++: <TT>main.cc</TT>, <TT>circle.cc</TT> и <TT>rectangle.cc</TT>. У двух из них есть файлы заголовков: <TT>circle.h</TT> и
+<TT>rectangle.h</TT>. Модуль <TT>main.cc</TT> использует два других и
+содержит функцию <TT>main()</TT>. Тогда самый простой Makefile может
+выглядеть примерно так:
+
+<P>
+<PRE>
+main: circle.o rectangle.o
+</PRE>
+
+<P>
+Здесь мы не указываем какую команду необходимо выполнить для
+компиляции, т.к. <TT>make</TT> имеет некоторые значения по-умолчанию,
+которые он применяет исходя из расширений исходных файлов.
+
+<P>
+При вызове программы <TT>make</TT> этот скрипт вызовет следующую
+последовательность действий:
+
+<P>
+<PRE>
+g++    -c -o circle.o circle.cc
+g++    -c -o rectangle.o rectangle.cc
+g++     main.cc circle.o rectangle.o   -o main
+</PRE>
+
+<P>
+Если нам понадобится добавить в аргументы компилятора ключик <TT>-g</TT>,
+то мы просто напишем вначале Makefile'а
+
+<P>
+<PRE>
+CXXFLAGS = -g
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+Настройка Emacs</A>
+</H1>
+
+<P>
+Настройки Emacs хранятся в файле <TT>.emacs</TT> в домашней директории
+пользователя. Этот файл представляет собой программу на Emacs Lisp'е.
+
+<P>
+Чтобы появилась возможность вводить текст на русском языке, необходимо
+добавить туда следующие строки (переключение на русский язык с помощью
+сочетания клавиш <TT>C-\</TT>):
+
+<P>
+<PRE>
+(set-language-environment "Cyrillic-KOI8")
+(set-default-buffer-file-coding-system 'koi8-r)
+(set-default-file-coding-system 'koi8-r)
+(set 'default-input-method "cyrillic-jcuken")
+(put-charset-property 'cyrillic-iso8859-5
+                      'preferred-coding-system 'koi8-r)
+</PRE>
+
+<P>
+Дополнительная информация о файлах <TT>.emacs</TT> на
+http://www.dotemacs.de/basics.html.
+
+<P>
+ 
+<H2><A NAME="SECTION00080000000000000000">
+Список литературы</A>
+</H2><DL COMPACT><DD><P></P><DT><A NAME="lj">1</A>
+<DD> Charles Curley. Emacs: the Free Software IDE 
+// Linux Journal.
+(http://www.linuxjournal.com/article.php?sid=5765, 1.06.2002)
+
+<P>
+<P></P><DT><A NAME="wiki">2</A>
+<DD> EmacsWiki (http://www.emacswiki.org)
+
+<P>
+</DL>
+<H1><A NAME="SECTION00090000000000000000">
+О документе...</A>
+</H1>
+ <STRONG>Emacs как среда разработки приложений на C++</STRONG><P>
+This document was generated using the
+<A HREF="http://www-texdev.mpce.mq.edu.au/l2h/docs/manual/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2K.1beta (1.48)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+<A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, 
+Computer Based Learning Unit, University of Leeds.
+<BR>Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>-nonavigation -split 0 -local_icons -address kolyuchiy@gmail.com -no_auto_link emacs-cxx.tex</TT>
+<P>
+The translation was initiated by Kolia Morev on 2004-04-10<BR><HR><H4>Сноски</H4>
+<DL>
+<DT><A NAME="foot19">... редактор</A><A NAME="foot19"
+ HREF="emacs-cxx.html#tex2html1"><SUP>1</SUP></A>
+<DD>GNU Emacs Manual
+(http://www.gnu.org/software/emacs/manual/).
+
+<DT><A NAME="foot20">... Столлманом</A><A NAME="foot20"
+ HREF="emacs-cxx.html#tex2html2"><SUP>2</SUP></A>
+<DD>Основатель движения GNU за
+свободное программное обеспечение.
+
+<DT><A NAME="foot149">...
+Emacs</A><A NAME="foot149"
+ HREF="emacs-cxx.html#tex2html3"><SUP>3</SUP></A>
+<DD>http://www.dina.dk/~abraham/religion/
+
+<DT><A NAME="foot22">...
+Столлман</A><A NAME="foot22"
+ HREF="emacs-cxx.html#tex2html4"><SUP>4</SUP></A>
+<DD>http://www.stallman.org/saintignucius.jpg
+
+<DT><A NAME="foot23">...
+GNU&nbsp;Emacs</A><A NAME="foot23"
+ HREF="emacs-cxx.html#tex2html5"><SUP>5</SUP></A>
+<DD>http://www.gnu.org/software/emacs/emacs.html
+
+<DT><A NAME="foot24">...
+XEmacs</A><A NAME="foot24"
+ HREF="emacs-cxx.html#tex2html6"><SUP>6</SUP></A>
+<DD>http://www.xemacs.org/
+
+<DT><A NAME="foot151">... проекта</A><A NAME="foot151"
+ HREF="emacs-cxx.html#tex2html7"><SUP>7</SUP></A>
+<DD>Для исходников на C++ принято использовать
+одно из расширений <TT>.C</TT>, <TT>.cc</TT>, <TT>.cxx</TT>, <TT>.cpp</TT> или
+<TT>.c++</TT>.
+
+<DT><A NAME="foot105">...<TT>make</TT></A><A NAME="foot105"
+ HREF="emacs-cxx.html#tex2html10"><SUP>8</SUP></A>
+<DD>http://www.gnu.org/software/make/make.html
+
+</DL><BR><HR>
+<ADDRESS>
+kolyuchiy@gmail.com
+</ADDRESS>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Tue Apr 15 21:27:20 2014 +0400</span></p>
+    </div>
+
+  </body>
+</html>

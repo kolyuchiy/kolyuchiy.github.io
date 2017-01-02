@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Реализация лайв-стриминга снимаемого видео в приложении для iOS</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+    <article id="post-4937" class="post-4937 post type-post status-publish format-standard hentry category-ios category-tutorial tag-avfoundation tag-http-live-streaming tag-ios tag-livecast tag-23 tag--- tag-350">
+    <header class="entry-header">
+        <h1 class="entry-title">Реализация лайв-стриминга снимаемого видео в приложении для iOS</h1>
+
+        <div class="entry-meta">
+            Posted on <a href="http://blog.denivip.ru/index.php/2013/10/ios-live-streaming-implementation/" title="19:54" rel="bookmark"><time class="entry-date" datetime="2013-10-25T19:54:18+00:00" pubdate>25.10.2013</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+    </header><!-- .entry-header -->
+
+    <div class="entry-content">
+        <p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2013/10/how-to-live-stream-video-as-you-shoot-it-in-ios/?lang=en">Английский</a></p><p>Под лайв-стримингом мы понимаем функцию приложения, которая позволяет передавать видео по сети одновременно со съемкой, не дожидаясь полного окончания записи видеофайла. В этой статье мы хотим рассказать о том, как мы подошли к ее решению в ходе разработки Видеокамеры Together для iOS.</p>
+        <p><span id="more-4937"></span></p>
+        <div style="padding-left: 10px; font-size: 90%; border-left: 4px solid #ddd; background-color: #eee; padding-right: 10px;">
+            <p><a href="http://www.2gzr.com/">Видеокамера Together</a> &#8212; это приложение для iPhone, которое позволяет снимать видеоролики, удобно рассортировать собственную видеоколлекцию как автоматически по дате, месту съемки, тэгам, так и вручную по альбомам, синхронизировать коллекцию между устройствами и делиться видео с друзьями, в том числе в формате потокового видео.</p>
+            <p>В самом начале разработки приложение Together задумывалось как приложение для телеконференций, затем акцент сместился к функциональности лайв-стриминга для целей одностороннего вещания на большую аудиторию, как в сервисах LiveStream и Ustream. И, наконец, подойдя к первому публичному релизу, приложение превратилось в менеджер личной библиотеки видеозаписей.</p>
+        </div>
+        <p>На первый взгляд в лайв-стриминге не должно быть ничего сложного. Существует множество широко известных приложений и сервисов для самых разных платформ, которые используют эту функцию. Для некоторых из них она является основной: Skype, Chatroulette, Livestream, Facetime и многие другие. Однако, средства разработки и стандартные библиотеки для iOS затрудняют оптимальную реализацию этой функции, так как не предоставляют прямого доступа к аппаратному кодированию видео.</p>
+        <p>С точки зрения реализации лайв-стриминг можно разбить на следующие подзадачи:</p>
+        <ul style="padding-left: 20px;">
+            <li>Получение данных видеопотока в процессе съемки.</li>
+            <li>Парсинг данных видеопотока.</li>
+            <li>Преобразование в формат, поддерживаемый сервером.</li>
+            <li>Отправка этих данных на сервер.</li>
+        </ul>
+        <p>Можно выделить следующие основные требования к реализации лайв-стриминга в приложении:</p>
+        <ul style="padding-left: 20px;">
+            <li>Минимальная задержка по времени между съемкой кадра видео и отображением его потребителю.</li>
+            <li>Минимальный объем данных, пересылаемых по сети, при сохранении приемлемого качества изображения и звука.</li>
+            <li>Оптимальное использование ресурсов процессора, памяти и хранилища устройства, на котором производится съемка.</li>
+            <li>Минимальный расход батареи.</li>
+        </ul>
+        <p>В зависимости от целей для которых приложение использует функционал лайв-стриминга, на первый план выходят те или иные требования. Например, требование минимизации расхода батареи противоречит требованию минимизации задержки, так как отправка данных по сети большими кусками более энергоэффективна, чем поддержание постоянного соединения, по которому данные отправляются по мере съемки. Наше приложение Together не ставит цель получения обратной связи от зрителей в реальном времени, в тоже время, мы даем возможность поделиться со своими друзьями снимаемыми кадрами как можно скорее.  Поэтому требование минимизации расхода батареи для нас стало первоочередным.</p>
+        <p>iOS SDK включает достаточно богатый набор возможностей по работе с камерой и данными видео и аудио. Подробнее о фреймворках CoreMedia и AVFoundation мы уже писали в <a href="#see-also">предыдущих статьях</a>. Классы <span style="font-family: monospace;">AVCaptureAudioDataOutput</span> и <span style="font-family: monospace;">AVCaptureVideoDataOutput</span> совместно с <span style="font-family: monospace;">AVCaptureSession</span> позволяют получать покадрово информацию с камеры в виде несжатых буферов видео или аудио (<span style="font-family: monospace;">CMSampleBuffer</span>). В комплекте с SDK поставляются примеры (AVCamDemo, RosyWriter), которые иллюстрируют работу с этими классами. Для того, чтобы передать полученные с камеры буферы на сервер, их необходимо предварительно сжать каким-нибудь кодеком. Кодирование видео с хорошим коэфициентом сжатия обычно требует довольно больших затрат процессорного времени и соответственно энергии батареи. Устройства на iOS имеют специальные аппаратные средства для быстрого сжатия видео кодеком H.264. Для того, чтобы разработчики приложений могли их использовать, в SDK предусмотрено всего два класса, различающихся по простоте использования и доступным возможностям:</p>
+        <ul style="padding-left: 20px;">
+            <li><span style="font-family: monospace;">AVCaptureMovieFileOutput</span> выводит изображение с камеры напрямую в файл MOV или MP4.</li>
+            <li><span style="font-family: monospace;">AVAssetWriter</span> тоже сохраняет видео в файле, но дополнительно дает возможность в качестве исходного изображения использовать кадры, предоставленные разработчиком, которые он может как получить с камеры в виде объектов <span style="font-family: monospace;">CMSampleBuffer</span> так и сгенерировать программно.</li>
+        </ul>
+        <div style="padding-left: 10px; font-size: 90%; border-left: 4px solid #ddd; background-color: #eee; padding-right: 10px;">
+            <p>Рассмотрим затраты процессорного времени на кодирование видео в H.264 при использовании стандартных библиотек SDK и FFmpeg на примере проекта <a href="https://github.com/chrisballinger/FFmpeg-iOS-Encoder">FFmpeg-iOS-Encoder</a>. Сравнение производилось с помощью инструмента Time Profiler во время съемки и одновременной записи в файл видео с разрешением 1920?1080.</p>
+            <p><a href="http://blog.denivip.ru/wp-content/uploads/2013/10/encode_benchmark.png"><img src="/texts/denivip/assets/encode_benchmark.png" alt="Сравнение FFmpeg и AVAssetWriter" width="446" height="108" class="aligncenter size-full wp-image-4959" /></a></p>
+            <p>На первом графике запись видео ведется с помощью класса <span style="font-family: monospace;">AVAssetWriter</span>. Нагрузка на процессор практически не отличается до и после начала записи. При этом часть нагрузки по кодированию передается системному процессу mediaserverd, но даже с учетом этого общая нагрузка очень мала и съемка видео производится плавно, без прерываний, со скоростью 30 кадров в секунду.</p>
+            <p>На втором графике запись видео ведется с помощью библиотек FFmpeg с использованием кодека MPEG4 и с понижением разрешения видео до 320?240. При этом процессор загружен практически на 100% и успевает записывать видео только со скоростью 10-15 кадров в секунду.</p>
+        </div>
+        <p>Для отправки видео по сети идеальным вариантом было бы пропустить этап сохранения данных на диск, а вместо этого сразу получать сжатые данные непосредственно в память приложения. Но, к сожалению, в SDK отсутствует такая возможность, поэтому единственное, что остается &#8212; это считывать сжатые данные из файла, в который пишет система.</p>
+        <div style="padding-left: 10px; font-size: 90%; border-left: 4px solid #ddd; background-color: #eee; padding-right: 10px;">
+            <p>Внимательный читатель может вспомнить о том, что iOS внутри является UNIX-подобной системой, а в таких системах обычно доступна особая разновидность файлов &#8212; именованные очереди (named pipe), которые позволяют читать и писать в файл, не задействуя при этом дисковые ресурсы. Но <span style="font-family: monospace;">AVAssetWriter</span> не умеет работать с таким типом файлов, так как он пишет данные не непрерывным потоком, а иногда возвращаясь назад и дописывая пропущенную информацию, как например при заполнении поля длины атома mdat в MOV-файле.</p>
+        </div>
+        <p>Для чтения данных из файла, который продолжает записываться в тот же самый момент, самым простым способом будет пытаться в цикле читать новые появившиеся в файле данные, игнорируя признак конца файла, до тех пор, пока запись в выходной файл не будет завершена:</p>
+        <script src="https://gist.github.com/7152532.js"></script><noscript><pre><code class="language-c c">int myfile_read_buffer(void *opaque, uint8_t *buf, int buf_size)
+{
+    MyFileContext *file = opaque;
+    FILE *fd = file-&gt;file;
+
+    void *b = malloc(buf_size);
+
+    size_t bytes_left = buf_size;
+    size_t total_bytes_read = 0;
+    void *p = b;
+    while (bytes_left &gt; 0) {
+        if (fd == NULL) {
+            free(b);
+            return total_bytes_read;
+        }
+
+        ssize_t bytes_read = fread(p, 1, bytes_left, fd);
+        if (bytes_read &lt; 0) {
+            free(b);
+            return bytes_read;
+        }
+        else if (bytes_read == 0) { // EOF - wait and repeat
+            if (myfile_get_finished_writing(opaque)) {
+                total_bytes_read += bytes_read;
+                goto finish;
+            }
+            else {
+                usleep(1000 * 100); // 100ms
+                clearerr(fd);
+                continue;
+            }
+        }
+
+        total_bytes_read += bytes_read;
+        p += bytes_read;
+        bytes_left -= bytes_read;
+    }
+
+finish:
+    memcpy(buf, b, total_bytes_read);
+    free(b);
+    return total_bytes_read;
+}</code></pre></noscript>
+        <p>Такой подход не очень эффективно расходует ресурсы системы, так как приложение не знает, когда в файле появились новые данные и обращается к файлу постоянно вне зависимости от того, появились они или нет. Этот недостаток можно обойти, задействовав возможности библиотеки GCD для асинхронного ввода/вывода, а именно функции dispatch_source.</p>
+        <script src="https://gist.github.com/7152637.js"></script><noscript><pre><code class="language-objective-c objective-c">int rc = 0;
+void *opaque = myfile_alloc();
+
+const char *incomplete_movie_filename = [[self.incompleteMovieAsset.movieURL path] cStringUsingEncoding:NSASCIIStringEncoding];
+rc = myfile_open(opaque, incomplete_movie_filename);
+if (rc &lt; 0) {
+    if (error) *error = [NSError errorWithFFStatus:rc];
+    return NO;
+}
+
+//
+
+int fd = myfile_fd(opaque);
+fcntl(fd, F_SETFL, O_NONBLOCK);  // Avoid blocking the read operation
+
+dispatch_queue_t queue = dispatch_queue_create(&quot;myfile-io&quot;, DISPATCH_QUEUE_SERIAL);
+dispatch_source_t readSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ,
+                                                        fd, 0, queue);
+if (readSource == nil) {
+    return NO;
+}
+
+dispatch_source_set_cancel_handler(readSource, ^{
+    myfile_close(opaque);
+    myfile_dealloc(&amp;opaque);
+});
+
+dispatch_source_set_event_handler(readSource, ^{
+    unsigned long bytes_available = dispatch_source_get_data(readSource);
+
+    // Now we can start reading...
+});</code></pre></noscript>
+        <p>Полученные таким образом данные будут представлены в том же формате, в котором их пишет iOS, то есть в контейнере MOV или MP4.</p>
+        <div style="padding-left: 10px; font-size: 90%; border-left: 4px solid #ddd; background-color: #eee; padding-right: 10px;">
+            <p>Формат видеоконтейнера MOV (также известный как Quicktime File Format) используется в большинстве продуктов Apple. Его спецификация была впервые опубликована в 2001 году и на основе нее ISO стандартизировала более широко используемый сегодня формат MP4. И MOV и MP4 очень похожи и отличаются только небольшим количеством деталей. Видеофайл логически разбит на отдельные иерархически вложенные друг в друга области, называемые атомами. <a href="https://developer.apple.com/library/mac/documentation/quicktime/QTFF/qtff.pdf">Спецификация MOV</a> описывает порядка пятидесяти различных типов атомов, каждый из которых отвечает за хранение определенной информации. Иногда для правильной интерпретации содержимого одного из атомов необходимо сначала прочитать другой атом. Например, видеопоток, закодированный кодеком H.264, хранится в атоме mdat; для того, чтобы его правильно отобразить в плеере, необходимо сначала прочитать параметры сжатия из атома avcC, временные метки кадров из атома ctts, границы отдельных кадров в mdat из атома stbl и т.д.</p>
+        </div>
+        <p><a href="http://blog.denivip.ru/wp-content/uploads/2013/10/MPEG-4_boxes.jpg"><img src="/texts/denivip/assets/MPEG-4_boxes.jpg" alt="MPEG-4 Boxes" width="500" height="788" class="aligncenter size-full wp-image-4967" /></a></p>
+        <p>Большинство плееров не смогут воспроизводить видеопоток в таком виде, в котором он поступает из незавершенного MOV-файла. Кроме того, для оптимизации передачи видео на сервер и хранения данных может потребоваться преобразовать видеопоток в другой формат или хотя бы распарсить его на отдельные пакеты. Задачу транскодирования видео можно возложить как на серверную часть, так и на клиентскую. В Видеокамере Together мы выбрали второй вариант, так как транскодирование не требует больших вычислительных ресурсов, но позволяет при этом упростить и разгрузить серверную архитектуру. Приложение сразу перекодирует поток в контейнер MPEG TS и нарезает его на сегменты по восемь секунд, которые удобно передавать на сервер простым HTTP POST запросом с телом в формате multipart/form-data. Эти сегменты сразу без дополнительной обработки могут использоваться при построении плейлиста для вещания по протоколу <a href="http://blog.denivip.ru/index.php/tag/http-live-streaming/">HTTP Live Streaming</a>.</p>
+        <p>Особенности структуры атомов внутри обычного MOV файла делают невозможным применение этого формата в стриминге. Для того, чтобы декодировать любую часть MOV файла, необходимо, чтобы файл был доступен целиком, так как критически важная для декодирования информация содержится в конце файла. Чтобы обойти эту проблему было предложено расширение формата MP4, позволяющее записывать MOV файл, состоящий из множества фрагментов, каждый из которых содержит собственный блок метаинформации о видеопотоке. Для того, чтобы <span style="font-family: monospace;">AVAssetWriter</span> начал записывать фрагментированный MOV, достаточно задать значение свойства <span style="font-family: monospace;">movieFragmentInterval</span>, означающее длительность фрагмента.</p>
+        <p><a href="http://blog.denivip.ru/wp-content/uploads/2013/10/Screen-Shot-2013-10-25-at-16.23.37.png"><img src="/texts/denivip/assets/Screen-Shot-2013-10-25-at-16.23.37.png" alt="Fragmented MP4 Structure" width="520" height="603" class="aligncenter size-full wp-image-4979" /></a></p>
+        <div style="padding-left: 10px; font-size: 90%; border-left: 4px solid #ddd; background-color: #eee; padding-right: 10px;">
+            <p>Фрагментированный MP4 (fMP4) используется в таких протоколах стриминга, как Microsoft Smooth Streaming, Adobe HTTP Dynamic Streaming и MPEG-DASH. В Apple HTTP Live Streaming с той же целью используется поток MPEG TS, разбитый на отдельные файлы, называемые сегментами.</p>
+            <p>До выхода iOS 7 был доступен еще один, более сложный способ чтения неполного MOV-файла, который не требовал использования фрагментированного MOV. Можно было распарсить содержимое mdat, выделив отдельные NALU (блок данных кодека H.264) и буферы AAC. Каждый NALU и буфер AAC в выходном файле соответствовал каждому входному сэмпл-буферу и следовал точно в том же порядке, в котором они были записаны. Благодаря этому, можно было легко установить соответствие NALU, кадра и временной метки кадра. Этой информации было достаточно для того, чтобы декодировать видеопоток. В iOS 7 это четкое соответствие перестало работать. Теперь каждому входному сэмпл-буферу могут соответствовать один и более NALU, причем невозможно установить сколько именно для каждого конкретного кадра. </p>
+        </div>
+        <p>Для транскодирования видеопотока мы использовали наиболее очевидное решение &#8212; открытый набор библиотек FFmpeg. Библиотеки FFmpeg позволили нам решить задачу парсинга фрагментированного MOV-файла и перекодирования пакетов в контейнер MPEG TS. FFmpeg позволяет относительно легко распарсить файл представленный в любом формате, переконвертировать его в другой формат и даже передать по сети по любому из поддерживаемых протоколов. Например, для целей лайв-стриминга можно задействовать выходной формат flv и протокол rtmp или протокол rtp.</p>
+        <div style="padding-left: 10px; font-size: 90%; border-left: 4px solid #ddd; background-color: #eee; padding-right: 10px;">
+            <p>Для того, чтобы подключить FFmpeg к приложению для iOS, необходимо скомпилировать статические библиотеки FFmpeg в нескольких вариантах под разные архитектуры, добавить их к проекту в Xcode и добавить в опцию Header Search Path настроек сборки путь до заголовочных файлов FFmpeg. Для кросс-компиляции библиотек под iOS необходимо перед сборкой FFmpeg запустить скрипт configure с параметрами, указывающими пути до используемого iOS SDK и набор функциональности, который необходимо включить в сборку. Проще всего скачать один из множества доступных в интернете готовых скриптов сборки (<a href="http://mtbcode.wordpress.com/2013/03/05/cross-compiling-ffmpeg-on-a-mac-for-ios/">1</a>, <a href="https://gist.github.com/m1entus/6983547">2</a>, <a href="https://github.com/dmcrodrigues/FFmpeg-iOS-build-script">3</a>, <a href="https://github.com/chrisballinger/FFmpeg-iOS-Encoder/tree/master/ffmpeg-iOS">4</a>) и модифицировать его под свои нужды.</p>
+        </div>
+        <p>Однако, FFmpeg не полностью поддерживает такую схему работы, которую нам пришлось реализовать в Together. Для того, чтобы чтение из пишущегося файла не обрывалось по достижению конца файла, мы написали модуль протокола для FFmpeg, который называется <a href="https://github.com/denivip/FFmpeg/blob/1.0-ios-denivip/libavformat/pipelike.c">pipelike</a>. Для нарезки сегментов для HTTP LS мы взяли за основу один из ранних вариантов модуля <a href="https://github.com/libav/libav/blob/adbe03077d197813d5ecba43e918ece9c2b8e9b9/libavformat/hlsenc.c">hlsenc</a> из libav и переработали его, исправив найденные ошибки и добавив возможность передавать выходные данные и основные события модуля непосредственно в другие части приложения через колбэки.</p>
+        <p>Можно выделить следующие преимущества и недостатки реализованного решения.</p>
+        <p>Преимущества:</p>
+        <ul style="padding-left: 20px;">
+            <li>Оптимальный расход батареи, не уступающий стандартным приложениям Apple, за счет использования аппаратных средств, доступных на платформе.</li>
+            <li>Максимально возможное использование стандартного iOS SDK, не используются никакие закрытые API, за счет чего решение полностью совместимо с использованием в App Store.</li>
+            <li>Упрощение серверной инфраструктуры за счет транскодирования видео в сегменты HTTP LS на стороне приложения.</li>
+        </ul>
+        <p>Недостатки:</p>
+        <ul style="padding-left: 20px;">
+            <li>Задержка от съемки до воспроизведения порядка 90 секунд.</li>
+            <li>Видеофайл пишется на диск, а это означает, что:
+                <ul style="padding-left: 20px;">
+                    <li>Нельзя застримить за один раз видео по длительности больше, чем имеется свободного места на флэш-диске.</li>
+                    <li>Во время стриминга расходуется ресурс флэш-диска на количество <a href="http://en.wikipedia.org/wiki/Solid-state_drive#Comparison_with_hard_disk_drives">перезаписываний информации</a>.</li>
+                    <li>Занимается место на диске, которое могло бы использоваться под другие нужды.</li>
+                </ul>
+            </ul>
+            <p>Из чего складывается задержка:</p>
+            <ol style="padding-left: 32px;">
+                <li>Передача кадра из камеры в приложение: миллисекунды.</li>
+                <li>Запись буфера в файл: миллисекунды.</li>
+                <li>Чтение буфера из файла (включая задержку, обусловленную буферизацией записи в файл на уровне операционной системы и алгоритма кодирования видео): 1-3 секунды.</li>
+                <li>Завершение чтения фрагмента: до 2 секунд (длительность фрагмента).</li>
+                <li>Завершение формирования сегмента: до 8 секунд (длительность сегмента).</li>
+                <li>Отправка сегмента на сервер: 2-10 секунд.</li>
+                <li>Формирование плейлиста: 2 секунды.</li>
+                <li>Задержка клиента перед запросом нового плейлиста: 9 секунд (значение Target duration заданное в плейлисте).</li>
+                <li>Загрузка и буферизация сегментов на клиенте: 27 секунд (три Target duration).</li>
+            </ol>
+            <p>Итого: до 60 секунд. Остальные задержки лайв-стриминга в Together обусловлены особенностями реализации:</p>
+            <ol style="padding-left: 32px;">
+                <li>Задержка, обусловенная тем, что следущий сегмент начинает считываться только после окончания передачи предыдущего.</li>
+                <li>Задержка, обусловленная временем прошедшим от начала записи файла до запуска стриминга пользователем (файл всегда стримится с начала).</li>
+            </ol>
+            <p>Большая часть факторов, влияющих на задержку обусловлена использованием протокола HTTP LS. Большинство приложений для лайв-стриминга используют протоколы RTMP или RTP, которые лучше приспособлены для стриминга с минимальной задержкой. Мы провели исследование нескольких других приложений, в которых есть функция лайв-стриминга: Skype, Ustream. Skype имеет минимальную задержку порядка одной секунды, при этом генерирует нагрузку на процессор порядка 50%, из чего можно сделать вывод, что они используют собственный алгоритм сжатия видео и протокол передачи данных. Ustream использует протокол RTMP, имеет задержку не более 10 секунд и минимальную нагрузку на процессор, как при использовании аппаратного кодирования видео. </p>
+            <p>В целом можно отметить, что в результате мы получили приемлемый способ лайв-стриминга, удовлетворяющий требованиям, предъявляемым к приложению Together Video Camera.</p>
+            <p>Другие разработки, использующие похожий подход к лайв-стримингу:</p>
+            <ul style="padding-left: 20px;">
+                <li><a href="http://www.stevemcfarlin.com/livu/">Livu</a> &#8212; приложение, для стриминга видео с iOS устройства на RTP сервер. Не является полноценным стриминговым сервисом, поэтому вам придется указать собственный видеосервер. На <a href="https://github.com/otmakie/LivuLib">github</a> выложена довольно старая версия кода стриминга этого приложения. Автор приложения <a href="http://stackoverflow.com/users/227021/steve-mcfarlin">Steve McFarlin</a> часто отвечает на Stack Overflow на вопросы, связанные с разработкой видеоприложений.</li>
+                <li><a href="http://www.gdcl.co.uk/2013/02/20/iOS-Video-Encoding.html">Hardware Video Encoding on iPhone — RTSP Server example</a> &#8212; исходники приложения, реализующего лайв-стриминг с iOS.</li>
+            </ul>
+            <p><a name="see-also"></a><br />
+                Смотрите также наши предыдущие статьи по теме разработки видеоприложений под iOS:</p>
+            <ol style="padding-left: 32px;">
+                <li><a href="http://blog.denivip.ru/index.php/2012/08/ios-vast-videoplayer/">Плеер для iOS с видеорекламой в стандарте VAST</a></li>
+                <li><a href="http://blog.denivip.ru/index.php/2012/07/%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0-%D1%81-%D0%BA%D0%B0%D0%BC%D0%B5%D1%80%D0%BE%D0%B9-%D0%B2-%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F%D1%85-%D0%B4%D0%BB%D1%8F-apple-ios/">Работа с камерой в iOS приложениях</a></li>
+                <li><a href="http://blog.denivip.ru/index.php/2012/07/apple-ios-video-development/">Воспроизведение видео в iOS приложениях</a></li>
+            </ol>
+            <div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+            <div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+        <footer class="entry-meta">
+            This entry was posted in <a href="http://blog.denivip.ru/index.php/category/ios/" title="Просмотреть все записи в рубрике &laquo;iOS&raquo;" rel="category tag">iOS</a>, <a href="http://blog.denivip.ru/index.php/category/tutorial/" title="Просмотреть все записи в рубрике &laquo;Разработка&raquo;" rel="category tag">Разработка</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/avfoundation/" rel="tag">avfoundation</a>, <a href="http://blog.denivip.ru/index.php/tag/http-live-streaming/" rel="tag">HTTP Live Streaming</a>, <a href="http://blog.denivip.ru/index.php/tag/ios/" rel="tag">iOS</a>, <a href="http://blog.denivip.ru/index.php/tag/livecast/" rel="tag">livecast</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0/" rel="tag">разработка</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%bc%d0%be%d0%b1%d0%b8%d0%bb%d1%8c%d0%bd%d1%8b%d1%85-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d0%b9/" rel="tag">разработка мобильных приложений</a>, <a href="http://blog.denivip.ru/index.php/tag/%d1%81%d1%82%d1%80%d0%b8%d0%bc%d0%b8%d0%bd%d0%b3/" rel="tag">стриминг</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2013/10/ios-live-streaming-implementation/" title="Permalink to Реализация лайв-стриминга снимаемого видео в приложении для iOS" rel="bookmark">permalink</a>.
+        </footer><!-- .entry-meta -->
+    </article><!-- #post-4937 -->
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Mon Jan 2 23:16:57 2017 +0300</span></p>
+    </div>
+
+  </body>
+</html>

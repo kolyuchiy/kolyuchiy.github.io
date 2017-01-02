@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:admin="http://webns.net/mvcb/">
+<foaf:PersonalProfileDocument rdf:about="">
+  <foaf:maker rdf:resource="#me"/>
+  <foaf:primaryTopic rdf:resource="#me"/>
+  <admin:generatorAgent rdf:resource="http://www.ldodds.com/foaf/foaf-a-matic"/>
+  <admin:errorReportsTo rdf:resource="mailto:leigh@ldodds.com"/>
+</foaf:PersonalProfileDocument>
+<foaf:Person rdf:ID="me">
+<foaf:name>Николай Морев</foaf:name>
+<foaf:givenname>Николай</foaf:givenname>
+<foaf:family_name>Морев</foaf:family_name>
+<foaf:nick>kolia</foaf:nick>
+<foaf:mbox_sha1sum>c237aa4585b8273d6cc89bf95f491048a3bf4475</foaf:mbox_sha1sum>
+<foaf:homepage rdf:resource="http://kolia.pp.ru/"/>
+<foaf:depiction rdf:resource="http://kolia.pp.ru/photos/me4.jpg"/>
+<foaf:workplaceHomepage rdf:resource="http://denivip.ru/"/></foaf:Person>
+</rdf:RDF>

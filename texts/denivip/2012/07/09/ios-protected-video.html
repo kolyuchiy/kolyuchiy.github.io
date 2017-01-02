@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Защищенная доставка и воспроизведение видео в iOS: поддержка DRM</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/syntax.css" rel="stylesheet" type="text/css" />
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+    <article id="post-2680" class="post-2680 post type-post status-publish format-standard hentry category-- category-tutorial tag-adobe-access tag-adobe-drm tag-drm tag-flash-access tag-ios tag-13 tag--">
+	<header class="entry-header">
+		<h1 class="entry-title">Защищенная доставка и воспроизведение видео в iOS: поддержка DRM</h1>
+
+		<div class="entry-meta">
+			Posted on <a href="http://blog.denivip.ru/index.php/2012/07/ios-protected-video-playback/" title="16:22" rel="bookmark"><time class="entry-date" datetime="2012-07-09T16:22:28+00:00" pubdate>09.07.2012</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://blog.denivip.ru/index.php/author/kolia/" title="View all posts by Nikolay Morev" rel="author">Nikolay Morev</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>This post is also available in: <a href="http://blog.denivip.ru/index.php/2012/07/secure-ios-video-delivery-and-playback-drm-support/?lang=en">Английский</a></p><p><center><a href="http://blog.denivip.ru/wp-content/uploads/2012/07/timthumb.png"><img class="aligncenter size-medium wp-image-3204" title="Схема Adobe Access" alt="" src="http://blog.denivip.ru/wp-content/uploads/2012/07/timthumb-300x140.png" width="300" height="140" /></a></center>Протокол HTTP Live Streaming (HTTP LS) рекомендуется и всячески продвигается компанией Apple в качестве наиболее оптимального решения для онлайн-доставки видеоконтента на мобильные устройства. Но ни сам этот протокол, ни средства для работы с ним, имеющиеся в API операционной системы, не реализуют полноценную поддержку систем DRM. Новая версия системы Adobe Access 4.0 добавляет на iOS-устройства эту недостающую функциональность. <span id="more-2680"></span></p>
+<h2>Шифрование контента средствами протокола HTTP Live Streaming</h2>
+<p>В протоколе HTTP LS предусмотрена возможность шифрования контента и безопасной аутентификации пользователя для получения ключа расшифровки по протоколу HTTPS. Для части разработчиков этих возможностей может быть вполне достаточно.</p>
+<p>Apple предоставляет бесплатные инструменты для перекодирования видео в формат HTTP LS, а также для его шифрования. При этом может использоваться как единый ключ для всего контента, так и отдельные ключи для каждого из потоков плейлиста с переменным битрейтом. Также существует возможность зашифровать контент несколькими ключами, которые будут попеременно меняться внутри одного потока. Кроме того, ключи защищены &#171;вектором инициализации&#187;, который также может меняться по ходу воспроизведения контента.</p>
+<p>На данный момент поддерживается протокол шифрования AES-128. Ссылки на ключи для расшифровки указываются в плейлисте, содержащем перечень чанков видео. Каждый ключ, встреченный клиентов в плейлисте, загружается по протоколу HTTP или HTTPS и используется для расшифровки. На стороне сервера может быть реализована специфическая для вашего приложения логика, с помощью которой контроллируется выдача ключей только тем пользователям, которым разрешено смотреть контент.</p>
+<h2>Новая версия Adobe Access с поддержкой iOS</h2>
+<p>Система DRM компании Adobe под названием Flash Access на сегодняшний день является практически единственным решением для защищенной доставки профессионального видео с наибольшим охватом веб-аудитории. Добиться этого она смогла благодаря интеграции с Flash Player &#8212; плагином, установленным по статистике Adobe на 99% персональных компьютеров, подключенных к Интернет. Однако, в последнее время в веб оформились две сильные тенденции, которые не играют на руку системе Flash Access. Во-первых, увеличивается число и процентное соотношение пользователей, которые выходят в сеть, используя мобильные устройства, на которых использование Flash осложнено по ряду причин, а зачастую и вовсе невозможно. Во-вторых, интерес разработчиков все больше смещается от проприетарных технологий таких, как Flash и HTTP Dynamic Streaming, к открытым стандартам таким, как HTML5 и HTTP Live Streaming. Компания Adobe, следуя в рамках общей тенденции, выпустила обновление своей системы DRM, которая теперь называется Adobe Access версии 4.0.</p>
+<p>Возможности шифрования, реализованные в HTTP LS, послужили основой для реализации функций новой версии Adobe Access с поддержкой HTTP LS и, прежде всего, ориентированной на устройства на iOS. Поддержка iOS &#8212; это самая главная и наиболее долгожданная функциональность новой версии. Компанией Adobe заявлена поддержка версий iOS начиная с 4.3 и выше, а также следующих моделей устройств на iOS: iPhone 4 или iPhone 4S; iPad, iPad 2, или новый iPad; iPod Touch 4-го поколения.</p>
+<p>Помимо обновления списка поддерживаемых устройств Adobe Access включает следующие функции:</p>
+<ul>
+<li>Единый DRM для самых разнообразных устройств: ПК на Windows, Linux и Mac OS X, мобильные устройства и медиацентры на Android.</li>
+<li>Фильтрация доступа к контенту по устройствам, их типу, ОС, размеру экрана, аппаратным возможностям.</li>
+<li>Простое масштабирование системы DRM при увеличивающейся нагрузке.</li>
+<li>Ротация ключей доступа.</li>
+</ul>
+<h2>Принцип работы с DRM-сервером</h2>
+<p>Чтобы защитить контент от несанкционированного просмотра и распространения, владелец контента создает лицензию на каждую единицу контента. Перед началом просмотра приложение запрашивает лицензию у сервера DRM и при необходимости производит аутентификацию пользователя. Из полученной лицензии приложение получает правила и ограничения, заданные правообладателем, которые необходимо соблюсти на стороне клиента, а также ключ для расшифровки контента.</p>
+<h2>Работа с Adobe Access на iOS</h2>
+<p>Поставка Adobe Access включает SDK для работы с системой DRM и пример приложения AccessPlayer, использующего этот SDK. SDK представляет собой фреймворк drmNativeInterface для Xcode, который подключается к нативному приложению. Для работы фреймворк требует подключения к приложению фреймворка Security и библиотеки libstdc++. API фреймворка для iOS копирует функциональность API, доступного для Flash-приложений написанных на ActionScript, но синтаксис и имена методов переработы, для того, чтобы лучше следовать принятым в iOS-разработке соглашениям. Кроме того iOS API активно использует синтаксическую конструкцию &#171;блок&#187;, доступную в iOS, для задания колбеков для асинхронно выполняющихся методов. Это дает возможность писать более структурированный код и без дополнительных усилий ассоциировать ответы DRM-сервера с конкретной сессией, в отличие от ActionScript, где колбеки назначаются через механизм событий.</p>
+<p>Когда пользователь приложения пытается воспроизвести защищенный контент, приложение должно сделать обращение к системе DRM, используя API, предоставляемые SDK. Это обращение состоит из следующих шагов:</p>
+<ol>
+<li>Приложение получает файл метаданных DRM, соответствующий воспроизводимому контенту. Этот файл содержит информацию, необходимую приложению для получения лицензии на просмотр контента.</li>
+<li>Приложение проверяет, была ли необходимая лицензия ранее загружена и сохранена на устройстве. Если да, то приложение переходит к расшифровке и воспроизведению контента.</li>
+<li>Приложение проверяет, необходима ли аутентификация для получения лицензии.</li>
+<li>Если требуется аутентификация, приложение запрашивает у пользователя логин и пароль и отправляет эти данные на сервер лицензий.</li>
+<li>Если требуется регистрация в домене, то приложение выполняет ее. Регистрация в домене позволяет использовать одну и ту же лицензию сразу на нескольких устройствах, которые прошли регистрацию в данном домене.</li>
+<li>После успешной аутентификации, приложение загружает лицензию, кэширует ее на устройстве и переходит к расшифровке и воспроизведению контента. Закэшированная лицензия может быть повторно использована в следующей сессии просмотра.</li>
+</ol>
+<p>В простейшем случае код, необходимый для воспроизведения защищенного видеофайла, может выглядеть так:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:540px;"><table cellspacing="0" cellpadding="0"><tbody><tr><td class="line-numbers"><div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br /></div></td><td><div class="text codecolorer">-(void) openPlaylist:(NSURL*)m3u8 <br />
+{ <br />
+&nbsp; &nbsp; DRMOperationError defError = <br />
+&nbsp; &nbsp; &nbsp; &nbsp; ^(NSUInteger major, NSUInteger minor, NSError * platformError) <br />
+&nbsp; &nbsp; &nbsp; &nbsp; { NSLog(@&quot;error&quot;); }; <br />
+&nbsp; &nbsp; DRMManager * manager = [DRMManager sharedManager]; <br />
+&nbsp; &nbsp; if ([manager isSupportedPlaylist:m3u8]) { <br />
+&nbsp; &nbsp; &nbsp; &nbsp; [manager getUpdatedPlaylist url:m3u8 <br />
+&nbsp; &nbsp; &nbsp; &nbsp; error:defError<br />
+&nbsp; &nbsp; &nbsp; &nbsp; updated:^(NSURL * newPlaylist, DRMMetadata * newMetadata) { <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; m_session = [manager createDRMSession metadata:newMetadata<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; playlist:newPlaylist error:defError complete:^() { <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.playerItem = [AVPlayerItem playerItemWithURL:playlist]; <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.player = [AVPlayer playerWithPlayerItem:playerItem]; <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [playerView setPlayer:player]; <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [player play]; <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }]; <br />
+&nbsp; &nbsp; &nbsp; &nbsp; }]; <br />
+&nbsp; &nbsp; } <br />
+}</div></td></tr></tbody></table></div>
+
+</pre>
+<p>Инициализация взаимодействия с сервером DRM занимает некоторое время в самом начале воспроизведения контента. Чтобы сократить его, можно выполнить инициализацию заранее.</p>
+<p>При работе с SDK следует помнить о том, что он скомпилирован специально таким образом, чтобы затруднить отладку. Это было сделано для того, чтобы дополнительно защитить алгоритмы, используемые фреймворком.</p>
+<p>Теоретически, благодаря возможности кэшировать лицензию на клиенте, возможна поддержка защищенного оффлайнового просмотра, но на практике iOS не включает встроенных средств для сохранения контента в формате HTTP LS на диск, поэтому их придется реализовать самостоятельно.</p>
+<h2>* * *</h2>
+<p>Более полную информацию о возможностях Adobe Access вы можете получить из наших предыдущих статей:</p>
+<ol>
+<li><a href="http://blog.denivip.ru/index.php/2012/06/adobe-media-server-5-%D0%B8-adobe-access-4/">Adobe Media Server 5 и Adobe Access 4</a></li>
+<li><a href="http://blog.denivip.ru/index.php/2012/04/flash-access-3-0-%D0%B4%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5-%D0%B2%D0%BE%D0%B7%D0%BC%D0%BE%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D0%B8/">Flash Access 3.0: Дополнительные возможности</a></li>
+<li><a href="http://blog.denivip.ru/index.php/2011/11/flash-access-3-drm-%D0%B2-android-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%B0%D1%85/">Flash Access 3: DRM в Android устройствах</a></li>
+<li><a href="http://blog.denivip.ru/index.php/2011/09/adobe-flash-access-3-0-2/">Adobe Flash Access 3.0</a></li>
+<li><a href="http://blog.denivip.ru/index.php/2011/08/live-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE-drm-http-ds-flash-access/">Flash Access: защита live видео</a></li>
+<li><a href="http://blog.denivip.ru/index.php/2011/06/flash-access-drm-%D0%B4%D0%BB%D1%8F-%D0%B7%D0%B0%D1%89%D0%B8%D1%89%D0%B5%D0%BD%D0%BD%D0%BE%D0%B3%D0%BE-%D1%81%D1%82%D1%80%D0%B8%D0%BC%D0%B8%D0%BD%D0%B3%D0%B0/">Flash Access: DRM для защищенного стриминга</a></li>
+<li><a href="http://blog.denivip.ru/index.php/2011/01/adobe-drm-for-web-video/">Adobe DRM для онлайн видео</a></li>
+</ol>
+<p>При подготовке этой статьи были использованы следующие источники:</p>
+<ol>
+<li><a href="http://www.adobe.com/support/documentation/en/adobeaccess/">Документация</a>, доступная на сайте Adobe Access.</li>
+</ol>
+<div style="min-height:33px;" class="really_simple_share really_simple_share_button robots-nocontent snap_nopreview"></div>
+		<div style="clear:both;"></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="http://blog.denivip.ru/index.php/category/%d0%be%d0%bd%d0%bb%d0%b0%d0%b9%d0%bd-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" title="Просмотреть все записи в рубрике &laquo;Онлайн видео&raquo;" rel="category tag">Онлайн видео</a>, <a href="http://blog.denivip.ru/index.php/category/tutorial/" title="Просмотреть все записи в рубрике &laquo;Разработка&raquo;" rel="category tag">Разработка</a> and tagged <a href="http://blog.denivip.ru/index.php/tag/adobe-access/" rel="tag">Adobe Access</a>, <a href="http://blog.denivip.ru/index.php/tag/adobe-drm/" rel="tag">Adobe DRM</a>, <a href="http://blog.denivip.ru/index.php/tag/drm/" rel="tag">DRM</a>, <a href="http://blog.denivip.ru/index.php/tag/flash-access/" rel="tag">Flash Access</a>, <a href="http://blog.denivip.ru/index.php/tag/ios/" rel="tag">iOS</a>, <a href="http://blog.denivip.ru/index.php/tag/%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" rel="tag">видео</a>, <a href="http://blog.denivip.ru/index.php/tag/%d0%be%d0%bd%d0%bb%d0%b0%d0%b9%d0%bd-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be/" rel="tag">Онлайн видео</a>. Bookmark the <a href="http://blog.denivip.ru/index.php/2012/07/ios-protected-video-playback/" title="Permalink to Защищенная доставка и воспроизведение видео в iOS: поддержка DRM" rel="bookmark">permalink</a>.
+			</footer><!-- .entry-meta -->
+</article><!-- #post-2680 -->
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Mon Jan 2 23:16:57 2017 +0300</span></p>
+    </div>
+
+  </body>
+</html>

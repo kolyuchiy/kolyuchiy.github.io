@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DocBook</title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pygments.css" rel="stylesheet" type="text/css" />
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:"MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;
+	mso-font-alt:"\FF2D\FF33 \660E\671D";
+	mso-font-charset:128;
+	mso-generic-font-family:modern;
+	mso-font-pitch:fixed;
+	mso-font-signature:-1610612033 1757936891 16 0 131231 0;}
+@font-face
+	{font-family:"\@MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;
+	mso-font-charset:128;
+	mso-generic-font-family:modern;
+	mso-font-pitch:fixed;
+	mso-font-signature:-1610612033 1757936891 16 0 131231 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin-top:6.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"MS Mincho";}
+h1
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:16.0pt;
+	font-family:Arial;
+	mso-font-kerning:16.0pt;}
+p.MsoFootnoteText, li.MsoFootnoteText, div.MsoFootnoteText
+	{mso-style-noshow:yes;
+	margin-top:6.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"MS Mincho";}
+span.MsoFootnoteReference
+	{mso-style-noshow:yes;
+	vertical-align:super;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"MS Mincho";
+	mso-no-proof:yes;}
+pre
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"MS Mincho";}
+ /* Page Definitions */
+ @page
+	{mso-footnote-separator:url("DocBook_files/header.htm") fs;
+	mso-footnote-continuation-separator:url("DocBook_files/header.htm") fcs;
+	mso-endnote-separator:url("DocBook_files/header.htm") es;
+	mso-endnote-continuation-separator:url("DocBook_files/header.htm") ecs;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:2.0cm 42.5pt 2.0cm 3.0cm;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:1959291788;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1918299018 68747265 68747267 68747269 68747265 68747267 68747269 68747265 68747267 68747269;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+  </head>
+  <body>
+    <!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-7476874-1', 'kolia.pp.ru');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Analytics -->
+
+        <p><a href="slides.pdf">Презентация</a></p>
+
+<div class=Section1>
+
+<h1><span lang=EN-US style='mso-ansi-language:EN-US'>DocBook<o:p></o:p></span></h1>
+
+<p class=MsoNormal>Так сложилось, что существуют различные системы подготовки
+публикаций, и каждую из них можно с определенной точностью отнести к той или
+иной области применения. <span lang=EN-US style='mso-ansi-language:EN-US'>MS</span>&nbsp;<span
+lang=EN-US style='mso-ansi-language:EN-US'>Word</span><span lang=EN-US> </span>–
+для бизнеса, <span lang=EN-US style='mso-ansi-language:EN-US'>LaTeX</span><span
+lang=EN-US> </span>– для научных статей, в частности математики, <span
+lang=EN-US style='mso-ansi-language:EN-US'>DocBook<a style='mso-footnote-id:
+ftn1' href="#_ftn1" name="_ftnref1" title=""><span class=MsoFootnoteReference><span
+style='mso-special-character:footnote'><![if !supportFootnotes]><span
+class=MsoFootnoteReference><span lang=EN-US style='font-size:12.0pt;font-family:
+"Times New Roman";mso-fareast-font-family:"MS Mincho";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'>[1]</span></span><![endif]></span></span></a></span><span
+lang=EN-US> </span>– программная документация.</p>
+
+<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span><span
+lang=EN-US> </span>считается наиболее подходящим инструментом для написания программной
+документации: книги, статьи, руководства пользователя. На сегодняшний день это
+общепризнанный стандарт как в <span lang=EN-US style='mso-ansi-language:EN-US'>open</span><span
+lang=EN-US> </span><span lang=EN-US style='mso-ansi-language:EN-US'>source</span><span
+lang=EN-US> </span>сообществе, так и во многих коммерческих организациях. <span
+lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span><span lang=EN-US> </span>используется
+в таких проектах, как <span lang=EN-US style='mso-ansi-language:EN-US'>FreeBSD</span>,
+ядро <span lang=EN-US style='mso-ansi-language:EN-US'>Linux</span>, <span
+lang=EN-US style='mso-ansi-language:EN-US'>Gnome</span>, <span lang=EN-US
+style='mso-ansi-language:EN-US'>KDE</span><span lang=EN-US> </span>и многих
+других, книги <span lang=EN-US style='mso-ansi-language:EN-US'>O</span>’<span
+lang=EN-US style='mso-ansi-language:EN-US'>Reilly</span>, документация <span
+lang=EN-US style='mso-ansi-language:EN-US'>Sun</span>.<span lang=EN-US
+style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span>
+– это <span lang=EN-US style='mso-ansi-language:EN-US'>XML</span>-язык разметки
+семантической (не только логической) структуры документа, позволяющий задать
+его содержимое в форме, не зависящей от конкретного представления (и здесь этот
+принцип соблюдается более последовательно, чем в <span lang=EN-US
+style='mso-ansi-language:EN-US'>LaTeX</span><span lang=EN-US> </span>или <span
+lang=EN-US style='mso-ansi-language:EN-US'>HTML</span>). И это его основная
+фишка. Этот документ затем можно автоматически представить в различных выходных
+форматах без каких-либо изменений в исходном документе: <span lang=EN-US
+style='mso-ansi-language:EN-US'>man</span> (*<span lang=EN-US style='mso-ansi-language:
+EN-US'>roff</span>), обычный текст, <span lang=EN-US style='mso-ansi-language:
+EN-US'>HTML</span>, <span lang=EN-US style='mso-ansi-language:EN-US'>Info</span>,
+<span lang=EN-US style='mso-ansi-language:EN-US'>TeX</span>/<span lang=EN-US
+style='mso-ansi-language:EN-US'>LaTeX</span>, <span lang=EN-US
+style='mso-ansi-language:EN-US'>XSL</span>&#8209;<span lang=EN-US
+style='mso-ansi-language:EN-US'>FO</span>, <span lang=EN-US style='mso-ansi-language:
+EN-US'>PDF</span>, <span lang=EN-US style='mso-ansi-language:EN-US'>PostScript</span>,
+<span lang=EN-US style='mso-ansi-language:EN-US'>RTF</span>. Существуют стили для
+получения веб-сайта, слайдов.</p>
+
+<p class=MsoNormal>Формат <span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span><span
+lang=EN-US> </span>возник в 1991 году, как совместный проект <span lang=EN-US
+style='mso-ansi-language:EN-US'>HaL</span><span lang=EN-US> </span><span
+lang=EN-US style='mso-ansi-language:EN-US'>Computer</span><span lang=EN-US> </span><span
+lang=EN-US style='mso-ansi-language:EN-US'>Systems</span><span lang=EN-US> </span>и
+<span lang=EN-US style='mso-ansi-language:EN-US'>O</span>’<span lang=EN-US
+style='mso-ansi-language:EN-US'>Reilly</span><span lang=EN-US> </span>&amp; <span
+lang=EN-US style='mso-ansi-language:EN-US'>Associates</span>. Затем для его
+поддержки возникла специальная организация <span lang=EN-US style='mso-ansi-language:
+EN-US'>Davenport</span><span lang=EN-US> </span><span lang=EN-US
+style='mso-ansi-language:EN-US'>Group</span>. В 1998 году <span lang=EN-US
+style='mso-ansi-language:EN-US'>DocBook</span><span lang=EN-US> </span>перешел
+под контроль <span lang=EN-US style='mso-ansi-language:EN-US'>SGML</span><span
+lang=EN-US> </span><span lang=EN-US style='mso-ansi-language:EN-US'>Open</span><span
+lang=EN-US> </span><span lang=EN-US style='mso-ansi-language:EN-US'>consortium</span>,
+который в последствии стал называться <span lang=EN-US style='mso-ansi-language:
+EN-US'>OASIS</span>.<span lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
+
+<p class=MsoNormal>Изначально <span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span><span
+lang=EN-US> </span>базировался на универсальном языке разметки <span
+lang=EN-US style='mso-ansi-language:EN-US'>SGML</span> (как и <span lang=EN-US
+style='mso-ansi-language:EN-US'>HTML</span>). Но в связи с развитием <span
+lang=EN-US style='mso-ansi-language:EN-US'>XML</span>, появилась <span
+lang=EN-US style='mso-ansi-language:EN-US'>XML</span>-версия, которая
+постепенно заменила <span lang=EN-US style='mso-ansi-language:EN-US'>SGML</span>-версию
+практически везде. Внутри <span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span><span
+lang=EN-US> </span>могут использоваться другие <span lang=EN-US
+style='mso-ansi-language:EN-US'>XML</span>-языки, такие как <span lang=EN-US
+style='mso-ansi-language:EN-US'>MathML</span> (набор математических формул), <span
+lang=EN-US style='mso-ansi-language:EN-US'>SVG</span> (векторная графика), <span
+lang=EN-US style='mso-ansi-language:EN-US'>XHTML</span>, <span lang=EN-US
+style='mso-ansi-language:EN-US'>CML</span> (химические формулы). Сообщество
+пользователей <span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span><span
+lang=EN-US> </span>в связи с популярностью <span lang=EN-US style='mso-ansi-language:
+EN-US'>XML</span><span lang=EN-US> </span>в последнее время надеется, что это
+увеличит количество новообращенных пользователей.</p>
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;book</span> <span class="na">id=</span><span class="s">"simple_book"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Very simple book<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;chapter</span> <span class="na">id=</span><span class="s">"simplechapter"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;title&gt;</span>Chapter 1<span class="nt">&lt;/title&gt;</span>
+        <span class="nt">&lt;para&gt;</span>Hello world!<span class="nt">&lt;/para&gt;</span>
+        <span class="nt">&lt;para&gt;</span>I hope that your day is proceeding splendidly!<span class="nt">&lt;/para&gt;</span>
+    <span class="nt">&lt;/chapter&gt;</span>
+    <span class="nt">&lt;chapter</span> <span class="na">id=</span><span class="s">"simplechapter"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;title&gt;</span>Chapter 2<span class="nt">&lt;/title&gt;</span>
+        <span class="nt">&lt;para&gt;</span>Hello again, world!<span class="nt">&lt;/para&gt;</span>
+    <span class="nt">&lt;/chapter&gt;</span>
+<span class="nt">&lt;/book&gt;</span></code></pre></figure>
+
+<p class=MsoNormal>Для получения выходных форматов используются <span
+lang=EN-US style='mso-ansi-language:EN-US'>XSLT</span>-шаблоны. До появления <span
+lang=EN-US style='mso-ansi-language:EN-US'>XSLT</span><span lang=EN-US> </span>аналогичную
+роль играл язык <span lang=EN-US style='mso-ansi-language:EN-US'>DSSSL</span>,
+который не является <span lang=EN-US style='mso-ansi-language:EN-US'>XML</span>-языком,
+а имеет синтаксис больше похожий на <span lang=EN-US style='mso-ansi-language:
+EN-US'>LISP</span>, т.е. куча скобочек, вложенные списки и т.д. Это еще одно
+преимущество по сравнению с <span lang=EN-US style='mso-ansi-language:EN-US'>LaTeX</span>,
+т.к. делает процесс создания нестандартных стилей более простым. <span
+lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
+
+<p class=MsoNormal>Стандарт <span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span><span
+lang=EN-US> </span>включает большое количество разнообразных тэгов на все
+случаи жизни: для разметки структуры документа, создания содержания и индекса,
+метаинформация (~50), внедренные объекты, перекрестные ссылки, <span
+lang=EN-US style='mso-ansi-language:EN-US'>inline</span>-тэги для обозначения
+различных видов текста (торговая марка, вывод программы, элементы <span
+lang=EN-US style='mso-ansi-language:EN-US'>GUI</span>, элементы программ).
+Существует и упрощенная версия <span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span>,
+в которой сокращено количество тэгов до набора, которого достаточно в
+большинстве случаев.</p>
+
+<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span><span
+lang=EN-US> </span>не стоит на месте, постоянно улучшается. В данный момент
+разрабатывается очередная 5-я версия и уже доступны предварительные
+спецификации.<span lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></p>
+
+<p class=MsoNormal>Проблемы <span lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span>:
+</p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo1;tab-stops:list 36.0pt'>Не
+     подходит для создания встроенной справки для программ, которая обычно имеет
+     не книжную древовидную структуру последовательности статей, а состоящую из
+     множества взаимосвязанных между собой статей, не обязательно придерживающихся
+     определенного порядка. Альтернатива – <span lang=EN-US style='mso-ansi-language:
+     EN-US'>DITA<a style='mso-footnote-id:ftn2' href="#_ftn2" name="_ftnref2"
+     title=""><span class=MsoFootnoteReference><span style='mso-special-character:
+     footnote'><![if !supportFootnotes]><span class=MsoFootnoteReference><span
+     lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+     mso-fareast-font-family:"MS Mincho";mso-ansi-language:EN-US;mso-fareast-language:
+     JA;mso-bidi-language:AR-SA'>[2]</span></span><![endif]></span></span></a></span><span
+     lang=EN-US> </span>(<span lang=EN-US style='mso-ansi-language:EN-US'>IBM</span>,
+     <span lang=EN-US style='mso-ansi-language:EN-US'>OASIS</span>).</li>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo1;tab-stops:list 36.0pt'>Недостаточное
+     разнообразие хороших <span lang=EN-US style='mso-ansi-language:EN-US'>WYSIWYG</span>-редакторов,
+     что особенно актуально при использовании <span lang=EN-US
+     style='mso-ansi-language:EN-US'>MathML</span>, <span lang=EN-US
+     style='mso-ansi-language:EN-US'>SVG</span>. На самом деле такие редакторы
+     есть, но все они имеют свои недостатки. Например, есть шаблон для <span
+     lang=EN-US style='mso-ansi-language:EN-US'>OpenOffice</span>, позволяющий
+     разметить документ специальными стилями и затем сохранить в формате <span
+     lang=EN-US style='mso-ansi-language:EN-US'>DocBook</span>, но он реализует
+     далеко не все тэги. Есть плагин для <span lang=EN-US style='mso-ansi-language:
+     EN-US'>Eclipse</span>. Редактор <span lang=EN-US style='mso-ansi-language:
+     EN-US'>XMLMind</span><span lang=EN-US> </span>судя по скриншотам неплох.</li>
+</ul>
+
+<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+
+</div>
+
+<div style='mso-element:footnote-list'><![if !supportFootnotes]><br clear=all>
+
+<hr align=left size=1 width="33%">
+
+<![endif]>
+
+<div style='mso-element:footnote' id=ftn1>
+
+<p class=MsoFootnoteText><a style='mso-footnote-id:ftn1' href="#_ftnref1"
+name="_ftn1" title=""><span class=MsoFootnoteReference><span style='mso-special-character:
+footnote'><![if !supportFootnotes]><span class=MsoFootnoteReference><span
+style='font-size:10.0pt;font-family:"Times New Roman";mso-fareast-font-family:
+"MS Mincho";mso-ansi-language:RU;mso-fareast-language:JA;mso-bidi-language:
+AR-SA'>[1]</span></span><![endif]></span></span></a> <a
+href="http://docbook.org/tdg/en/html/docbook.html">http://docbook.org/tdg/en/html/docbook.html</a><span
+style='mso-ansi-language:EN-US'> <span lang=EN-US><o:p></o:p></span></span></p>
+
+</div>
+
+<div style='mso-element:footnote' id=ftn2>
+
+<p class=MsoFootnoteText><a style='mso-footnote-id:ftn2' href="#_ftnref2"
+name="_ftn2" title=""><span class=MsoFootnoteReference><span style='mso-special-character:
+footnote'><![if !supportFootnotes]><span class=MsoFootnoteReference><span
+style='font-size:10.0pt;font-family:"Times New Roman";mso-fareast-font-family:
+"MS Mincho";mso-ansi-language:RU;mso-fareast-language:JA;mso-bidi-language:
+AR-SA'>[2]</span></span><![endif]></span></span></a><span style='mso-ansi-language:
+EN-US'> </span><a
+href="http://www-128.ibm.com/developerworks/xml/library/x-dita3/"><span
+lang=EN-US style='mso-ansi-language:EN-US'>http://www-128.ibm.com/developerworks/xml/library/x-dita3/</span></a><span
+style='mso-ansi-language:EN-US'> <span lang=EN-US><o:p></o:p></span></span></p>
+
+</div>
+
+</div>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    
+
+    <div class="col-md-12" style="margin-top: 6em">
+        <p style="text-align: center"><span class="small">Обновлено Sun Apr 20 11:58:28 2014 +0400</span></p>
+    </div>
+
+  </body>
+</html>
