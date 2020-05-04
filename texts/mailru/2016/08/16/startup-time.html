@@ -278,12 +278,12 @@ stop    7326    0</code></pre></figure>
     <span class="k">return</span> <span class="n">_image</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">forwardInvocation</span><span class="o">:</span><span class="p">(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="n">invocation</span> <span class="p">{</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation</span><span class="p">:(</span><span class="n">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">invocation</span> <span class="p">{</span>
     <span class="n">invocation</span><span class="p">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">image</span><span class="p">;</span>
     <span class="p">[</span><span class="n">invocation</span> <span class="nf">invoke</span><span class="p">];</span>
 <span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="n">methodSignatureForSelector</span><span class="o">:</span><span class="p">(</span><span class="n">SEL</span><span class="p">)</span><span class="n">sel</span> <span class="p">{</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSMethodSignature</span> <span class="o">*</span><span class="p">)</span><span class="nf">methodSignatureForSelector</span><span class="p">:(</span><span class="n">SEL</span><span class="p">)</span><span class="nv">sel</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">image</span> <span class="nf">methodSignatureForSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">];</span>
 <span class="p">}</span></code></pre></figure>
 <br/>
@@ -353,8 +353,8 @@ stop    7326    0</code></pre></figure>
 </ul><br/>
 Сборка приложения для jailbreak и для обычного устройства выглядит одинаково. Единственное отличие в том, что для jailbreak снижены требования к подписи и профилям. С помощью xcodebuild собираем проект в конфигурации App Store Release с включенным логированием этапов запуска. <code>ENABLE_TIME_LOGGER</code> включает не только логирование, но и автоматическое завершение приложения по достижению конечной точки процесса запуска.<br/>
 <br/>
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$XCODEBUILD</span> -project MRMail.xcodeproj -target <span class="s2">"</span><span class="nv">$TARGET</span><span class="s2">"</span> -configuration <span class="s2">"</span><span class="nv">$CONFIGURATION</span><span class="s2">"</span> <span class="se">\</span>
-    -destination <span class="s2">"platform=iOS"</span> -parallelizeTargets -jobs 4 <span class="se">\</span>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$XCODEBUILD</span> <span class="nt">-project</span> MRMail.xcodeproj <span class="nt">-target</span> <span class="s2">"</span><span class="nv">$TARGET</span><span class="s2">"</span> <span class="nt">-configuration</span> <span class="s2">"</span><span class="nv">$CONFIGURATION</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">-destination</span> <span class="s2">"platform=iOS"</span> <span class="nt">-parallelizeTargets</span> <span class="nt">-jobs</span> 4 <span class="se">\</span>
     <span class="nv">CODE_SIGN_IDENTITY</span><span class="o">=</span><span class="s2">"iPhone Developer"</span> <span class="se">\</span>
     <span class="nv">MAIN_INFOPLIST_FILE</span><span class="o">=</span><span class="s2">"tools/profiler/Info.plist"</span> <span class="se">\</span>
     <span class="nv">GCC_PREPROCESSOR_DEFINITIONS</span><span class="o">=</span><span class="s1">'$GCC_PREPROCESSOR_DEFINITIONS ENABLE_TIME_LOGGER=1 DISABLE_FLURRY=1'</span></code></pre></figure>
@@ -362,17 +362,17 @@ stop    7326    0</code></pre></figure>
 Подмена <code>Info.plist</code> делается для того, чтобы включить iTunes File Sharing: это позволяет в версии без jailbreak доставать лог-файл из папки Documents. Отключение Flurry связано с особенностью работы этой библиотеки: если много раз запускать приложение и останавливать его раньше, чем Flurry успеет отправить все события, библиотека накапливает огромное количество временных файлов и пытается все их прочитать на старте, что негативно влияет на время запуска. Установка собранного приложения на устройство без jailbreak осуществляется с помощью утилиты <a href="https://github.com/phonegap/ios-deploy">ios-deploy</a>:<br/>
 <br/>
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">APP_BUNDLE</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">/build/</span><span class="k">${</span><span class="nv">CONFIGURATION</span><span class="k">}</span><span class="s2">-iphoneos/</span><span class="nv">$PRODUCT</span><span class="s2">.app"</span>
-<span class="nv">$IOS_DEPLOY</span> --bundle <span class="s2">"</span><span class="nv">$APP_BUNDLE</span><span class="s2">"</span> --id <span class="s2">"</span><span class="nv">$DEVICE_ID</span><span class="s2">"</span> <span class="se">\</span>
-    --noninteractive --justlaunch</code></pre></figure>
+<span class="nv">$IOS_DEPLOY</span> <span class="nt">--bundle</span> <span class="s2">"</span><span class="nv">$APP_BUNDLE</span><span class="s2">"</span> <span class="nt">--id</span> <span class="s2">"</span><span class="nv">$DEVICE_ID</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">--noninteractive</span> <span class="nt">--justlaunch</span></code></pre></figure>
 <br/>
 Для устройства с jailbreak достаточно заархивировать папку <code>.app</code> в <code>.ipa</code> и скопировать по ssh на устройство (в скрипте — <code>localhost</code>, так как ssh работает через туннель). Затем приложение устанавливается с помощью утилиты ipainstaller из Cydia.<br/>
 <br/>
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">APP_BUNDLE</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">/build/</span><span class="k">${</span><span class="nv">CONFIGURATION</span><span class="k">}</span><span class="s2">-iphoneos/</span><span class="nv">$PRODUCT</span><span class="s2">.app"</span>
 
 <span class="nb">cd</span> <span class="s2">"</span><span class="nv">$PROJECT_ROOT</span><span class="s2">/build"</span>
-rm -rf Payload; mkdir -p Payload
-cp -a <span class="s2">"</span><span class="nv">$APP_BUNDLE</span><span class="s2">"</span> Payload/
-rm -f MRMail.ipa; zip -r MRMail.ipa Payload
+<span class="nb">rm</span> <span class="nt">-rf</span> Payload<span class="p">;</span> <span class="nb">mkdir</span> <span class="nt">-p</span> Payload
+<span class="nb">cp</span> <span class="nt">-a</span> <span class="s2">"</span><span class="nv">$APP_BUNDLE</span><span class="s2">"</span> Payload/
+<span class="nb">rm</span> <span class="nt">-f</span> MRMail.ipa<span class="p">;</span> zip <span class="nt">-r</span> MRMail.ipa Payload
 
 SCP_TO_DEVICE MRMail.ipa root@localhost:
 SSH_TO_DEVICE ipainstaller MRMail.ipa</code></pre></figure>
@@ -381,57 +381,57 @@ SSH_TO_DEVICE ipainstaller MRMail.ipa</code></pre></figure>
 <br/>
 Далее производится необходимое количество запусков приложения. После каждого запуска лог-файл достается с устройства и сохраняется для последующего анализа. Для запуска приложения на устройстве без jailbreak используется утилита <a href="https://github.com/libimobiledevice/libimobiledevice">idevicedebug</a>, а для скачивания результатов по USB — утилита <a href="https://github.com/libimobiledevice/ifuse">ifuse</a>.<br/>
 <br/>
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="k">for </span>i <span class="k">in</span> <span class="k">$(</span>seq 1 <span class="nv">$NUMBER_OF_RUNS</span><span class="k">)</span>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="k">for </span>i <span class="k">in</span> <span class="si">$(</span><span class="nb">seq </span>1 <span class="nv">$NUMBER_OF_RUNS</span><span class="si">)</span>
 <span class="k">do</span>
-    <span class="nv">$IDEVICEDEBUG</span> --udid <span class="s2">"</span><span class="nv">$DEVICE_ID</span><span class="s2">"</span> run <span class="s2">"</span><span class="nv">$BUNDLE_ID</span><span class="s2">"</span> &gt;/dev/null 2&gt;/dev/null &amp;
+    <span class="nv">$IDEVICEDEBUG</span> <span class="nt">--udid</span> <span class="s2">"</span><span class="nv">$DEVICE_ID</span><span class="s2">"</span> run <span class="s2">"</span><span class="nv">$BUNDLE_ID</span><span class="s2">"</span> <span class="o">&gt;</span>/dev/null 2&gt;/dev/null &amp;
 
     <span class="nv">COMPLETION_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$MOUNTPOINT_PATH</span><span class="s2">/</span><span class="nv">$COMPLETION_INDICATOR</span><span class="s2">"</span>
     <span class="nv">LOG_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$MOUNTPOINT_PATH</span><span class="s2">/</span><span class="nv">$LOG_NAME</span><span class="s2">"</span>
 
-    <span class="k">for </span>j <span class="k">in</span> <span class="k">$(</span>seq 1 5<span class="k">)</span>
+    <span class="k">for </span>j <span class="k">in</span> <span class="si">$(</span><span class="nb">seq </span>1 5<span class="si">)</span>
     <span class="k">do
-        </span>sleep <span class="nv">$MOUNT_SECONDS_PEDIOD</span>
+        </span><span class="nb">sleep</span> <span class="nv">$MOUNT_SECONDS_PEDIOD</span>
         <span class="nv">$UMOUNT</span> <span class="s2">"</span><span class="nv">$MOUNTPOINT_PATH</span><span class="s2">"</span> 2&gt;/dev/null <span class="o">||</span> <span class="nb">true</span>
         <span class="nv">$MKDIR</span> <span class="s2">"</span><span class="nv">$MOUNTPOINT_PATH</span><span class="s2">"</span>
-        <span class="nv">$IFUSE</span> --documents <span class="s2">"</span><span class="nv">$BUNDLE_ID</span><span class="s2">"</span> --udid <span class="s2">"</span><span class="nv">$DEVICE_ID</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$MOUNTPOINT_PATH</span><span class="s2">"</span>
-        sleep <span class="nv">$AFTER_MOUNT_SECONDS_PEDIOD</span>
+        <span class="nv">$IFUSE</span> <span class="nt">--documents</span> <span class="s2">"</span><span class="nv">$BUNDLE_ID</span><span class="s2">"</span> <span class="nt">--udid</span> <span class="s2">"</span><span class="nv">$DEVICE_ID</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$MOUNTPOINT_PATH</span><span class="s2">"</span>
+        <span class="nb">sleep</span> <span class="nv">$AFTER_MOUNT_SECONDS_PEDIOD</span>
 
-        <span class="k">if</span> <span class="o">[</span> -f <span class="s2">"</span><span class="nv">$COMPLETION_PATH</span><span class="s2">"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> -f <span class="s2">"</span><span class="nv">$LOG_PATH</span><span class="s2">"</span> <span class="o">]</span>; <span class="k">then
+        <span class="k">if</span> <span class="o">[</span> <span class="nt">-f</span> <span class="s2">"</span><span class="nv">$COMPLETION_PATH</span><span class="s2">"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="nt">-f</span> <span class="s2">"</span><span class="nv">$LOG_PATH</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
             </span><span class="nb">break
         </span><span class="k">fi
     done
 
-    </span><span class="nv">RESULT_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$LOGS_FOLDER_PATH</span><span class="s2">/</span><span class="k">$(</span>date +<span class="s2">"%d-%m-%Y-%H-%M-%S"</span><span class="k">)</span><span class="s2">.csv"</span>
-    <span class="o">(</span><span class="nb">set</span> -x; cp <span class="s2">"</span><span class="nv">$LOG_PATH</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$RESULT_PATH</span><span class="s2">"</span><span class="o">)</span>
+    </span><span class="nv">RESULT_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$LOGS_FOLDER_PATH</span><span class="s2">/</span><span class="si">$(</span><span class="nb">date</span> +<span class="s2">"%d-%m-%Y-%H-%M-%S"</span><span class="si">)</span><span class="s2">.csv"</span>
+    <span class="o">(</span><span class="nb">set</span> <span class="nt">-x</span><span class="p">;</span> <span class="nb">cp</span> <span class="s2">"</span><span class="nv">$LOG_PATH</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$RESULT_PATH</span><span class="s2">"</span><span class="o">)</span>
 
     <span class="nv">$UMOUNT</span> <span class="s2">"</span><span class="nv">$MOUNTPOINT_PATH</span><span class="s2">"</span>
 <span class="k">done</span></code></pre></figure>
 </code></pre><br/>
 На устройстве с jailbreak все несколько проще. Для запуска приложения используется утилита open из Cydia, результаты копируются по ssh.<br/>
 <br/>
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">SANDBOX_PATH</span><span class="o">=</span><span class="sb">`</span>SSH_TO_DEVICE ipainstaller -i <span class="s2">"</span><span class="nv">$BUNDLE_ID</span><span class="s2">"</span> | grep <span class="s1">'^Data: '</span> | awk <span class="s1">'{print $2}'</span><span class="sb">`</span>
-<span class="nv">SANDBOX_PATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">SANDBOX_PATH</span><span class="p">//[</span><span class="nv">$'</span><span class="p">\t\r\n </span><span class="s1">']}"
-COMPLETION_PATH="$SANDBOX_PATH/Documents/$COMPLETION_INDICATOR"
-LOG_PATH="$SANDBOX_PATH/Documents/$LOG_NAME"
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">SANDBOX_PATH</span><span class="o">=</span><span class="sb">`</span>SSH_TO_DEVICE ipainstaller <span class="nt">-i</span> <span class="s2">"</span><span class="nv">$BUNDLE_ID</span><span class="s2">"</span> | <span class="nb">grep</span> <span class="s1">'^Data: '</span> | <span class="nb">awk</span> <span class="s1">'{print $2}'</span><span class="sb">`</span>
+<span class="nv">SANDBOX_PATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">SANDBOX_PATH</span><span class="p">//[</span><span class="s1">$'</span><span class="se">\t\r\n</span><span class="s1"> '</span><span class="p">]</span><span class="k">}</span><span class="s2">"</span>
+<span class="nv">COMPLETION_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$SANDBOX_PATH</span><span class="s2">/Documents/</span><span class="nv">$COMPLETION_INDICATOR</span><span class="s2">"</span>
+<span class="nv">LOG_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$SANDBOX_PATH</span><span class="s2">/Documents/</span><span class="nv">$LOG_NAME</span><span class="s2">"</span>
 
-for i in $(seq 1 $NUMBER_OF_RUNS)
-do
-    SSH_TO_DEVICE open "$BUNDLE_ID"
-    sleep $MOUNT_SECONDS_PEDIOD
+<span class="k">for </span>i <span class="k">in</span> <span class="si">$(</span><span class="nb">seq </span>1 <span class="nv">$NUMBER_OF_RUNS</span><span class="si">)</span>
+<span class="k">do
+    </span>SSH_TO_DEVICE open <span class="s2">"</span><span class="nv">$BUNDLE_ID</span><span class="s2">"</span>
+    <span class="nb">sleep</span> <span class="nv">$MOUNT_SECONDS_PEDIOD</span>
 
-    for j in $(seq 1 5)
-    do
-        if SSH_TO_DEVICE test -f "$COMPLETION_PATH" &amp;&amp; \
-            SSH_TO_DEVICE test -f "$LOG_PATH"
-        then
-            break
-        fi
-        sleep $AFTER_MOUNT_SECONDS_PEDIOD
-    done
+    <span class="k">for </span>j <span class="k">in</span> <span class="si">$(</span><span class="nb">seq </span>1 5<span class="si">)</span>
+    <span class="k">do
+        if </span>SSH_TO_DEVICE <span class="nb">test</span> <span class="nt">-f</span> <span class="s2">"</span><span class="nv">$COMPLETION_PATH</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+            SSH_TO_DEVICE <span class="nb">test</span> <span class="nt">-f</span> <span class="s2">"</span><span class="nv">$LOG_PATH</span><span class="s2">"</span>
+        <span class="k">then
+            </span><span class="nb">break
+        </span><span class="k">fi
+        </span><span class="nb">sleep</span> <span class="nv">$AFTER_MOUNT_SECONDS_PEDIOD</span>
+    <span class="k">done
 
-    RESULT_PATH="$LOGS_FOLDER_PATH/$(date +"%d-%m-%Y-%H-%M-%S").csv"
-    (set -x; SCP_TO_DEVICE root@localhost:"$LOG_PATH" "$RESULT_PATH")
-done</span></code></pre></figure>
+    </span><span class="nv">RESULT_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$LOGS_FOLDER_PATH</span><span class="s2">/</span><span class="si">$(</span><span class="nb">date</span> +<span class="s2">"%d-%m-%Y-%H-%M-%S"</span><span class="si">)</span><span class="s2">.csv"</span>
+    <span class="o">(</span><span class="nb">set</span> <span class="nt">-x</span><span class="p">;</span> SCP_TO_DEVICE root@localhost:<span class="s2">"</span><span class="nv">$LOG_PATH</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$RESULT_PATH</span><span class="s2">"</span><span class="o">)</span>
+<span class="k">done</span></code></pre></figure>
 <br/>
 После этого несложный скрипт на Ruby собирает результаты всех запусков, вычисляет по всем событиям статистические характеристики (минимальное время, максимальное время, среднее, медиану, квантили) и отправляет эти данные в <a href="https://github.com/influxdata/influxdb">Influxdb</a>, по которым в дэшборде на <a href="https://github.com/grafana/grafana">Grafana</a> строится график.<br/>
 <br/>

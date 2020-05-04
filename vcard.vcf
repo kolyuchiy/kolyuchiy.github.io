@@ -3,13 +3,13 @@ VERSION:2.1
 N;CHARSET=UTF-8:Морев;Николай;;;
 FN;CHARSET=UTF-8:Николай Морев
 ORG:Yandex.Taxi
-PHOTO;JPEG:http://kolia.pp.ru/photos/me4.jpg
+PHOTO;JPEG:https://kolia.xyz/photos/me4.jpg
 BDAY:19840123
 EMAIL:kolyuchiy@gmail.com
-SOURCE:http://kolia.pp.ru/vcard.vcf
+SOURCE:https://kolia.xyz/vcard.vcf
 TZ:+0300
 ROLE;CHARSET=UTF-8:iOS-разработчик
-URL:http://kolia.pp.ru
+URL:https://kolia.xyz
 UID:f42167d3ffada82c949bf6472015b00b
 REV:20190618T220700Z
 X-TELEGRAM:kolyuchiy

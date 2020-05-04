@@ -104,19 +104,19 @@
 <figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">@implementation</span> <span class="nc">MRWKContactsInterfaceController</span>
 <span class="err">‐</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">awakeWithContext</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">context</span> <span class="p">{</span>
 <span class="err"> </span>   <span class="p">[</span><span class="n">super</span> <span class="nf">awakeWithContext</span><span class="p">:</span><span class="n">context</span><span class="p">];</span>
-    <span class="c1">// Call app initialization code from your main interface controller's awakeWithContext method
-</span>    <span class="p">[</span><span class="n">MRWKInitialization</span> <span class="nf">extensionDidFinishLaunching</span><span class="p">];</span>
-    <span class="c1">//...     
-</span>  <span class="p">}</span>
+    <span class="c1">// Call app initialization code from your main interface controller's awakeWithContext method</span>
+    <span class="p">[</span><span class="n">MRWKInitialization</span> <span class="nf">extensionDidFinishLaunching</span><span class="p">];</span>
+    <span class="c1">//...     </span>
+  <span class="p">}</span>
 
-<span class="c1">// Separate class where we store all initialization code for our watch extension
-</span><span class="k">@implementation</span> <span class="nc">MRWKInitialization</span>
+<span class="c1">// Separate class where we store all initialization code for our watch extension</span>
+<span class="k">@implementation</span> <span class="nc">MRWKInitialization</span>
   <span class="k">+</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">extensionDidFinishLaunching</span> <span class="p">{</span><span class="err"> </span>        
-<span class="c1">// Wrap initialization in dispatch_once to prevent calling it multiple times accidentaly
-</span><span class="err"> </span>     <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+<span class="c1">// Wrap initialization in dispatch_once to prevent calling it multiple times accidentaly</span>
+<span class="err"> </span>     <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
 <span class="err"> </span>     <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">onceToken</span><span class="p">,</span><span class="o">^</span><span class="p">{</span>
-<span class="err"> </span>       <span class="c1">// This is where we create our global object instances and initialize external SDKs
-</span><span class="err"> </span>       <span class="p">[</span><span class="n">self</span> <span class="nf">internalExtensionDidFinishLaunching</span><span class="p">];</span>
+<span class="err"> </span>       <span class="c1">// This is where we create our global object instances and initialize external SDKs</span>
+<span class="err"> </span>       <span class="p">[</span><span class="n">self</span> <span class="nf">internalExtensionDidFinishLaunching</span><span class="p">];</span>
 <span class="err"> </span>  <span class="p">});</span>
 <span class="err"> </span><span class="p">}</span> </code></pre></figure>
 <p>Moreover, it&#8217;s possible to use the <code>initialize</code> method in one of the extension classes, which will be executed on the first reference to this class.</p>
@@ -130,7 +130,7 @@
   <span class="nf">accountName</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">accountName</span>
   <span class="nf">completionBlock</span><span class="p">:(</span><span class="n">MRWKParentApplicationActionsCompletionBlock</span><span class="p">)</span><span class="nv">completionBlock</span> <span class="p">{</span>
   <span class="n">MRWKParentApplicationAction</span> <span class="o">*</span><span class="n">action</span> <span class="o">=</span> <span class="p">[</span><span class="n">MRWKParentApplicationAction</span> <span class="nf">markAsReadActionWithMessageId</span><span class="p">:</span><span class="n">messageId</span>
-    <span class="nf">accountName</span><span class="p">:</span><span class="n">accountName</span><span class="p">];</span>
+    <span class="nl">accountName:</span><span class="n">accountName</span><span class="p">];</span>
   <span class="p">[</span><span class="n">self</span> <span class="nf">openParentApplication</span><span class="p">:</span><span class="n">action</span><span class="p">.</span><span class="n">dictionary</span> <span class="nf">reply</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">replyInfo</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">completionBlock</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">MRWKParentApplicationReplyInfo</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MRWKParentApplicationReplyInfo</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithDictionary</span><span class="p">:</span><span class="n">replyInfo</span><span class="p">];</span>

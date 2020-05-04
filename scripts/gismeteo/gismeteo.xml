@@ -6,11 +6,11 @@
         title_url="http://www.gismeteo.ru/towns/__UP_city__.htm" 
         author="Kolia Morev"
         author_email="kolyuchiy@gmail.com"
-        author_link="http://kolia.pp.ru/"
+        author_link="https://kolia.xyz/"
         author_location="Vladimir, Russia"> 
 
-        <Locale messages="http://kolia.pp.ru/scripts/gismeteo/ALL_ALL.xml" />
-        <Locale lang="ru" messages="http://kolia.pp.ru/scripts/gismeteo/ru_ALL.xml" />
+        <Locale messages="https://kolia.xyz/scripts/gismeteo/ALL_ALL.xml" />
+        <Locale lang="ru" messages="https://kolia.xyz/scripts/gismeteo/ru_ALL.xml" />
     </ModulePrefs>
     <UserPref name="city"   display_name="__MSG_city__" required="true" default_value="27532" />
     <UserPref name="clouds" display_name="__MSG_clouds__" datatype="bool" default_value="false" />
