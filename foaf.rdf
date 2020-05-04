@@ -16,7 +16,7 @@
 <foaf:family_name>Морев</foaf:family_name>
 <foaf:nick>kolia</foaf:nick>
 <foaf:mbox_sha1sum>c237aa4585b8273d6cc89bf95f491048a3bf4475</foaf:mbox_sha1sum>
-<foaf:homepage rdf:resource="http://kolia.pp.ru/"/>
-<foaf:depiction rdf:resource="http://kolia.pp.ru/photos/me4.jpg"/>
+<foaf:homepage rdf:resource="https://kolia.xyz/"/>
+<foaf:depiction rdf:resource="https://kolia.xyz/photos/me4.jpg"/>
 <foaf:workplaceHomepage rdf:resource="http://denivip.ru/"/></foaf:Person>
 </rdf:RDF>
